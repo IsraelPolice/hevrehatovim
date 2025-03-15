@@ -331,13 +331,15 @@
                     <img class="flag" src="${char.flag}">
                     <select id="role-${char.name}" onchange="updateTeam()">
                         <option value="">בחר תפקיד</option>
+                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
+                        <option value="חייל">חייל</option>
+                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
+                        ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
                     </select>
                 `;
                 teamDisplay.appendChild(card);
                 delay += 0.5;
             });
-
-            updateTeam(); // עדכון התפקידים הראשוני
 
             setTimeout(() => {
                 const confirmRolesButton = document.createElement("button");
@@ -345,10 +347,14 @@
                 confirmRolesButton.onclick = confirmRoles;
                 teamDisplay.appendChild(confirmRolesButton);
             }, delay * 1000 + 500);
+
+            updateTeam(); // עדכון תפקידים ראשוני
         }
 
         function updateTeam() {
             let leaderCount = 0, soldierCount = 0, whoreCount = 0;
+
+            // ספירת התפקידים הנוכחיים
             selectedTeam.forEach(char => {
                 const role = document.getElementById(`role-${char.name}`).value;
                 if (role === "מנהיג") leaderCount++;
@@ -356,24 +362,27 @@
                 if (role === "זונה") whoreCount++;
             });
 
+            // עדכון התפריטים בהתאם להגבלות
             selectedTeam.forEach(char => {
                 const select = document.getElementById(`role-${char.name}`);
+                const currentValue = select.value; // שמירת הערך הנוכחי
                 select.innerHTML = '<option value="">בחר תפקיד</option>';
-                if (leaderCount === 0 && char.name !== "אריאל עין גל" && char.name !== "חיים מרקס") {
+
+                // אופציות זמינות לפי הגבלות
+                if (leaderCount < 1 && char.name !== "אריאל עין גל" && char.name !== "חיים מרקס") {
                     select.innerHTML += '<option value="מנהיג">מנהיג</option>';
                 }
                 if (soldierCount < 3) {
                     select.innerHTML += '<option value="חייל">חייל</option>';
                 }
-                if (whoreCount === 0 && char.name !== "דביר ברקת") {
+                if (whoreCount < 1 && char.name !== "דביר ברקת") {
                     select.innerHTML += '<option value="זונה">זונה</option>';
                 }
                 if (char.name === "ליאב בן יעקב") {
                     select.innerHTML += '<option value="הגיי של הצוות">הגיי של הצוות</option>';
                 }
 
-                const currentRole = selectedTeam.find(c => c.name === char.name).role;
-                if (currentRole) select.value = currentRole;
+                select.value = currentValue; // שחזור הערך שנבחר
             });
         }
 
@@ -416,7 +425,7 @@
 
         function confirmLiav(charName, role, confirm) {
             const popup = document.querySelector(".popup");
-            if (popup) popup.remove(); // סגירת הפופ-אפ
+            if (popup) popup.remove();
 
             const char = selectedTeam.find(c => c.name === charName);
             if (confirm) {
@@ -496,7 +505,7 @@
                     }
 
                     displayTeamStatus(battleIndex);
-                    if (battleIndex < 4) showPostBattleMessage(battleIndex); // הודעה עד קרב 4
+                    if (battleIndex < 4) showPostBattleMessage(battleIndex);
                 } else {
                     battleDisplay.innerHTML = `
                         <h2>מלחמה: ${battle.name}</h2>
