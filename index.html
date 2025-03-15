@@ -65,7 +65,7 @@
             margin: 20px;
             padding: 20px;
             width: 220px;
-            height: 350px;
+            height: 400px;
             background: linear-gradient(135deg, rgba(0, 255, 204, 0.2), rgba(255, 0, 102, 0.2));
             border: 2px solid #ff0066;
             border-radius: 15px;
@@ -221,20 +221,7 @@
             characters.forEach(char => {
                 const card = document.createElement("div");
                 card.className = "character-card";
-                card.innerHTML = `
-                    <img src="${char.image}">
-                    <div>${char.name}</div>
-                    <select id="role-${char.name}" onchange="updateSelection('${char.name}')">
-                        <option value="">בחר תפקיד</option>
-                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
-                        <option value="חייל">חייל</option>
-                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
-                        ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
-                    </select>
-                    <select id="weapon-${char.name}" onchange="updateSelection('${char.name}')" disabled>
-                        <option value="">בחר נשק</option>
-                    </select>
-                `;
+                card.innerHTML = `<img src="${char.image}"><div>${char.name}</div>`;
                 card.onclick = () => toggleSelection(char, card);
                 selectionDiv.appendChild(card);
             });
@@ -242,43 +229,67 @@
         }
 
         function toggleSelection(char, card) {
-            const role = document.getElementById(`role-${char.name}`).value;
-            const weapon = document.getElementById(`weapon-${char.name}`).value;
             const index = selectedTeam.findIndex(c => c.name === char.name);
-
             if (index !== -1) {
                 selectedTeam.splice(index, 1);
-                usedWeapons = usedWeapons.filter(w => w !== weapon);
                 card.classList.remove("selected");
-                document.getElementById(`weapon-${char.name}`).disabled = true;
-            } else if (selectedTeam.length < 5 && role && weapon) {
-                const leaderCount = selectedTeam.filter(c => c.role === "מנהיג").length;
-                const soldierCount = selectedTeam.filter(c => c.role === "חייל").length;
-                const whoreCount = selectedTeam.filter(c => c.role === "זונה").length;
-
-                if (role === "מנהיג" && leaderCount >= 1) return alert("יכול להיות רק מנהיג אחד!");
-                if (role === "חייל" && soldierCount >= 3) return alert("יכולים להיות עד 3 חיילים!");
-                if (role === "זונה" && whoreCount >= 1) return alert("יכולה להיות רק זונה אחת!");
-                if (char.name === "דביר ברקת" && role === "זונה") {
-                    showLosePopup(char);
-                    return;
-                }
-                if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") return alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
-                if (char.name === "אריאל שרביט" && weapon !== "Glock") return alert("אריאל שרביט יכולה להשתמש רק ב-Glock!");
-                if (char.name === "ליאב בן יעקב" && role !== "הגיי של הצוות") {
-                    showLiavConfirmation(char, role, weapon, card);
-                    return;
-                }
-
-                selectedTeam.push({ ...char, health: char.overall, role, weapon });
-                usedWeapons.push(weapon);
+            } else if (selectedTeam.length < 5) {
+                selectedTeam.push({ ...char, health: char.overall }); // חיים שווים ל-Overall
                 card.classList.add("selected");
             }
-            updateWeaponOptions();
             document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
         }
 
-        function updateSelection(charName) {
+        function confirmTeam() {
+            document.getElementById("character-selection").style.display = "none";
+            document.getElementById("confirm-team").style.display = "none";
+            const teamDisplay = document.getElementById("team-display");
+            teamDisplay.style.display = "block";
+            teamDisplay.innerHTML = "<h2>הצוות שלך:</h2>";
+
+            let delay = 0;
+            selectedTeam.forEach(char => {
+                const stars = Math.floor(char.overall / 20);
+                const card = document.createElement("div");
+                card.className = "team-card";
+                card.style.animationDelay = `${delay}s`;
+                card.innerHTML = `
+                    <img src="${char.image}" class="player-img" style="display: none;">
+                    <div class="name" style="display: none;">${char.name}</div>
+                    <div class="overall" style="display: none;">Overall: ${char.overall}</div>
+                    <div class="stars" style="display: none;">${"★".repeat(stars)}</div>
+                    <img class="flag" src="${char.flag}" style="display: none;">
+                    <select id="role-${char.name}" onchange="updateTeam('${char.name}')">
+                        <option value="">בחר תפקיד</option>
+                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
+                        <option value="חייל">חייל</option>
+                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
+                        ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
+                    </select>
+                    <select id="weapon-${char.name}" onchange="updateTeam('${char.name}')" disabled>
+                        <option value="">בחר נשק</option>
+                    </select>
+                `;
+                teamDisplay.appendChild(card);
+
+                setTimeout(() => card.querySelector(".name").style.display = "block", delay * 1000 + 500);
+                setTimeout(() => card.querySelector(".player-img").style.display = "block", delay * 1000 + 1000);
+                setTimeout(() => card.querySelector(".overall").style.display = "block", delay * 1000 + 1500);
+                setTimeout(() => card.querySelector(".stars").style.display = "block", delay * 1000 + 2000);
+                setTimeout(() => card.querySelector(".flag").style.display = "block", delay * 1000 + 2500);
+                setTimeout(() => card.querySelector("select").style.display = "block", delay * 1000 + 3000);
+                delay += 3;
+            });
+
+            setTimeout(() => {
+                const confirmRolesButton = document.createElement("button");
+                confirmRolesButton.innerText = "אשר תפקידים ונשקים";
+                confirmRolesButton.onclick = confirmRolesAndWeapons;
+                teamDisplay.appendChild(confirmRolesButton);
+            }, delay * 1000 + 1000);
+        }
+
+        function updateTeam(charName) {
             const role = document.getElementById(`role-${charName}`).value;
             const weaponSelect = document.getElementById(`weapon-${charName}`);
             weaponSelect.disabled = !role;
@@ -295,72 +306,36 @@
             }
         }
 
-        function updateWeaponOptions() {
-            characters.forEach(char => {
-                const weaponSelect = document.getElementById(`weapon-${char.name}`);
+        function confirmRolesAndWeapons() {
+            let leaderCount = 0, soldierCount = 0, whoreCount = 0;
+            for (const char of selectedTeam) {
                 const role = document.getElementById(`role-${char.name}`).value;
-                if (role && !selectedTeam.find(c => c.name === char.name)) {
-                    updateSelection(char.name);
+                const weapon = document.getElementById(`weapon-${char.name}`).value;
+
+                if (!role || !weapon) return alert("חובה לבחור תפקיד ונשק לכל חבר צוות!");
+                if (role === "מנהיג" && ++leaderCount > 1) return alert("יכול להיות רק מנהיג אחד!");
+                if (role === "חייל" && ++soldierCount > 3) return alert("יכולים להיות עד 3 חיילים!");
+                if (role === "זונה" && ++whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
+                if (char.name === "דביר ברקת" && role === "זונה") return showLosePopup(char);
+                if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") return alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
+                if (char.name === "אריאל שרביט" && weapon !== "Glock") return alert("אריאל שרביט יכולה להשתמש רק ב-Glock!");
+                if (char.name === "ליאב בן יעקב" && role !== "הגיי של הצוות") {
+                    showLiavConfirmation(char, role, weapon);
+                    return;
                 }
-            });
-        }
 
-        function showLiavConfirmation(char, role, weapon, card) {
-            const popup = document.createElement("div");
-            popup.className = "popup";
-            popup.innerHTML = `
-                <h3>אתה בטוח שלא רוצה שליאב יהיה הגיי של הצוות?</h3>
-                <button onclick="confirmLiav('${char.name}', '${role}', '${weapon}', this.parentElement, true)">כן</button>
-                <button onclick="confirmLiav('${char.name}', '${role}', '${weapon}', this.parentElement, false)">לא</button>
-            `;
-            document.body.appendChild(popup);
-        }
+                char.role = role;
+                char.weapon = weapon;
+                usedWeapons.push(weapon);
 
-        function confirmLiav(charName, role, weapon, popup, confirm) {
-            popup.remove();
-            const char = characters.find(c => c.name === charName);
-            const card = document.querySelector(`#character-selection .character-card:has(#role-${charName})`);
-            if (confirm) {
-                selectedTeam.push({ ...char, health: char.overall, role, weapon });
-                usedWeapons.push(weapon);
-                card.classList.add("selected");
-            } else {
-                document.getElementById(`role-${charName}`).value = "הגיי של הצוות";
-                updateSelection(charName);
-                document.getElementById(`weapon-${charName}`).value = weapon;
-                selectedTeam.push({ ...char, health: char.overall, role: "הגיי של הצוות", weapon });
-                usedWeapons.push(weapon);
-                card.classList.add("selected");
+                if (role === "מנהיג") char.overall += 3;
+                if (role === "חייל") char.overall += 1;
+                if (role === "זונה") char.overall -= 2;
+                char.health = char.overall; // חיים שווים ל-Overall המשופר
             }
-            updateWeaponOptions();
-            document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
-        }
 
-        function showLosePopup(char) {
-            const popup = document.createElement("div");
-            popup.className = "popup";
-            popup.innerHTML = `
-                <h3>הפסדת!</h3>
-                <p>דביר ברקת לא יכול להיות זונה והפרטים שלך נשלחו לדביר ברקת.</p>
-                <img src="${char.image}">
-            `;
-            document.body.appendChild(popup);
-        }
-
-        function confirmTeam() {
-            selectedTeam.forEach(char => {
-                if (char.role === "מנהיג") char.overall += 3;
-                if (char.role === "חייל") char.overall += 1;
-                if (char.role === "זונה") char.overall -= 2;
-                char.health = char.overall; // עדכון החיים ל-Overall המשופר
-            });
-
-            document.getElementById("character-selection").style.display = "none";
-            document.getElementById("confirm-team").style.display = "none";
             const teamDisplay = document.getElementById("team-display");
-            teamDisplay.style.display = "block";
             teamDisplay.innerHTML = "<h2>הצוות שלך:</h2>";
-
             let delay = 0;
             selectedTeam.forEach(char => {
                 const stars = Math.floor(char.overall / 20);
@@ -389,6 +364,46 @@
             setTimeout(() => startBattle(0), delay * 1000 + 1000);
         }
 
+        function showLiavConfirmation(char, role, weapon) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <h3>אתה בטוח שלא רוצה שליאב יהיה הגיי של הצוות?</h3>
+                <button onclick="confirmLiav('${char.name}', '${role}', '${weapon}', this.parentElement, true)">כן</button>
+                <button onclick="confirmLiav('${char.name}', '${role}', '${weapon}', this.parentElement, false)">לא</button>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        function confirmLiav(charName, role, weapon, popup, confirm) {
+            popup.remove();
+            const char = selectedTeam.find(c => c.name === charName);
+            if (confirm) {
+                char.role = role;
+                char.weapon = weapon;
+            } else {
+                char.role = "הגיי של הצוות";
+                char.weapon = weapon;
+            }
+            usedWeapons.push(weapon);
+            if (char.role === "מנהיג") char.overall += 3;
+            if (char.role === "חייל") char.overall += 1;
+            if (char.role === "זונה") char.overall -= 2;
+            char.health = char.overall;
+            confirmRolesAndWeapons();
+        }
+
+        function showLosePopup(char) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <h3>הפסדת!</h3>
+                <p>דביר ברקת לא יכול להיות זונה והפרטים שלך נשלחו לדביר ברקת.</p>
+                <img src="${char.image}">
+            `;
+            document.body.appendChild(popup);
+        }
+
         function startBattle(battleIndex) {
             const battleDisplay = document.getElementById("battle-display");
             battleDisplay.style.display = "block";
@@ -400,10 +415,11 @@
                 if (traitors.length > 0) {
                     traitors.forEach(traitor => {
                         showTraitorPopup(traitor);
-                        selectedTeam = selectedTeam.filter(char => char.name !== traitor.name);
+                        selectedTeam = selectedTeam.filter(char => char.name !== traitor.name); // הסרה מלאה מהצוות
                     });
                     setTimeout(() => {
                         document.querySelectorAll(".popup").forEach(popup => popup.remove());
+                        aliveTeam = selectedTeam.filter(char => char.health > 0); // עדכון הצוות החי
                         displayTeamStatus(battleIndex);
                     }, 3000);
                     return;
