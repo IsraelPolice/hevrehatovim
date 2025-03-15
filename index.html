@@ -210,7 +210,7 @@
                 selectedTeam.splice(index, 1);
                 card.classList.remove("selected");
             } else if (selectedTeam.length < 5) {
-                selectedTeam.push({ ...char, health: char.overall });
+                selectedTeam.push({ ...char, health: char.overall }); // חיים מתחילים שווים ל-Overall
                 card.classList.add("selected");
             }
             document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
@@ -258,12 +258,17 @@
             // בדיקת בגידה בשלב 3 (אינדקס 2)
             if (battleIndex === 2) {
                 const traitors = aliveTeam.filter(char => char.name === "ליאב בן יעקב" || char.name === "עמית לסרי");
-                traitors.forEach(traitor => {
-                    traitor.flag = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/1200px-Flag_of_Iran.svg.png";
-                    showTraitorPopup(traitor);
-                    selectedTeam = selectedTeam.filter(char => char.name !== traitor.name); // הסרת הבוגד מהצוות
-                });
-                aliveTeam = selectedTeam.filter(char => char.health > 0); // עדכון הצוות החי
+                if (traitors.length > 0) {
+                    traitors.forEach(traitor => {
+                        showTraitorPopup(traitor);
+                        selectedTeam = selectedTeam.filter(char => char.name !== traitor.name); // הסרת הבוגד מהצוות
+                    });
+                    setTimeout(() => {
+                        document.querySelectorAll(".popup").forEach(popup => popup.remove());
+                        displayTeamStatus(battleIndex);
+                    }, 3000); // ממתין 3 שניות לפני שממשיכים
+                    return; // עוצר כאן עד שהפופ-אפ נסגר
+                }
             }
 
             const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
@@ -289,14 +294,13 @@
         }
 
         function showTraitorPopup(traitor) {
+            traitor.flag = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/1200px-Flag_of_Iran.svg.png";
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
                 <img src="${traitor.image}">
-                <h3>${traitor.name} היו סוכנים זרים!</h3>
-                <p>הם עברו ליריב ועכשיו מייצגים את איראן.</p>
+                <h3>${traitor.name} היה סוכן זר והוא עוזר ליריב!</h3>
                 <img src="${traitor.flag}" style="width: 40px;">
-                <button onclick="this.parentElement.remove()">סגור</button>
             `;
             document.body.appendChild(popup);
         }
