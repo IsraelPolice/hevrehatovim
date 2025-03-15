@@ -128,6 +128,27 @@
         #team-display, #battle-display {
             margin-top: 30px;
         }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1c2526;
+            border: 2px solid #ffd700;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .popup img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -189,7 +210,7 @@
                 selectedTeam.splice(index, 1);
                 card.classList.remove("selected");
             } else if (selectedTeam.length < 5) {
-                selectedTeam.push({ ...char, health: char.overall }); // חיים מתחילים שווים ל-Overall
+                selectedTeam.push({ ...char, health: char.overall });
                 card.classList.add("selected");
             }
             document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
@@ -232,7 +253,19 @@
             const battleDisplay = document.getElementById("battle-display");
             battleDisplay.style.display = "block";
             const battle = battles[battleIndex];
-            const aliveTeam = selectedTeam.filter(char => char.health > 0);
+            let aliveTeam = selectedTeam.filter(char => char.health > 0);
+
+            // בדיקת בגידה בשלב 3 (אינדקס 2)
+            if (battleIndex === 2) {
+                const traitors = aliveTeam.filter(char => char.name === "ליאב בן יעקב" || char.name === "עמית לסרי");
+                traitors.forEach(traitor => {
+                    traitor.flag = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/1200px-Flag_of_Iran.svg.png";
+                    showTraitorPopup(traitor);
+                    selectedTeam = selectedTeam.filter(char => char.name !== traitor.name); // הסרת הבוגד מהצוות
+                });
+                aliveTeam = selectedTeam.filter(char => char.health > 0); // עדכון הצוות החי
+            }
+
             const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
             battleDisplay.innerHTML = `
                 <h2>מלחמה: ${battle.name}</h2>
@@ -247,12 +280,25 @@
 
             if (avg >= battle.requiredAvg) {
                 aliveTeam.forEach(char => {
-                    char.health = Math.max(0, char.health - battle.damage); // נזק לפי השלב
+                    char.health = Math.max(0, char.health - battle.damage);
                 });
                 displayTeamStatus(battleIndex);
             } else {
                 battleDisplay.innerHTML += "<p>הפסדת! הדירוג שלך נמוך מדי.</p>";
             }
+        }
+
+        function showTraitorPopup(traitor) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <img src="${traitor.image}">
+                <h3>${traitor.name} היו סוכנים זרים!</h3>
+                <p>הם עברו ליריב ועכשיו מייצגים את איראן.</p>
+                <img src="${traitor.flag}" style="width: 40px;">
+                <button onclick="this.parentElement.remove()">סגור</button>
+            `;
+            document.body.appendChild(popup);
         }
 
         function displayTeamStatus(battleIndex) {
@@ -285,9 +331,9 @@
             if (coins >= 10) {
                 const char = selectedTeam.find(c => c.name === charName);
                 if (char && char.health > 0 && char.health < char.overall) {
-                    char.health = Math.min(char.overall, char.health + 10); // מרפא 10 חיים, לא יותר מה-Overall
+                    char.health = Math.min(char.overall, char.health + 10);
                     coins -= 10;
-                    displayTeamStatus(battleIndex); // עדכון התצוגה בלבד
+                    displayTeamStatus(battleIndex);
                 }
             } else {
                 alert("אין מספיק מטבעות!");
