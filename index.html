@@ -111,6 +111,7 @@
             cursor: pointer;
             box-shadow: 0 0 10px #ff0066;
             transition: transform 0.3s, box-shadow 0.3s;
+            margin: 10px;
         }
 
         button:hover {
@@ -260,9 +261,9 @@
         let playerName = "שחקן";
         let completedBattles = [];
         const battles = [
-            { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!" },
-            { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!" },
-            { name: "המרכז", requiredAvg: 75, damage: 20, story: "המרכז המסחרי נפל, הצילו את התושבים!" },
+            { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!", altOption: "lake" },
+            { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!", altOption: "zamira" },
+            { name: "המרכז", requiredAvg: 75, damage: 20, story: "המרכז המסחרי נפל, הצילו את התושבים!", altOption: "suck" },
             { name: "שכונת האילנות", requiredAvg: 80, damage: 25, story: "מלכודות הוטמנו בשכונה, היזהר!" },
             { name: "שכונת סביונים", requiredAvg: 85, damage: 30, story: "האויב בנה בסיס בסביונים, הרוס אותו!" },
             { name: "יפה נוף", requiredAvg: 90, damage: 35, story: "קרב גובה קטלני, שלוט בהר!" },
@@ -388,21 +389,18 @@
             const teamCopy = [...selectedTeam];
             const rolesAssigned = [];
 
-            // בחירת מנהיג
             const leaderCandidates = teamCopy.filter(char => char.name !== "אריאל עין גל" && char.name !== "חיים מרקס");
             const leader = leaderCandidates[Math.floor(Math.random() * leaderCandidates.length)];
             document.getElementById(`role-${leader.name}`).value = "מנהיג";
             rolesAssigned.push(leader.name);
             teamCopy.splice(teamCopy.findIndex(c => c.name === leader.name), 1);
 
-            // בחירת זונה
             const whoreCandidates = teamCopy.filter(char => char.name !== "דביר ברקת");
             const whore = whoreCandidates[Math.floor(Math.random() * whoreCandidates.length)];
             document.getElementById(`role-${whore.name}`).value = "זונה";
             rolesAssigned.push(whore.name);
             teamCopy.splice(teamCopy.findIndex(c => c.name === whore.name), 1);
 
-            // בחירת 3 חיילים מהנותרים
             for (let i = 0; i < 3 && teamCopy.length > 0; i++) {
                 const soldier = teamCopy[0];
                 document.getElementById(`role-${soldier.name}`).value = "חייל";
@@ -410,7 +408,6 @@
                 teamCopy.splice(0, 1);
             }
 
-            // אם נשאר מישהו (ליאב בן יעקב), ניתן לו תפקיד רנדומלי
             if (teamCopy.length > 0) {
                 const remaining = teamCopy[0];
                 if (remaining.name === "ליאב בן יעקב" && Math.random() < 0.5) {
@@ -467,7 +464,7 @@
             popup.innerHTML = `
                 <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
                 <button id="liav-yes" onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
-                <button id="liav-no" onclick="confirmLiav('${char.name}', '${role}', false)">לא</button>
+                <button id="liav-close" onclick="closeLiavPopup('${char.name}', '${role}')">סגור</button>
             `;
             document.body.appendChild(popup);
         }
@@ -482,6 +479,15 @@
             } else {
                 selectElement.value = "הגיי של הצוות";
             }
+            confirmRoles();
+        }
+
+        function closeLiavPopup(charName, role) {
+            const popup = document.getElementById("liav-popup");
+            if (popup) popup.remove();
+
+            const selectElement = document.getElementById(`role-${charName}`);
+            selectElement.value = role; // שומר את התפקיד שבחרת
             confirmRoles();
         }
 
@@ -509,14 +515,14 @@
                 <button onclick="fightBattle(${battleIndex})">להילחם על ${battle.name}</button>
             `;
 
-            if (!completedBattles.includes("lake")) {
-                optionsHtml += `<button onclick="startLakeBattle(${battleIndex})">כבוש את האגם</button>`;
-            }
-            if (!completedBattles.includes("suck") && battleIndex === 4) {
-                optionsHtml += `<button onclick="showSuckChoice(${battleIndex})">למי אתה מוכן למצוץ?</button>`;
-            }
-            if (!completedBattles.includes("zamira")) {
-                optionsHtml += `<button onclick="fightZamira(${battleIndex})">להילחם בזמירה קחלר השמנה והמגעילה (Overall: 85, Health: 100, שומן: 150)</button>`;
+            if (battleIndex < 3 && battle.altOption && !completedBattles.includes(battle.altOption)) {
+                if (battle.altOption === "lake") {
+                    optionsHtml += `<button onclick="startLakeBattle(${battleIndex})">כבוש את האגם</button>`;
+                } else if (battle.altOption === "zamira") {
+                    optionsHtml += `<button onclick="fightZamira(${battleIndex})">להילחם בזמירה קחלר</button>`;
+                } else if (battle.altOption === "suck") {
+                    optionsHtml += `<button onclick="showSuckChoice(${battleIndex})">למי אתה מוכן למצוץ?</button>`;
+                }
             }
 
             battleDisplay.innerHTML = optionsHtml;
@@ -544,7 +550,7 @@
                 <select id="suck-choice">
                     ${characters.filter(c => c.name !== "אריאל שרביט").map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
                 </select>
-                <button onclick="confirm ransomwareSuckChoice(${battleIndex})">אשר</button>
+                <button onclick="confirmSuckChoice(${battleIndex})">אשר</button>
             `;
         }
 
@@ -584,7 +590,7 @@
                 } else {
                     battleDisplay.innerHTML = `
                         <h2>קרב נגד זמירה קחלר</h2>
-                        <p>Health: ${zamiraHealth} | שומן: 150</p>
+                        <p>Health: ${zamiraHealth} | שומן: 150 (מסריח ומגעיל)</p>
                         <button onclick="fightZamira(${battleIndex})">המשך לתקוף</button>
                     `;
                 }
