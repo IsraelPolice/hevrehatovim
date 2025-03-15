@@ -258,7 +258,7 @@
         let selectedTeam = [];
         let coins = 150;
         let playerName = "שחקן";
-        let completedBattles = []; // מעקב אחר קרבות שבוצעו
+        let completedBattles = [];
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!" },
             { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!" },
@@ -365,11 +365,62 @@
             });
 
             setTimeout(() => {
+                const buttonContainer = document.createElement("div");
+                buttonContainer.style.marginTop = "20px";
+
                 const confirmRolesButton = document.createElement("button");
                 confirmRolesButton.innerText = "התחל קרב";
                 confirmRolesButton.onclick = confirmRoles;
-                teamDisplay.appendChild(confirmRolesButton);
+
+                const randomRolesButton = document.createElement("button");
+                randomRolesButton.innerText = "בחירה רנדומלית של תפקידים";
+                randomRolesButton.style.background = "#00ffcc";
+                randomRolesButton.style.marginRight = "10px";
+                randomRolesButton.onclick = randomizeRoles;
+
+                buttonContainer.appendChild(randomRolesButton);
+                buttonContainer.appendChild(confirmRolesButton);
+                teamDisplay.appendChild(buttonContainer);
             }, delay * 1000 + 500);
+        }
+
+        function randomizeRoles() {
+            const teamCopy = [...selectedTeam];
+            const rolesAssigned = [];
+
+            // בחירת מנהיג
+            const leaderCandidates = teamCopy.filter(char => char.name !== "אריאל עין גל" && char.name !== "חיים מרקס");
+            const leader = leaderCandidates[Math.floor(Math.random() * leaderCandidates.length)];
+            document.getElementById(`role-${leader.name}`).value = "מנהיג";
+            rolesAssigned.push(leader.name);
+            teamCopy.splice(teamCopy.findIndex(c => c.name === leader.name), 1);
+
+            // בחירת זונה
+            const whoreCandidates = teamCopy.filter(char => char.name !== "דביר ברקת");
+            const whore = whoreCandidates[Math.floor(Math.random() * whoreCandidates.length)];
+            document.getElementById(`role-${whore.name}`).value = "זונה";
+            rolesAssigned.push(whore.name);
+            teamCopy.splice(teamCopy.findIndex(c => c.name === whore.name), 1);
+
+            // בחירת 3 חיילים מהנותרים
+            for (let i = 0; i < 3 && teamCopy.length > 0; i++) {
+                const soldier = teamCopy[0];
+                document.getElementById(`role-${soldier.name}`).value = "חייל";
+                rolesAssigned.push(soldier.name);
+                teamCopy.splice(0, 1);
+            }
+
+            // אם נשאר מישהו (ליאב בן יעקב), ניתן לו תפקיד רנדומלי
+            if (teamCopy.length > 0) {
+                const remaining = teamCopy[0];
+                if (remaining.name === "ליאב בן יעקב" && Math.random() < 0.5) {
+                    document.getElementById(`role-${remaining.name}`).value = "הגיי של הצוות";
+                } else {
+                    document.getElementById(`role-${remaining.name}`).value = "חייל";
+                }
+            }
+
+            confirmRoles();
         }
 
         function confirmRoles() {
@@ -493,7 +544,7 @@
                 <select id="suck-choice">
                     ${characters.filter(c => c.name !== "אריאל שרביט").map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
                 </select>
-                <button onclick="confirmSuckChoice(${battleIndex})">אשר</button>
+                <button onclick="confirm ransomwareSuckChoice(${battleIndex})">אשר</button>
             `;
         }
 
