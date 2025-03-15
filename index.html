@@ -258,6 +258,7 @@
         let selectedTeam = [];
         let coins = 150;
         let playerName = "שחקן";
+        let completedBattles = []; // מעקב אחר קרבות שבוצעו
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!" },
             { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!" },
@@ -450,19 +451,28 @@
             const teamDisplay = document.getElementById("team-display");
             teamDisplay.style.display = "none";
             const battle = battles[battleIndex];
-            let aliveTeam = selectedTeam.filter(char => char.health > 0);
 
-            battleDisplay.innerHTML = `
+            let optionsHtml = `
                 <h2>בחר את דרכך בקרב ${battle.name}</h2>
                 <p>${battle.story}</p>
                 <button onclick="fightBattle(${battleIndex})">להילחם על ${battle.name}</button>
-                <button onclick="startLakeBattle(${battleIndex})">כבוש את האגם</button>
-                ${battleIndex === 4 ? `<button onclick="showSuckChoice(${battleIndex})">למי אתה מוכן למצוץ?</button>` : ""}
-                <button onclick="fightZamira(${battleIndex})">להילחם בזמירה קחלר השמנה והמגעילה (Overall: 85, Health: 100, שומן: 150)</button>
             `;
+
+            if (!completedBattles.includes("lake")) {
+                optionsHtml += `<button onclick="startLakeBattle(${battleIndex})">כבוש את האגם</button>`;
+            }
+            if (!completedBattles.includes("suck") && battleIndex === 4) {
+                optionsHtml += `<button onclick="showSuckChoice(${battleIndex})">למי אתה מוכן למצוץ?</button>`;
+            }
+            if (!completedBattles.includes("zamira")) {
+                optionsHtml += `<button onclick="fightZamira(${battleIndex})">להילחם בזמירה קחלר השמנה והמגעילה (Overall: 85, Health: 100, שומן: 150)</button>`;
+            }
+
+            battleDisplay.innerHTML = optionsHtml;
         }
 
         function startLakeBattle(battleIndex) {
+            completedBattles.push("lake");
             const battleDisplay = document.getElementById("battle-display");
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             battleDisplay.innerHTML = `
@@ -488,6 +498,7 @@
         }
 
         function confirmSuckChoice(battleIndex) {
+            completedBattles.push("suck");
             const chosenName = document.getElementById("suck-choice").value;
             const popup = document.createElement("div");
             popup.className = "popup fancy";
@@ -500,6 +511,7 @@
         }
 
         function fightZamira(battleIndex) {
+            completedBattles.push("zamira");
             const battleDisplay = document.getElementById("battle-display");
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             let zamiraHealth = 100;
