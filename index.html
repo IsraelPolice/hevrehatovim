@@ -99,8 +99,8 @@
         .team-card .flag {
             position: absolute;
             top: 10px;
-            right: 10px; /* שינוי לימין כדי לא להידחס */
-            width: 40px; /* גודל גדול יותר לדגל */
+            right: 10px;
+            width: 40px;
             height: auto;
         }
 
@@ -247,7 +247,7 @@
 
             if (avg >= battle.requiredAvg) {
                 aliveTeam.forEach(char => {
-                    char.health = Math.max(0, char.health - battle.damage); // נזק קבוע לפי השלב
+                    char.health = Math.max(0, char.health - battle.damage); // נזק לפי השלב
                 });
                 displayTeamStatus(battleIndex);
             } else {
@@ -257,11 +257,17 @@
 
         function displayTeamStatus(battleIndex) {
             const battleDisplay = document.getElementById("battle-display");
-            battleDisplay.innerHTML += `<p>מטבעות: ${coins}</p><h3>מצב הצוות:</h3>`;
+            battleDisplay.innerHTML = `
+                <h2>מלחמה: ${battles[battleIndex].name}</h2>
+                <p>דירוג ממוצע נדרש: ${battles[battleIndex].requiredAvg}</p>
+                <p>דירוג ממוצע שלך: ${(selectedTeam.filter(char => char.health > 0).reduce((sum, char) => sum + char.overall, 0) / selectedTeam.filter(char => char.health > 0).length || 0).toFixed(2)}</p>
+                <p>מטבעות: ${coins}</p>
+                <h3>מצב הצוות:</h3>
+            `;
             selectedTeam.forEach(char => {
                 battleDisplay.innerHTML += `
                     <div>
-                        ${char.name} - חיים: ${char.health}/${char.overall} 
+                        ${char.name} - חיים: ${char.health}/${char.overall}
                         ${char.health > 0 && char.health < char.overall ? `<button onclick="heal('${char.name}', ${battleIndex})">רפא (10 מטבעות)</button>` : ""}
                     </div>`;
             });
@@ -279,9 +285,9 @@
             if (coins >= 10) {
                 const char = selectedTeam.find(c => c.name === charName);
                 if (char && char.health > 0 && char.health < char.overall) {
-                    char.health = Math.min(char.overall, char.health + 10); // מרפא 10, לא יותר מה-Overall
+                    char.health = Math.min(char.overall, char.health + 10); // מרפא 10 חיים, לא יותר מה-Overall
                     coins -= 10;
-                    displayTeamStatus(battleIndex); // עדכון התצוגה בלבד, בלי להפעיל מחדש את הקרב
+                    displayTeamStatus(battleIndex); // עדכון התצוגה בלבד
                 }
             } else {
                 alert("אין מספיק מטבעות!");
