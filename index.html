@@ -137,7 +137,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             z-index: 1000;
             width: 90%;
-            max-width: 700px;
+            max-width: 800px;
             max-height: 80vh;
             overflow-y: auto;
             animation: fadeIn 0.5s ease;
@@ -216,6 +216,39 @@
             margin-bottom: 10px;
         }
 
+        .city-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        details {
+            margin: 10px 0;
+            background: #303030;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        summary {
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #00ccff;
+        }
+
+        details[open] summary {
+            color: #fff;
+        }
+
+        .submenu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+        }
+
         @media (max-width: 600px) {
             h1 { font-size: 2em; }
             h2 { font-size: 1.5em; }
@@ -223,6 +256,7 @@
             .card img, .team-card img { width: 80px; height: 80px; }
             button { font-size: 14px; padding: 8px 15px; }
             .popup { padding: 20px; }
+            .city-image { max-width: 300px; }
         }
     </style>
 </head>
@@ -280,11 +314,46 @@
             { name: "הבית של איתי אוחנה", value: 3000000, sold: false },
             { name: "הבית של יוסף קחלר", value: 1500000, sold: false },
             { name: "הבית של יוגב שבתאי", value: 200000, sold: false },
-            { name: "הבית של דביר אוחנה", value: 450000, sold: false }
+            { name: "הבית של דביר אוחנה", value: 450000, sold: false },
+            { name: "היכל התרבות", value: 8000000, sold: false },
+            { name: "המרכז המסחרי", value: 12000000, sold: false },
+            { name: "בית ספר למוזיקה", value: 5000000, sold: false },
+            { name: "אגם מונפורט", value: 10000000, sold: false },
+            { name: "קניון צים סנטר", value: 15000000, sold: false },
+            { name: "מגדל המים", value: 3000000, sold: false },
+            { name: "פארק המים", value: 7000000, sold: false },
+            { name: "כיכר ירושלים", value: 2000000, sold: false },
+            { name: "כיכר השלום", value: 1500000, sold: false },
+            { name: "גינת המשחקים המרכזית", value: 500000, sold: false },
+            { name: "פארק העצמאות", value: 800000, sold: false },
+            { name: "ספרייה עירונית", value: 1200000, sold: false },
+            { name: "בית העם", value: 1000000, sold: false },
+            { name: "מגרש הכדורגל העירוני", value: 2500000, sold: false }
         ];
-        let cityUpgrades = { newNeighborhood: false, airport: false, hotel: false };
+        let cityUpgrades = {
+            newNeighborhood: { bought: false, cost: 10000000, population: 4000, income: 40000 },
+            airport: { bought: false, cost: 50000000, population: 10000, income: 100000 },
+            hotel: { bought: false, cost: 20000000, population: 3000, income: 50000 },
+            trainStation: { bought: false, cost: 30000000, population: 5000, income: 60000 },
+            busTerminal: { bought: false, cost: 15000000, population: 2000, income: 30000 },
+            mall: { bought: false, cost: 25000000, population: 4000, income: 70000 },
+            hospital: { bought: false, cost: 40000000, population: 3000, income: 50000 },
+            university: { bought: false, cost: 60000000, population: 8000, income: 80000 },
+            sportsComplex: { bought: false, cost: 20000000, population: 2000, income: 40000 },
+            theater: { bought: false, cost: 15000000, population: 1000, income: 30000 }
+        };
         let bigBossDefeated = false;
         let assignedJobs = {};
+
+        const cityImages = [
+            { maxPop: 40000, url: "https://www.healthycities.co.il/html5/web/16874/47068ImageFile2.jpg" },
+            { maxPop: 80000, url: "https://i.redd.it/10-000-population-for-a-city-this-size-cities-skylines-v0-c0m1gzmdrur81.jpg?width=1920&format=pjpg&auto=webp&s=306d87e5b227ec6b8086401ff747552e2e1c1291" },
+            { maxPop: 120000, url: "https://preview.redd.it/10k-population-1-tile-city-economically-stable-v0-s470facgud4c1.png?width=640&crop=smart&auto=webp&s=a0ef6a81edc29911db3372dabcc66715d11ba6b8" },
+            { maxPop: 160000, url: "https://preview.redd.it/150-000-population-in-1-tile-no-mods-v0-puls5bpn2cwd1.png?width=1080&crop=smart&auto=webp&s=eb608463d57a0995ba1e70809d397508bfa0f2e0" },
+            { maxPop: 250000, url: "https://static-cdn.toi-media.com/www/uploads/2023/06/iStock-1476123691-e1686847822176.jpg" },
+            { maxPop: 500000, url: "https://res.cloudinary.com/globes/image/upload/t_800X392/v1740324508/direct/shutterstock_2437057467_dcc9ny.jpg" },
+            { maxPop: Infinity, url: "https://img.mako.co.il/2014/12/11/NY_1_i.jpg" }
+        ];
 
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית!" },
@@ -759,12 +828,17 @@
             }
         }
 
+        function getCityImage() {
+            return cityImages.find(img => cityPopulation <= img.maxPop).url;
+        }
+
         function showCityManagement() {
             if (!bigBossDefeated) return;
             const cityDisplay = document.getElementById("city-management");
             cityDisplay.style.display = "flex";
             cityDisplay.innerHTML = `
                 <h2>ניהול ${cityName}</h2>
+                <img src="${getCityImage()}" alt="${cityName}" class="city-image">
                 <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
                 <div class="team-grid">
                     <div class="team-card">
@@ -778,9 +852,9 @@
                         <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
                     </div>
                     <div class="team-card">
-                        <h3>שדרוגים</h3>
-                        <p>${Object.values(cityUpgrades).filter(u => u).length}/3 שדרוגים</p>
-                        <button onclick="showCityMenu('upgrades')">נהל שדרוגים</button>
+                        <h3>שדרוגים ומכירות</h3>
+                        <p>${Object.values(cityUpgrades).filter(u => u.bought).length} שדרוגים</p>
+                        <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
                     </div>
                 </div>
                 <div style="width: 100%; text-align: center;">
@@ -794,7 +868,8 @@
         function startCityIncome() {
             setInterval(() => {
                 let jobIncome = Object.keys(assignedJobs).reduce((sum, job) => sum + Math.floor(cityJobs[job] / 10), 0);
-                cityBudget += 20 + (prostitutes.length * 30) + (cityUpgrades.newNeighborhood ? 40000 : 0) + (cityUpgrades.airport ? 100000 : 0) + (cityUpgrades.hotel ? 50000 : 0) + jobIncome;
+                let upgradeIncome = Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? u.income : 0), 0);
+                cityBudget += 20 + (prostitutes.length * 30) + upgradeIncome + jobIncome;
                 if (Math.random() < 0.02) triggerCityEvent();
                 updateCityDisplay();
             }, 5000);
@@ -805,6 +880,7 @@
             if (cityDisplay.style.display === "flex") {
                 cityDisplay.innerHTML = `
                     <h2>ניהול ${cityName}</h2>
+                    <img src="${getCityImage()}" alt="${cityName}" class="city-image">
                     <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
                     <div class="team-grid">
                         <div class="team-card">
@@ -818,9 +894,9 @@
                             <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
                         </div>
                         <div class="team-card">
-                            <h3>שדרוגים</h3>
-                            <p>${Object.values(cityUpgrades).filter(u => u).length}/3 שדרוגים</p>
-                            <button onclick="showCityMenu('upgrades')">נהל שדרוגים</button>
+                            <h3>שדרוגים ומכירות</h3>
+                            <p>${Object.values(cityUpgrades).filter(u => u.bought).length} שדרוגים</p>
+                            <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
                         </div>
                     </div>
                     <div style="width: 100%; text-align: center;">
@@ -859,9 +935,9 @@
                     <h3>שכונות</h3>
                     ${cityNeighborhoods.map((n, i) => `<div>${n} <button onclick="changeNeighborhoodName(${i})">שנה שם (1,000,000 ₪)</button></div>`).join('')}
                     <h3>זונות (${prostitutes.length}/4)</h3>
-                    ${prostitutesList.filter(p => !prostitutes.includes(p)).map(p => `<button onclick="hireProstitute('${p}')">${p} (+30 ₪/5ש)</button>`).join('')}
-                    <h3>מכירת מבנים</h3>
-                    ${buildings.filter(b => !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
+                    <div class="submenu">
+                        ${prostitutesList.filter(p => !prostitutes.includes(p)).map(p => `<button onclick="hireProstitute('${p}')">${p} (+30 ₪/5ש)</button>`).join('')}
+                    </div>
                 `;
             } else if (section === "jobs") {
                 popup.innerHTML += `
@@ -876,10 +952,34 @@
                 `;
             } else if (section === "upgrades") {
                 popup.innerHTML += `
-                    <h3>שדרוגים</h3>
-                    <button onclick="buyNewNeighborhood()" ${cityUpgrades.newNeighborhood ? "disabled" : ""}>שכונה חדשה (10,000,000 ₪, +4,000 תושבים, +40,000 ₪/5ש)</button>
-                    <button onclick="buyAirport()" ${cityPopulation < 50000 || cityUpgrades.airport ? "disabled" : ""}>נמל תעופה (50,000,000 ₪, +100,000 ₪/5ש)</button>
-                    <button onclick="buyHotel()" ${cityUpgrades.hotel ? "disabled" : ""}>מלון (20,000,000 ₪, +3,000 תושבים, +50,000 ₪/5ש)</button>
+                    <h3>שדרוגים ומכירות</h3>
+                    <details>
+                        <summary>מכירת נכסים גדולים</summary>
+                        <div class="submenu">
+                            ${buildings.filter(b => b.value >= 3000000 && !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
+                        </div>
+                    </details>
+                    <details>
+                        <summary>מכירת נכסים קטנים</summary>
+                        <div class="submenu">
+                            ${buildings.filter(b => b.value < 3000000 && !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
+                        </div>
+                    </details>
+                    <details>
+                        <summary>שדרוגי עיר</summary>
+                        <div class="submenu">
+                            <button onclick="buyUpgrade('newNeighborhood')" ${cityUpgrades.newNeighborhood.bought ? "disabled" : ""}>שכונה חדשה (${cityUpgrades.newNeighborhood.cost.toLocaleString()} ₪, +${cityUpgrades.newNeighborhood.population}, +${cityUpgrades.newNeighborhood.income}/5ש)</button>
+                            <button onclick="buyUpgrade('airport')" ${cityPopulation < 50000 || cityUpgrades.airport.bought ? "disabled" : ""}>נמל תעופה (${cityUpgrades.airport.cost.toLocaleString()} ₪, +${cityUpgrades.airport.population}, +${cityUpgrades.airport.income}/5ש)</button>
+                            <button onclick="buyUpgrade('hotel')" ${cityUpgrades.hotel.bought ? "disabled" : ""}>מלון (${cityUpgrades.hotel.cost.toLocaleString()} ₪, +${cityUpgrades.hotel.population}, +${cityUpgrades.hotel.income}/5ש)</button>
+                            <button onclick="buyUpgrade('trainStation')" ${cityUpgrades.trainStation.bought ? "disabled" : ""}>תחנת רכבת (${cityUpgrades.trainStation.cost.toLocaleString()} ₪, +${cityUpgrades.trainStation.population}, +${cityUpgrades.trainStation.income}/5ש)</button>
+                            <button onclick="buyUpgrade('busTerminal')" ${cityUpgrades.busTerminal.bought ? "disabled" : ""}>תחנה מרכזית (${cityUpgrades.busTerminal.cost.toLocaleString()} ₪, +${cityUpgrades.busTerminal.population}, +${cityUpgrades.busTerminal.income}/5ש)</button>
+                            <button onclick="buyUpgrade('mall')" ${cityUpgrades.mall.bought ? "disabled" : ""}>קניון (${cityUpgrades.mall.cost.toLocaleString()} ₪, +${cityUpgrades.mall.population}, +${cityUpgrades.mall.income}/5ש)</button>
+                            <button onclick="buyUpgrade('hospital')" ${cityUpgrades.hospital.bought ? "disabled" : ""}>בית חולים (${cityUpgrades.hospital.cost.toLocaleString()} ₪, +${cityUpgrades.hospital.population}, +${cityUpgrades.hospital.income}/5ש)</button>
+                            <button onclick="buyUpgrade('university')" ${cityUpgrades.university.bought ? "disabled" : ""}>אוניברסיטה (${cityUpgrades.university.cost.toLocaleString()} ₪, +${cityUpgrades.university.population}, +${cityUpgrades.university.income}/5ש)</button>
+                            <button onclick="buyUpgrade('sportsComplex')" ${cityUpgrades.sportsComplex.bought ? "disabled" : ""}>מתחם ספורט (${cityUpgrades.sportsComplex.cost.toLocaleString()} ₪, +${cityUpgrades.sportsComplex.population}, +${cityUpgrades.sportsComplex.income}/5ש)</button>
+                            <button onclick="buyUpgrade('theater')" ${cityUpgrades.theater.bought ? "disabled" : ""}>תיאטרון (${cityUpgrades.theater.cost.toLocaleString()} ₪, +${cityUpgrades.theater.population}, +${cityUpgrades.theater.income}/5ש)</button>
+                        </div>
+                    </details>
                 `;
             }
             popup.innerHTML += `
@@ -937,7 +1037,7 @@
                 cityBudget += building.value;
                 building.sold = true;
                 document.querySelector(".popup").remove();
-                showCityMenu('neighborhoods');
+                showCityMenu('upgrades');
             }
         }
 
@@ -968,35 +1068,17 @@
             showCityMenu('jobs');
         }
 
-        function buyNewNeighborhood() {
-            if (cityBudget >= 10000000 && !cityUpgrades.newNeighborhood) {
-                cityBudget -= 10000000;
-                cityPopulation += 4000;
-                cityUpgrades.newNeighborhood = true;
+        function buyUpgrade(upgradeName) {
+            const upgrade = cityUpgrades[upgradeName];
+            if (cityBudget >= upgrade.cost && !upgrade.bought && (upgradeName !== 'airport' || cityPopulation >= 50000)) {
+                cityBudget -= upgrade.cost;
+                cityPopulation += upgrade.population;
+                upgrade.bought = true;
                 updateCityDisplay();
                 document.querySelector(".popup").remove();
                 showCityMenu('upgrades');
-            }
-        }
-
-        function buyAirport() {
-            if (cityBudget >= 50000000 && cityPopulation >= 50000 && !cityUpgrades.airport) {
-                cityBudget -= 50000000;
-                cityUpgrades.airport = true;
-                updateCityDisplay();
-                document.querySelector(".popup").remove();
-                showCityMenu('upgrades');
-            }
-        }
-
-        function buyHotel() {
-            if (cityBudget >= 20000000 && !cityUpgrades.hotel) {
-                cityBudget -= 20000000;
-                cityPopulation += 3000;
-                cityUpgrades.hotel = true;
-                updateCityDisplay();
-                document.querySelector(".popup").remove();
-                showCityMenu('upgrades');
+            } else {
+                alert(upgradeName === 'airport' && cityPopulation < 50000 ? "צריך לפחות 50,000 תושבים!" : "אין מספיק תקציב!");
             }
         }
 
