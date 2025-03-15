@@ -4,38 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מלחמת הבלאקיף</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto Mono', monospace;
-            background: linear-gradient(135deg, #1a1a1a, #2b0f0f);
-            color: #fff;
+            font-family: 'Rubik', sans-serif;
+            background: #2d2d2d url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGUlEQVQYV2NkYGD4z8DAwMgABXAG2gQ8ABwFAgB0uJ5aAAAAAElFTkSuQmCC') repeat;
+            color: #333;
             direction: rtl;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
             overflow-x: hidden;
-            position: relative;
-            animation: bgPulse 10s infinite alternate;
-        }
-
-        @keyframes bgPulse {
-            0% { background: linear-gradient(135deg, #1a1a1a, #2b0f0f); }
-            100% { background: linear-gradient(135deg, #2b0f0f, #1a1a1a); }
         }
 
         h1 {
-            color: #ff1a1a;
-            font-size: 3em;
+            color: #fff;
+            font-size: 2.5em;
             text-align: center;
-            text-shadow: 0 0 10px #ff1a1a;
             margin: 0 0 20px;
         }
 
         h2 {
             color: #fff;
-            font-size: 2em;
-            text-shadow: 0 0 5px #00ccff;
+            font-size: 1.8em;
             margin: 15px 0;
         }
 
@@ -44,25 +35,31 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 15px;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .card {
-            background: #2c2c2c;
-            border: 2px solid #00ccff;
-            border-radius: 8px;
+            background: #f9f9f9;
+            border: 1px solid #1e3a8a;
+            border-radius: 5px;
             padding: 10px;
             width: 160px;
             text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 15px rgba(0, 204, 255, 0.3);
+            transition: box-shadow 0.3s ease;
         }
 
         .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(0, 204, 255, 0.6);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .card.selected {
+            border-color: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
         }
 
         .card img {
@@ -74,13 +71,12 @@
         }
 
         .team-card {
-            background: linear-gradient(135deg, #2c2c2c, #3a3a3a);
-            border: 2px solid #ff1a1a;
-            border-radius: 8px;
+            background: #f9f9f9;
+            border: 1px solid #1e3a8a;
+            border-radius: 5px;
             padding: 15px;
             width: 180px;
             text-align: center;
-            box-shadow: 0 0 15px rgba(255, 26, 26, 0.3);
         }
 
         .team-card img {
@@ -91,49 +87,39 @@
         }
 
         .stars {
-            color: #ffd700;
+            color: #f59e0b;
             margin: 5px 0;
         }
 
         button {
             padding: 10px 20px;
             font-size: 16px;
-            background: #ff1a1a;
+            background: #1e3a8a;
             color: #fff;
-            border: 2px solid #00ccff;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 26, 26, 0.5);
-            animation: buttonPulse 1.5s infinite;
-        }
-
-        @keyframes buttonPulse {
-            0% { box-shadow: 0 0 10px rgba(255, 26, 26, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(255, 26, 26, 0.8); }
-            100% { box-shadow: 0 0 10px rgba(255, 26, 26, 0.5); }
+            transition: background 0.3s ease;
         }
 
         button:hover {
-            background: #00ccff;
-            color: #000;
-            transform: scale(1.1);
+            background: #fff;
+            color: #1e3a8a;
+            border: 1px solid #1e3a8a;
         }
 
         button:disabled {
-            background: #555;
-            border-color: #333;
-            box-shadow: none;
+            background: #d1d5db;
+            color: #6b7280;
             cursor: not-allowed;
-            animation: none;
         }
 
         select {
             padding: 8px;
             font-size: 14px;
-            background: #2c2c2c;
-            color: #fff;
-            border: 1px solid #00ccff;
+            background: #f9f9f9;
+            color: #333;
+            border: 1px solid #1e3a8a;
             border-radius: 5px;
             margin: 5px 0;
             width: 100%;
@@ -144,41 +130,34 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #ff1a1a;
+            background: #fff;
+            border: 1px solid #1e3a8a;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255, 26, 26, 0.5);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             max-height: 80vh;
             overflow-y: auto;
-            animation: fadeIn 0.5s ease;
         }
 
         .chat-popup {
             position: fixed;
             bottom: 20px;
             left: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #00ccff;
+            background: #1e3a8a;
+            color: #fff;
             padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 999;
-            width: 300px;
-            animation: slideIn 0.5s ease;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            width: 250px;
         }
 
         .chat-popup img {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 5px;
             float: right;
             margin-left: 10px;
@@ -187,30 +166,16 @@
         .chat-popup p {
             margin: 0;
             font-size: 14px;
-            color: #fff;
-            text-shadow: 0 0 5px #00ccff;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .popup-content {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            text-align: center;
         }
 
         .battle-screen {
-            background: rgba(0, 0, 0, 0.8);
+            background: #fff;
             padding: 20px;
-            border-radius: 10px;
-            border: 2px solid #ff1a1a;
-            max-width: 1200px;
+            border-radius: 8px;
+            border: 1px solid #1e3a8a;
+            max-width: 1000px;
             margin: 0 auto;
-            box-shadow: 0 0 20px rgba(255, 26, 26, 0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .team-grid {
@@ -223,7 +188,7 @@
 
         .health-bar {
             width: 100%;
-            background: #333;
+            background: #e5e7eb;
             height: 6px;
             border-radius: 3px;
             margin: 5px 0;
@@ -231,7 +196,7 @@
 
         .health-bar-fill {
             height: 100%;
-            background: #ff1a1a;
+            background: #22c55e;
             transition: width 0.5s ease;
             border-radius: 3px;
         }
@@ -245,18 +210,12 @@
         }
 
         .weapon-card {
-            background: #2c2c2c;
-            border: 2px solid #00ccff;
-            border-radius: 8px;
+            background: #f9f9f9;
+            border: 1px solid #1e3a8a;
+            border-radius: 5px;
             padding: 10px;
             width: 140px;
             text-align: center;
-            box-shadow: 0 0 10px rgba(0, 204, 255, 0.3);
-        }
-
-        .weapon-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 204, 255, 0.6);
         }
 
         .weapon-card img {
@@ -268,18 +227,39 @@
 
         .city-image {
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
             height: auto;
-            border-radius: 10px;
+            border-radius: 8px;
             margin: 15px auto;
             display: block;
-            box-shadow: 0 0 20px rgba(255, 26, 26, 0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .upgrade-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .upgrade-table th, .upgrade-table td {
+            border: 1px solid #1e3a8a;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .upgrade-table th {
+            background: #1e3a8a;
+            color: #fff;
+        }
+
+        .upgrade-table td {
+            background: #f9f9f9;
         }
 
         details {
             margin: 10px 0;
-            background: #2c2c2c;
-            border: 1px solid #00ccff;
+            background: #f9f9f9;
+            border: 1px solid #1e3a8a;
             border-radius: 5px;
             padding: 10px;
         }
@@ -287,12 +267,11 @@
         summary {
             cursor: pointer;
             font-size: 1.2em;
-            color: #ff1a1a;
-            text-shadow: 0 0 5px #ff1a1a;
+            color: #1e3a8a;
         }
 
         details[open] summary {
-            color: #fff;
+            color: #333;
         }
 
         .submenu {
@@ -310,7 +289,7 @@
             button { font-size: 14px; padding: 8px 15px; }
             .popup { padding: 15px; max-width: 90%; }
             .chat-popup { width: 200px; }
-            .chat-popup img { width: 40px; height: 40px; }
+            .chat-popup img { width: 30px; height: 30px; }
             .city-image { max-width: 100%; }
         }
     </style>
@@ -326,7 +305,7 @@
     <script>
         const weapons = {
             "גלוק": { cost: 1000, bonus: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-U913muhRYPQf90Rdx6lU2mNovdSLPQTV6A&s" },
-            "MP5": { cost: 5000, bonus: 2, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTcYN7Ay8P0akauOPxiBm9vQ1XTg2fSNOL6w&s" },
+            "MP5": { cost: 5000, bonus: 2, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn9GcRTcYN7Ay8P0akauOPxiBm9vQ1XTg2fSNOL6w&s" },
             "M16": { cost: 15000, bonus: 3, image: "https://airsoftmania.eu/cdn/shop/products/1152230674_1.webp?v=1662630204" },
             "M4": { cost: 30000, bonus: 4, image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/M4A1-flattop.png/800px-M4A1-flattop.png" },
             "RPG": { cost: 50000, bonus: 5, image: "https://static.wikia.nocookie.net/maxpayne/images/4/40/Rpg.png" }
@@ -386,16 +365,21 @@
             { name: "מגרש הכדורגל העירוני", value: 2500000, sold: false }
         ];
         let cityUpgrades = {
-            newNeighborhood: { bought: false, cost: 10000000, population: 4000, income: 40000 },
-            airport: { bought: false, cost: 50000000, population: 10000, income: 100000 },
-            hotel: { bought: false, cost: 20000000, population: 3000, income: 50000 },
-            trainStation: { bought: false, cost: 30000000, population: 5000, income: 60000 },
-            busTerminal: { bought: false, cost: 15000000, population: 2000, income: 30000 },
-            mall: { bought: false, cost: 25000000, population: 4000, income: 70000 },
-            hospital: { bought: false, cost: 40000000, population: 3000, income: 50000 },
-            university: { bought: false, cost: 60000000, population: 8000, income: 80000 },
-            sportsComplex: { bought: false, cost: 20000000, population: 2000, income: 40000 },
-            theater: { bought: false, cost: 15000000, population: 1000, income: 30000 }
+            newNeighborhood: { bought: false, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים" },
+            airport: { bought: false, cost: 50000000, population: 10000, income: 100000, description: "נמל תעופה בינלאומי (דרוש 50,000 תושבים)" },
+            hotel: { bought: false, cost: 20000000, population: 3000, income: 50000, description: "מלון מפואר לתיירים" },
+            trainStation: { bought: false, cost: 30000000, population: 5000, income: 60000, description: "תחנת רכבת מהירה" },
+            busTerminal: { bought: false, cost: 15000000, population: 2000, income: 30000, description: "תחנה מרכזית לאוטובוסים" },
+            mall: { bought: false, cost: 25000000, population: 4000, income: 70000, description: "קניון ענק לקניות" },
+            hospital: { bought: false, cost: 40000000, population: 3000, income: 50000, description: "בית חולים מודרני" },
+            university: { bought: false, cost: 60000000, population: 8000, income: 80000, description: "אוניברסיטה למחקר והשכלה" },
+            sportsComplex: { bought: false, cost: 20000000, population: 2000, income: 40000, description: "מתחם ספורט עירוני" },
+            theater: { bought: false, cost: 15000000, population: 1000, income: 30000, description: "תיאטרון לתרבות ובידור" },
+            bridge: { bought: false, cost: 8000000, population: 1000, income: 20000, description: "גשר לשיפור תנועה" },
+            tunnel: { bought: false, cost: 12000000, population: 1500, income: 25000, description: "מנהרה להקלת עומסי תנועה" },
+            amusementPark: { bought: false, cost: 35000000, population: 5000, income: 90000, description: "פארק שעשועים לתיירות" },
+            powerPlant: { bought: false, cost: 45000000, population: 2000, income: 60000, description: "תחנת כוח לאספקת חשמל" },
+            researchCenter: { bought: false, cost: 70000000, population: 10000, income: 120000, description: "מרכז מחקר טכנולוגי" }
         };
         let bigBossDefeated = false;
         let assignedJobs = {};
@@ -440,10 +424,10 @@
         const prostitutesList = ["לאה אוחנה", "אמא של רפי", "זמירה קחלר", "ורד עין גל"];
 
         const funnyMessages = [
-            "אני מרגיש שאני חייב לאונן, אני מאוד מפחד לקרב הבא",
-            "אני מרגיש שאני חייב למצוץ או משהו בקטנה כזה למישהו, אני מאוד מפחד מהקרב הבא",
-            "אני חייב לדחוף איזה משהו לתחת או שמישהו יזיין אותי רגע בתחת, אני לא יודע אם נצא מהקרב הבא, הייתם החברים הטובים בעולם",
-            "אני מרגיש שזה הסוף, בואו תעמדו סביבי ותאוננו, אני ממש לא יודע אם נראה את הבית שוב.."
+            "אני חייב לאונן עכשיו, תכסה אותי!",
+            "האויב זרק עליי גרב מסריחה!",
+            "מישהו ראה את הסנדוויץ' שלי?",
+            "אני עייף, אפשר הפסקת קפה?"
         ];
 
         function clearPopups() {
@@ -468,8 +452,8 @@
             popup.innerHTML = `
                 <div class="popup-content">
                     <h2>מעלות בסכנה!</h2>
-                    <p>הצוות שלך ייבחר אוטומטית למלחמה</p>
-                    <button onclick="this.parentElement.parentElement.remove(); selectRandomTeam()">המשך</button>
+                    <p>בחר את הצוות שלך למלחמה</p>
+                    <button onclick="this.parentElement.parentElement.remove(); displayCharacters()">המשך</button>
                 </div>
             `;
             document.body.appendChild(popup);
@@ -485,12 +469,33 @@
             clearPopups();
             const selectionDiv = document.getElementById("character-selection");
             selectionDiv.style.display = "flex";
-            selectionDiv.innerHTML = `
+            selectionDiv.innerHTML = "";
+            characters.forEach(char => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `<img src="${char.image}" alt="${char.name}"><div>${char.name}</div>`;
+                card.onclick = () => toggleSelection(char, card);
+                selectionDiv.appendChild(card);
+            });
+            selectionDiv.innerHTML += `
                 <div style="width: 100%; text-align: center;">
+                    <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות</button>
                     <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
                 </div>
             `;
             hideAllExcept("character-selection");
+        }
+
+        function toggleSelection(char, card) {
+            const index = selectedTeam.findIndex(c => c.name === char.name);
+            if (index !== -1) {
+                selectedTeam.splice(index, 1);
+                card.classList.remove("selected");
+            } else if (selectedTeam.length < 5) {
+                selectedTeam.push({ ...char, health: char.overall });
+                card.classList.add("selected");
+            }
+            document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
         }
 
         function selectRandomTeam() {
@@ -1017,27 +1022,35 @@
                             ${buildings.filter(b => b.value < 3000000 && !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
                         </div>
                     </details>
-                    <details>
+                    <details open>
                         <summary>שדרוגי עיר</summary>
-                        <div class="submenu">
-                            <button onclick="buyUpgrade('newNeighborhood')" ${cityUpgrades.newNeighborhood.bought ? "disabled" : ""}>שכונה חדשה (${cityUpgrades.newNeighborhood.cost.toLocaleString()} ₪, +${cityUpgrades.newNeighborhood.population}, +${cityUpgrades.newNeighborhood.income}/5ש)</button>
-                            <button onclick="buyUpgrade('airport')" ${cityPopulation < 50000 || cityUpgrades.airport.bought ? "disabled" : ""}>נמל תעופה (${cityUpgrades.airport.cost.toLocaleString()} ₪, +${cityUpgrades.airport.population}, +${cityUpgrades.airport.income}/5ש)</button>
-                            <button onclick="buyUpgrade('hotel')" ${cityUpgrades.hotel.bought ? "disabled" : ""}>מלון (${cityUpgrades.hotel.cost.toLocaleString()} ₪, +${cityUpgrades.hotel.population}, +${cityUpgrades.hotel.income}/5ש)</button>
-                            <button onclick="buyUpgrade('trainStation')" ${cityUpgrades.trainStation.bought ? "disabled" : ""}>תחנת רכבת (${cityUpgrades.trainStation.cost.toLocaleString()} ₪, +${cityUpgrades.trainStation.population}, +${cityUpgrades.trainStation.income}/5ש)</button>
-                            <button onclick="buyUpgrade('busTerminal')" ${cityUpgrades.busTerminal.bought ? "disabled" : ""}>תחנה מרכזית (${cityUpgrades.busTerminal.cost.toLocaleString()} ₪, +${cityUpgrades.busTerminal.population}, +${cityUpgrades.busTerminal.income}/5ש)</button>
-                            <button onclick="buyUpgrade('mall')" ${cityUpgrades.mall.bought ? "disabled" : ""}>קניון (${cityUpgrades.mall.cost.toLocaleString()} ₪, +${cityUpgrades.mall.population}, +${cityUpgrades.mall.income}/5ש)</button>
-                            <button onclick="buyUpgrade('hospital')" ${cityUpgrades.hospital.bought ? "disabled" : ""}>בית חולים (${cityUpgrades.hospital.cost.toLocaleString()} ₪, +${cityUpgrades.hospital.population}, +${cityUpgrades.hospital.income}/5ש)</button>
-                            <button onclick="buyUpgrade('university')" ${cityUpgrades.university.bought ? "disabled" : ""}>אוניברסיטה (${cityUpgrades.university.cost.toLocaleString()} ₪, +${cityUpgrades.university.population}, +${cityUpgrades.university.income}/5ש)</button>
-                            <button onclick="buyUpgrade('sportsComplex')" ${cityUpgrades.sportsComplex.bought ? "disabled" : ""}>מתחם ספורט (${cityUpgrades.sportsComplex.cost.toLocaleString()} ₪, +${cityUpgrades.sportsComplex.population}, +${cityUpgrades.sportsComplex.income}/5ש)</button>
-                            <button onclick="buyUpgrade('theater')" ${cityUpgrades.theater.bought ? "disabled" : ""}>תיאטרון (${cityUpgrades.theater.cost.toLocaleString()} ₪, +${cityUpgrades.theater.population}, +${cityUpgrades.theater.income}/5ש)</button>
-                        </div>
+                        <table class="upgrade-table">
+                            <tr>
+                                <th>שדרוג</th>
+                                <th>עלות (₪)</th>
+                                <th>אוכלוסייה</th>
+                                <th>הכנסה (/5ש)</th>
+                                <th>תיאור</th>
+                                <th>פעולה</th>
+                            </tr>
+                            ${Object.keys(cityUpgrades).map(key => `
+                                <tr>
+                                    <td>${key === 'newNeighborhood' ? 'שכונה חדשה' : key === 'airport' ? 'נמל תעופה' : key === 'hotel' ? 'מלון' : key === 'trainStation' ? 'תחנת רכבת' : key === 'busTerminal' ? 'תחנה מרכזית' : key === 'mall' ? 'קניון' : key === 'hospital' ? 'בית חולים' : key === 'university' ? 'אוניברסיטה' : key === 'sportsComplex' ? 'מתחם ספורט' : key === 'theater' ? 'תיאטרון' : key === 'bridge' ? 'גשר' : key === 'tunnel' ? 'מנהרה' : key === 'amusementPark' ? 'פארק שעשועים' : key === 'powerPlant' ? 'תחנת כוח' : 'מרכז מחקר'}</td>
+                                    <td>${cityUpgrades[key].cost.toLocaleString()}</td>
+                                    <td>+${cityUpgrades[key].population.toLocaleString()}</td>
+                                    <td>+${cityUpgrades[key].income.toLocaleString()}</td>
+                                    <td>${cityUpgrades[key].description}</td>
+                                    <td><button onclick="buyUpgrade('${key}')" ${cityUpgrades[key].bought || (key === 'airport' && cityPopulation < 50000) ? "disabled" : ""}>קנה</button></td>
+                                </tr>
+                            `).join('')}
+                        </table>
                     </details>
                 `;
             }
             popup.innerHTML += `
                 <div style="text-align: center;">
                     <button onclick="changeCityName()">שנה שם עיר (3,000,000 ₪)</button>
-                    <button onclick="this.parentElement.parentElement.remove()">סגור</button>
+                    <button style="background: #dc2626; color: #fff;" onclick="this.parentElement.parentElement.remove()">סגור</button>
                 </div>
             </div>`;
             document.body.appendChild(popup);
