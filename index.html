@@ -52,6 +52,7 @@
             width: 180px;
             text-align: center;
             transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
 
         .card:hover {
@@ -237,6 +238,7 @@
             { name: "הבית של דביר אוחנה", value: 450000, sold: false }
         ];
         let cityUpgrades = { newNeighborhood: false, airport: false, hotel: false };
+        let bigBossDefeated = false;
 
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית!" },
@@ -272,7 +274,7 @@
             mainMenu.style.display = "flex";
             mainMenu.innerHTML = `
                 <button onclick="displayCharacters()">התחל משחק</button>
-                ${cityBudget > 0 ? `<button onclick="showCityManagement()">ניהול עיר</button>` : ""}
+                ${bigBossDefeated ? `<button onclick="showCityManagement()">ניהול עיר</button>` : ""}
             `;
             hideAllExcept("main-menu");
         }
@@ -290,12 +292,16 @@
             characters.forEach(char => {
                 const card = document.createElement("div");
                 card.className = "card";
-                card.innerHTML = `<img src="${char.image}"><div>${char.name}</div>`;
+                card.innerHTML = `<img src="${char.image}" alt="${char.name}"><div>${char.name}</div>`;
                 card.onclick = () => toggleSelection(char, card);
                 selectionDiv.appendChild(card);
             });
-            selectionDiv.innerHTML += `<button id="confirm-team" disabled>אשר צוות</button>`;
-            document.getElementById("confirm-team").onclick = confirmTeam;
+            const confirmButton = document.createElement("button");
+            confirmButton.id = "confirm-team";
+            confirmButton.innerText = "אשר צוות";
+            confirmButton.disabled = true;
+            confirmButton.onclick = confirmTeam;
+            selectionDiv.appendChild(confirmButton);
             hideAllExcept("character-selection");
         }
 
@@ -319,7 +325,7 @@
                 const card = document.createElement("div");
                 card.className = "card";
                 card.innerHTML = `
-                    <img src="${char.image}">
+                    <img src="${char.image}" alt="${char.name}">
                     <div>${char.name}</div>
                     <select id="role-${char.name}">
                         <option value="">בחר תפקיד</option>
@@ -370,7 +376,7 @@
                 <div class="popup-content">
                     <h3>הפסדת!</h3>
                     <p>דביר ברקת לא יכול להיות זונה!</p>
-                    <img src="${char.image}">
+                    <img src="${char.image}" alt="${char.name}">
                     <button onclick="this.parentElement.parentElement.remove(); showMainMenu()">חזור לתפריט ראשי</button>
                 </div>
             `;
@@ -401,6 +407,7 @@
                 aliveTeam.forEach(char => {
                     if (char.weapon !== "RPG") char.health = Math.max(0, char.health - battle.damage);
                 });
+                if (battleIndex === battles.length - 1) bigBossDefeated = true;
                 displayTeamStatus(battleIndex);
             } else {
                 battleDisplay.innerHTML = `
@@ -424,7 +431,7 @@
                 const healthPercent = (char.health / char.overall) * 100;
                 battleDisplay.innerHTML += `
                     <div class="card">
-                        <img src="${char.image}">
+                        <img src="${char.image}" alt="${char.name}">
                         <div>${char.name} (${char.role})</div>
                         <div>חיים: ${char.health}/${char.overall}</div>
                         <div class="health-bar"><div class="health-bar-fill" style="width: ${healthPercent}%"></div></div>
@@ -458,7 +465,7 @@
             selectedTeam.forEach(char => {
                 sellSection.innerHTML += `
                     <div class="transfer-card">
-                        <img src="${char.image}">
+                        <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}<br>שווי: ${char.value.toLocaleString()} €</div>
                         <button onclick="sellPlayer('${char.name}', ${battleIndex})">מכור</button>
                     </div>`;
@@ -468,7 +475,7 @@
             characters.filter(c => !selectedTeam.some(t => t.name === c.name)).forEach(char => {
                 buySection.innerHTML += `
                     <div class="transfer-card">
-                        <img src="${char.image}">
+                        <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}<br>שווי: ${char.value.toLocaleString()} €<br>Overall: ${char.overall}</div>
                         <button onclick="buyPlayer('${char.name}', ${battleIndex})" ${teamBudget < char.value ? "disabled" : ""}>קנה</button>
                     </div>`;
@@ -516,7 +523,7 @@
             selectedTeam.forEach(char => {
                 trainingSection.innerHTML += `
                     <div class="card">
-                        <img src="${char.image}">
+                        <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}</div>
                         <div>Overall: ${char.overall}</div>
                         <button onclick="trainPlayer('${char.name}', ${battleIndex})" ${char.trained || coins < 5 ? "disabled" : ""}>אמן (5 מטבעות)</button>
@@ -527,7 +534,7 @@
             selectedTeam.forEach(char => {
                 weaponsSection.innerHTML += `
                     <div class="card">
-                        <img src="${char.image}">
+                        <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}</div>
                         <div>נשק: ${char.weapon}</div>
                         <button onclick="sellWeapon('${char.name}', ${battleIndex})" ${char.weapon === "גלוק" ? "disabled" : ""}>מכור</button>
@@ -583,6 +590,7 @@
         }
 
         function showCityManagement() {
+            if (!bigBossDefeated) return;
             const cityDisplay = document.getElementById("city-management");
             cityDisplay.style.display = "flex";
             cityDisplay.innerHTML = `
