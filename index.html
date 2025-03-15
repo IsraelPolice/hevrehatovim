@@ -257,24 +257,23 @@
 
         let selectedTeam = [];
         let coins = 150;
-        let playerName = "שחקן"; // שם ברירת מחדל, ישתנה בהמשך
+        let playerName = "שחקן";
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!" },
             { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!" },
             { name: "המרכז", requiredAvg: 75, damage: 20, story: "המרכז המסחרי נפל, הצילו את התושבים!" },
             { name: "שכונת האילנות", requiredAvg: 80, damage: 25, story: "מלכודות הוטמנו בשכונה, היזהר!" },
-            { name: "כבוש את האגם", requiredAvg: 85, damage: 30, story: "האויב שולט באגם, תבחר את דרכך!" },
+            { name: "שכונת סביונים", requiredAvg: 85, damage: 30, story: "האויב בנה בסיס בסביונים, הרוס אותו!" },
             { name: "יפה נוף", requiredAvg: 90, damage: 35, story: "קרב גובה קטלני, שלוט בהר!" },
             { name: "ביג בוס", requiredAvg: 92, damage: 40, story: "המנהיג הסופי מחכה, תביס אותו!" }
         ];
 
         const randomEvents = [
-            { text: "מלכודת! הצוות שלך נפגע!", effect: () => selectedTeam.forEach(char => char.health -= 5) },
-            { text: "תגבורת! מצאת אספקה!", effect: () => coins += 20 },
-            { text: "מזל טוב! אויב נרדם!", effect: () => {} },
-            { text: "אריאל שרביט התבלבלה בדרך!", effect: () => selectedTeam.filter(c => c.name === "אריאל שרביט").forEach(c => c.health -= 10) },
-            { text: "מצאתם בירה בדרך!", effect: () => selectedTeam.forEach(char => char.health += 5) },
-            { text: "רפי אלגרבלי התפוצץ!", effect: () => selectedTeam.filter(c => c.name === "רפי אלגרבלי").forEach(c => c.health = 0) }
+            { text: "מלכודת קטלנית! הצוות שלך נפגע קשה!", effect: () => selectedTeam.forEach(char => char.health = Math.max(0, char.health - 15)) },
+            { text: "מצאת ארגז זהב! מטבעות נוספים!", effect: () => coins += 30 },
+            { text: "האויב נרדם, התקפה קלה!", effect: () => selectedTeam.forEach(char => char.health += 10) },
+            { text: "אריאל שרביט נתקעה בשירותים!", effect: () => selectedTeam.filter(c => c.name === "אריאל שרביט").forEach(c => c.health = Math.max(0, c.health - 20)) },
+            { text: "רפי אלגרבלי אכל יותר מדי שווארמה!", effect: () => selectedTeam.filter(c => c.name === "רפי אלגרבלי").forEach(c => c.health = Math.max(0, c.health - 10)) }
         ];
 
         const postBattleMessages = [
@@ -415,8 +414,8 @@
             popup.id = "liav-popup";
             popup.innerHTML = `
                 <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
-                <button onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
-                <button onclick="confirmLiav('${char.name}', '${role}', false)">לא</button>
+                <button id="liav-yes" onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
+                <button id="liav-no" onclick="confirmLiav('${char.name}', '${role}', false)">לא</button>
             `;
             document.body.appendChild(popup);
         }
@@ -453,27 +452,39 @@
             const battle = battles[battleIndex];
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
 
-            if (battleIndex === 4) { // "כבוש את האגם"
-                battleDisplay.innerHTML = `
-                    <h2>${battle.name}</h2>
-                    <p>${battle.story}</p>
-                    <p>למי מהבאים אתה מוכן למצוץ?</p>
-                    <select id="suck-choice">
-                        ${characters.filter(c => c.name !== "אריאל שרביט").map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
-                    </select>
-                    <button onclick="confirmSuckChoice(${battleIndex})">אשר</button>
-                    <button onclick="fightZamira(${battleIndex})">להילחם בזמירה קחלר (Overall: 85, Health: 100)</button>
-                `;
-            } else {
-                battleDisplay.innerHTML = `
-                    <h2>מלחמה: ${battle.name}</h2>
-                    <p>${battle.story}</p>
-                    <p>דירוג ממוצע נדרש: ${battle.requiredAvg}</p>
-                    <p>דירוג ממוצע שלך: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
-                    <div class="battle-text">הצוות שלך מתכונן לתקוף...</div>
-                    <button onclick="fightBattle(${battleIndex})">תקוף</button>
-                `;
-            }
+            battleDisplay.innerHTML = `
+                <h2>בחר את דרכך בקרב ${battle.name}</h2>
+                <p>${battle.story}</p>
+                <button onclick="fightBattle(${battleIndex})">להילחם על ${battle.name}</button>
+                <button onclick="startLakeBattle(${battleIndex})">כבוש את האגם</button>
+                ${battleIndex === 4 ? `<button onclick="showSuckChoice(${battleIndex})">למי אתה מוכן למצוץ?</button>` : ""}
+                <button onclick="fightZamira(${battleIndex})">להילחם בזמירה קחלר השמנה והמגעילה (Overall: 85, Health: 100, שומן: 150)</button>
+            `;
+        }
+
+        function startLakeBattle(battleIndex) {
+            const battleDisplay = document.getElementById("battle-display");
+            let aliveTeam = selectedTeam.filter(char => char.health > 0);
+            battleDisplay.innerHTML = `
+                <h2>כבוש את האגם</h2>
+                <p>האויב שולט באגם, תקוף אותו!</p>
+                <p>דירוג ממוצע נדרש: 85</p>
+                <p>דירוג ממוצע שלך: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
+                <div class="battle-text">הצוות שלך מתכונן לתקוף...</div>
+                <button onclick="fightBattle(${battleIndex}, true)">תקוף את האגם</button>
+            `;
+        }
+
+        function showSuckChoice(battleIndex) {
+            const battleDisplay = document.getElementById("battle-display");
+            battleDisplay.innerHTML = `
+                <h2>למי אתה מוכן למצוץ?</h2>
+                <p>בחר דמות להצהרה מיוחדת:</p>
+                <select id="suck-choice">
+                    ${characters.filter(c => c.name !== "אריאל שרביט").map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
+                </select>
+                <button onclick="confirmSuckChoice(${battleIndex})">אשר</button>
+            `;
         }
 
         function confirmSuckChoice(battleIndex) {
@@ -493,8 +504,8 @@
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             let zamiraHealth = 100;
             battleDisplay.innerHTML = `
-                <h2>קרב נגד זמירה קחלר</h2>
-                <p>Overall: 85 | Health: ${zamiraHealth}</p>
+                <h2>קרב נגד זמירה קחלר השמנה והמגעילה</h2>
+                <p>Overall: 85 | Health: ${zamiraHealth} | שומן: 150 (מסריח ומגעיל)</p>
                 <div class="battle-text">הצוות שלך תוקף את זמירה!</div>
             `;
             setTimeout(() => {
@@ -502,28 +513,28 @@
                 zamiraHealth = Math.max(0, zamiraHealth - teamDamage);
                 aliveTeam.forEach(char => char.health = Math.max(0, char.health - 20));
                 if (zamiraHealth <= 0) {
-                    battleDisplay.innerHTML = `<p>ניצחת את זמירה קחלר!</p>`;
+                    battleDisplay.innerHTML = `<p>ניצחת את זמירה קחלר השמנה והמגעילה! הריח נעלם!</p>`;
                     coins += 50;
                     setTimeout(() => displayTeamStatus(battleIndex), 2000);
                 } else if (aliveTeam.every(char => char.health <= 0)) {
-                    battleDisplay.innerHTML = `<p>זמירה קחלר ניצחה אותך!</p>`;
+                    battleDisplay.innerHTML = `<p>זמירה קחלר השמנה והמגעילה ניצחה אותך! השומן חנק אותך!</p>`;
                 } else {
                     battleDisplay.innerHTML = `
                         <h2>קרב נגד זמירה קחלר</h2>
-                        <p>Health: ${zamiraHealth}</p>
+                        <p>Health: ${zamiraHealth} | שומן: 150</p>
                         <button onclick="fightZamira(${battleIndex})">המשך לתקוף</button>
                     `;
                 }
             }, 2000);
         }
 
-        function fightBattle(battleIndex) {
-            const battle = battles[battleIndex];
+        function fightBattle(battleIndex, isLake = false) {
+            const battle = isLake ? { name: "האגם", requiredAvg: 85, damage: 30 } : battles[battleIndex];
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
             const battleDisplay = document.getElementById("battle-display");
 
-            if (battleIndex === 2) {
+            if (battleIndex === 2 && !isLake) {
                 const traitors = aliveTeam.filter(char => char.name === "ליאב בן יעקב" || char.name === "עמית לסרי");
                 if (traitors.length > 0) {
                     traitors.forEach(traitor => {
@@ -548,17 +559,17 @@
 
                     if (Math.random() < 0.2 && aliveTeam.some(c => c.name === "דביר ברקת" && c.health > 0)) {
                         battleDisplay.innerHTML += `<p>דביר ברקת השתמש ב'צליפה מדויקת' וגרם 30 נזק נוסף לאויב!</p>`;
-                        aliveTeam.forEach(char => char.health += 5); // בונוס קטן לבריאות כפרס
+                        aliveTeam.forEach(char => char.health += 5);
                     }
 
-                    if (Math.random() < 0.3) {
+                    if (Math.random() < 0.4) {
                         const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
                         battleDisplay.innerHTML += `<p>${event.text}</p>`;
                         event.effect();
                     }
 
                     displayTeamStatus(battleIndex);
-                    if (battleIndex < 4) showPostBattleMessage(battleIndex);
+                    if (battleIndex < 4 && !isLake) showPostBattleMessage(battleIndex);
                 } else {
                     battleDisplay.innerHTML = `
                         <h2>מלחמה: ${battle.name}</h2>
