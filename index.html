@@ -37,7 +37,7 @@
             font-size: 2em;
         }
 
-        .character-card, .transfer-card {
+        .character-card, .transfer-card, .team-management-card {
             display: inline-block;
             margin: 15px;
             padding: 15px;
@@ -51,7 +51,7 @@
             text-align: center;
         }
 
-        .character-card:hover, .transfer-card:hover {
+        .character-card:hover, .transfer-card:hover, .team-management-card:hover {
             transform: scale(1.1);
             box-shadow: 0 0 25px #ff0066;
         }
@@ -61,7 +61,7 @@
             box-shadow: 0 0 20px #ff0066;
         }
 
-        .character-card img, .transfer-card img {
+        .character-card img, .transfer-card img, .team-management-card img {
             border-radius: 10px;
             width: 120px;
             height: 120px;
@@ -229,17 +229,17 @@
             transition: width 0.5s ease;
         }
 
-        .player-details {
+        .player-details, .team-management-section {
             text-align: right;
             padding: 10px;
         }
 
-        .player-details p {
+        .player-details p, .team-management-section p {
             margin: 5px 0;
             font-size: 1.1em;
         }
 
-        .player-details strong {
+        .player-details strong, .team-management-section strong {
             color: #00ffcc;
         }
     </style>
@@ -252,26 +252,34 @@
     <div id="battle-display" style="display: none;"></div>
 
     <script>
+        const weapons = {
+            "גלוק": { cost: 1000, bonus: 1, image: "https://example.com/glock.png" }, // תחליף ללינק אמיתי
+            "עוזי": { cost: 5000, bonus: 2, image: "https://example.com/uzi.png" },
+            "M16": { cost: 15000, bonus: 3, image: "https://example.com/m16.png" },
+            "M4": { cost: 30000, bonus: 4, image: "https://example.com/m4.png" },
+            "RPG": { cost: 50000, bonus: 5, image: "https://static.wikia.nocookie.net/maxpayne/images/4/40/Rpg.png" }
+        };
+
         const characters = [
-            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((79 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 75, defense: 70, fatPercentage: 18, report: "ביצועים סבירים, אבל יש נטייה לעייפות מהירה ולחוסר ריכוז בשדה הקרב." },
-            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 90, defense: 85, fatPercentage: 12, report: "לוחם מצוין עם כוח התקפי מרשים והגנה יציבה." },
-            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 92, defense: 88, fatPercentage: 10, report: "כישרון טבעי, מהיר וחד בקרבות." },
-            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 78, fatPercentage: 15, report: "ביצועים טובים, אך נדרשת משמעת טובה יותר." },
-            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 93, defense: 87, fatPercentage: 9, report: "חייל עילית עם יכולות התקפה והגנה מרשימות." },
-            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((86 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 88, defense: 82, fatPercentage: 13, report: "לוחם אמין עם כוח התקפי גבוה." },
-            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((92 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 95, defense: 90, fatPercentage: 8, report: "כוכב עליון, קרוב לשלמות בקרב." },
-            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((80 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 78, defense: 75, fatPercentage: 17, report: "ממוצע, נוטה להתעייף בלחימה ממושכת." },
-            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((74 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 70, defense: 68, fatPercentage: 22, report: "חלש יחסית, נדרש שיפור משמעותי בכושר הקרבי." },
-            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((83 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 82, defense: 80, fatPercentage: 14, report: "ביצועים טובים, אך לפעמים חסר יציבות." },
-            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((58 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 55, defense: 50, fatPercentage: 30, report: "חלש מאוד, נוטה להיכשל במשימות קרביות בסיסיות." },
-            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((85 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 87, defense: 83, fatPercentage: 11, report: "לוחם חזק ואמין, כמעט ללא חולשות." },
-            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((89 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 91, defense: 86, fatPercentage: 10, report: "מצוין, כוח התקפי והגנתי מרשים." },
-            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 79, fatPercentage: 16, report: "סביר, אך נדרשת עבודה על סיבולת." },
-            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round(80000 + ((66 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 65, defense: 60, fatPercentage: 25, report: "ביצועים נמוכים, חוסר כושר גופני בולט." },
-            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round(80000 + ((71 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 68, defense: 66, fatPercentage: 23, report: "חלש, נוטה להיכשל תחת לחץ." },
-            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 89, defense: 85, fatPercentage: 12, report: "לוחם מעולה עם ביצועים גבוהים." },
-            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 80000, attack: 50, defense: 45, fatPercentage: 32, report: "חלשה ביותר, כמעט חסרת תועלת בקרב, נדרשת החלפה דחופה." },
-            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000, attack: 99, defense: 98, fatPercentage: 5, report: "מושלם, לוחם עליון עם כוח התקפי והגנתי ללא תחרות, גוף חטוב ומלא כריזמה." }
+            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((79 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 75, defense: 70, fatPercentage: 18, report: "ביצועים סבירים, אבל יש נטייה לעייפות מהירה ולחוסר ריכוז בשדה הקרב.", weapon: "גלוק", trained: false },
+            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 90, defense: 85, fatPercentage: 12, report: "לוחם מצוין עם כוח התקפי מרשים והגנה יציבה.", weapon: "גלוק", trained: false },
+            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 92, defense: 88, fatPercentage: 10, report: "כישרון טבעי, מהיר וחד בקרבות.", weapon: "גלוק", trained: false },
+            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 78, fatPercentage: 15, report: "ביצועים טובים, אך נדרשת משמעת טובה יותר.", weapon: "גלוק", trained: false },
+            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 93, defense: 87, fatPercentage: 9, report: "חייל עילית עם יכולות התקפה והגנה מרשימות.", weapon: "גלוק", trained: false },
+            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((86 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 88, defense: 82, fatPercentage: 13, report: "לוחם אמין עם כוח התקפי גבוה.", weapon: "גלוק", trained: false },
+            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((92 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 95, defense: 90, fatPercentage: 8, report: "כוכב עליון, קרוב לשלמות בקרב.", weapon: "גלוק", trained: false },
+            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((80 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 78, defense: 75, fatPercentage: 17, report: "ממוצע, נוטה להתעייף בלחימה ממושכת.", weapon: "גלוק", trained: false },
+            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((74 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 70, defense: 68, fatPercentage: 22, report: "חלש יחסית, נדרש שיפור משמעותי בכושר הקרבי.", weapon: "גלוק", trained: false },
+            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((83 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 82, defense: 80, fatPercentage: 14, report: "ביצועים טובים, אך לפעמים חסר יציבות.", weapon: "גלוק", trained: false },
+            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((58 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 55, defense: 50, fatPercentage: 30, report: "חלש מאוד, נוטה להיכשל במשימות קרביות בסיסיות.", weapon: "גלוק", trained: false },
+            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((85 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 87, defense: 83, fatPercentage: 11, report: "לוחם חזק ואמין, כמעט ללא חולשות.", weapon: "גלוק", trained: false },
+            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((89 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 91, defense: 86, fatPercentage: 10, report: "מצוין, כוח התקפי והגנתי מרשים.", weapon: "גלוק", trained: false },
+            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 79, fatPercentage: 16, report: "סביר, אך נדרשת עבודה על סיבולת.", weapon: "גלוק", trained: false },
+            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round(80000 + ((66 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 65, defense: 60, fatPercentage: 25, report: "ביצועים נמוכים, חוסר כושר גופני בולט.", weapon: "גלוק", trained: false },
+            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round(80000 + ((71 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 68, defense: 66, fatPercentage: 23, report: "חלש, נוטה להיכשל תחת לחץ.", weapon: "גלוק", trained: false },
+            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 89, defense: 85, fatPercentage: 12, report: "לוחם מעולה עם ביצועים גבוהים.", weapon: "גלוק", trained: false },
+            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 80000, attack: 50, defense: 45, fatPercentage: 32, report: "חלשה ביותר, כמעט חסרת תועלת בקרב, נדרשת החלפה דחופה.", weapon: "גלוק", trained: false },
+            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000, attack: 99, defense: 98, fatPercentage: 5, report: "מושלם, לוחם עליון עם כוח התקפי והגנתי ללא תחרות, גוף חטוב ומלא כריזמה.", weapon: "גלוק", trained: false }
         ];
 
         let selectedTeam = [];
@@ -572,7 +580,9 @@
             setTimeout(() => {
                 const teamDamage = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / 2;
                 zamiraHealth = Math.max(0, zamiraHealth - teamDamage);
-                aliveTeam.forEach(char => char.health = Math.max(0, char.health - 20));
+                aliveTeam.forEach(char => {
+                    if (char.weapon !== "RPG") char.health = Math.max(0, char.health - 20);
+                });
                 if (zamiraHealth <= 0) {
                     battleDisplay.innerHTML = `<p>ניצחת את זמירה קחלר השמנה והמגעילה! הריח נעלם!</p>`;
                     coins += 50;
@@ -617,7 +627,7 @@
             setTimeout(() => {
                 if (avg >= battle.requiredAvg) {
                     aliveTeam.forEach(char => {
-                        char.health = Math.max(0, char.health - battle.damage);
+                        if (char.weapon !== "RPG") char.health = Math.max(0, char.health - battle.damage);
                     });
 
                     if (Math.random() < 0.2 && aliveTeam.some(c => c.name === "דביר ברקת" && c.health > 0)) {
@@ -637,6 +647,7 @@
                     battleDisplay.innerHTML = `
                         <h2>מלחמה: ${battle.name}</h2>
                         <p>הפסדת! הדירוג שלך נמוך מדי (${avg.toFixed(2)} < ${battle.requiredAvg}).</p>
+                        <button onclick="showTeamManagement(${battleIndex}, ${isLake})">ניהול צוות</button>
                     `;
                 }
             }, 2000);
@@ -682,6 +693,7 @@
                     <div style="margin-top: 20px;">
                         ${battleIndex < battles.length - 1 ? `<button onclick="startBattle(${battleIndex + 1})">התחל קרב הבא</button>` : `<p>ניצחת את הביג בוס! סיימת את המשחק!</p>`}
                         <button onclick="showTransferWindow(${battleIndex})">חלון העברות</button>
+                        <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
                     </div>
                 `;
             }
@@ -756,6 +768,7 @@
                     <p><strong>התקפה:</strong> ${char.attack}</p>
                     <p><strong>הגנה:</strong> ${char.defense}</p>
                     <p><strong>אחוז שומן:</strong> ${char.fatPercentage}%</p>
+                    <p><strong>נשק נוכחי:</strong> ${char.weapon}</p>
                     <p><strong>דוח ביצועים:</strong> ${char.report}</p>
                 </div>
                 <button onclick="this.parentElement.remove()">סגור</button>
@@ -784,6 +797,102 @@
                 alert("חייב למכור שחקן לפני קנייה חדשה!");
             } else {
                 alert("אין מספיק תקציב!");
+            }
+        }
+
+        function showTeamManagement(battleIndex, isLake = false) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <h2>ניהול צוות</h2>
+                <p>מטבעות: ${coins} | תקציב קבוצה: ${teamBudget.toLocaleString()} €</p>
+                <h3>אימון</h3>
+                <div id="training-section" class="team-management-section"></div>
+                <h3>נשקים</h3>
+                <div id="weapons-section" class="team-management-section"></div>
+                <button onclick="this.parentElement.remove(); startBattle(${battleIndex})">חזור לקרב</button>
+            `;
+            document.body.appendChild(popup);
+
+            const trainingSection = document.getElementById("training-section");
+            selectedTeam.forEach(char => {
+                const card = document.createElement("div");
+                card.className = "team-management-card";
+                card.innerHTML = `
+                    <img src="${char.image}">
+                    <div>${char.name}</div>
+                    <div>Overall: ${char.overall}</div>
+                    <button onclick="trainPlayer('${char.name}', ${battleIndex})" ${char.trained || coins < 5 ? "disabled" : ""}>אמן (5 מטבעות)</button>
+                `;
+                trainingSection.appendChild(card);
+            });
+
+            const weaponsSection = document.getElementById("weapons-section");
+            selectedTeam.forEach(char => {
+                const card = document.createElement("div");
+                card.className = "team-management-card";
+                card.innerHTML = `
+                    <img src="${char.image}">
+                    <div>${char.name}</div>
+                    <div>נשק נוכחי: ${char.weapon}</div>
+                    <div>Overall: ${char.overall}</div>
+                    <button onclick="sellWeapon('${char.name}', ${battleIndex})" ${char.weapon === "גלוק" ? "disabled" : ""}>מכור נשק</button>
+                    <select id="weapon-select-${char.name}" onchange="buyWeapon('${char.name}', this.value, ${battleIndex})">
+                        <option value="">בחר נשק</option>
+                        ${Object.keys(weapons).filter(w => (char.name !== "אריאל שרביט" || w === "גלוק") && (w !== "RPG" || char.name === "דביר ברקת")).map(w => `
+                            <option value="${w}" ${teamBudget < weapons[w].cost || char.weapon === w ? "disabled" : ""}>${w} (${weapons[w].cost.toLocaleString()} €, +${weapons[w].bonus})</option>
+                        `).join('')}
+                    </select>
+                `;
+                weaponsSection.appendChild(card);
+            });
+        }
+
+        function trainPlayer(charName, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            if (coins >= 5 && !char.trained) {
+                coins -= 5;
+                char.overall += 3;
+                char.health += 3;
+                char.trained = true;
+                document.querySelector(".popup").remove();
+                showTeamManagement(battleIndex);
+            } else if (char.trained) {
+                alert("השחקן כבר עבר אימון!");
+            } else {
+                alert("אין מספיק מטבעות!");
+            }
+        }
+
+        function buyWeapon(charName, weapon, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            if (!weapon || char.weapon === weapon) return;
+
+            const newWeaponCost = weapons[weapon].cost;
+            if (teamBudget >= newWeaponCost) {
+                const oldWeaponBonus = weapons[char.weapon].bonus;
+                teamBudget -= newWeaponCost;
+                char.overall = char.overall - oldWeaponBonus + weapons[weapon].bonus;
+                char.health = char.health - oldWeaponBonus + weapons[weapon].bonus;
+                char.weapon = weapon;
+                document.querySelector(".popup").remove();
+                showTeamManagement(battleIndex);
+            } else {
+                alert("אין מספיק תקציב!");
+            }
+        }
+
+        function sellWeapon(charName, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            if (char.weapon !== "גלוק") {
+                const oldWeaponCost = weapons[char.weapon].cost;
+                const oldWeaponBonus = weapons[char.weapon].bonus;
+                teamBudget += Math.floor(oldWeaponCost / 2); // החזר 50%
+                char.overall = char.overall - oldWeaponBonus + weapons["גלוק"].bonus;
+                char.health = char.health - oldWeaponBonus + weapons["גלוק"].bonus;
+                char.weapon = "גלוק";
+                document.querySelector(".popup").remove();
+                showTeamManagement(battleIndex);
             }
         }
 
