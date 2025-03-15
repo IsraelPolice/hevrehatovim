@@ -2,131 +2,127 @@
 <html lang="he">
 <head>
     <meta charset="UTF-8">
-    <title>מלחמת העולם - המשחק</title>
+    <title>מלחמת העולם - המשחק העתידני</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Rubik', sans-serif;
             text-align: center;
-            background: linear-gradient(135deg, #1a1a1a, #003087);
-            color: white;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77);
+            color: #e0e1dd;
             direction: rtl;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
+            overflow-x: hidden;
+            animation: glowBackground 5s infinite alternate;
+        }
+
+        @keyframes glowBackground {
+            0% { background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77); }
+            100% { background: linear-gradient(135deg, #1b263b, #415a77, #778da9); }
         }
 
         h1, h2 {
-            color: #ffd700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+            font-size: 2.5em;
         }
 
         .character-card {
             display: inline-block;
             margin: 15px;
-            padding: 10px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00ffcc;
+            border-radius: 15px;
+            box-shadow: 0 0 15px #00ffcc;
             cursor: pointer;
             transition: transform 0.3s, box-shadow 0.3s;
-            width: 120px;
+            width: 200px;
+            text-align: center;
         }
 
         .character-card:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 25px #ff0066;
         }
 
         .character-card.selected {
-            border: 3px solid #ffd700;
-            box-shadow: 0 0 15px #ffd700;
+            border-color: #ff0066;
+            box-shadow: 0 0 20px #ff0066;
         }
 
         .character-card img {
-            border-radius: 5px;
-            width: 100px;
-            height: 100px;
+            border-radius: 10px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
         }
 
         .team-card {
             display: inline-block;
             margin: 20px;
-            padding: 15px;
-            width: 200px;
-            height: 320px;
-            background: linear-gradient(135deg, #1c2526, #003087);
-            border: 2px solid #ffd700;
+            padding: 20px;
+            width: 220px;
+            height: 350px;
+            background: linear-gradient(135deg, rgba(0, 255, 204, 0.2), rgba(255, 0, 102, 0.2));
+            border: 2px solid #ff0066;
             border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px #ff0066;
             position: relative;
-            overflow: hidden;
-            animation: revealCard 2s ease forwards;
+            animation: revealCard 1.5s ease forwards;
         }
 
         @keyframes revealCard {
             0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.7; }
             100% { transform: scale(1); opacity: 1; }
         }
 
         .team-card img.player-img {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             border-radius: 10px;
             margin-top: 20px;
-            border: 2px solid #fff;
+            border: 2px solid #00ffcc;
         }
 
-        .team-card .name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #ffd700;
-            margin: 10px 0;
-        }
-
-        .team-card .overall {
-            font-size: 24px;
-            color: #fff;
-            margin: 10px 0;
-        }
-
-        .team-card .stars {
-            font-size: 18px;
-            color: #ffd700;
-        }
-
-        .team-card .flag {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 40px;
-            height: auto;
-        }
+        .team-card .name { font-size: 22px; color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
+        .team-card .overall { font-size: 20px; color: #e0e1dd; }
+        .team-card .stars { font-size: 18px; color: #ff0066; }
+        .team-card .flag { position: absolute; top: 10px; right: 10px; width: 40px; }
 
         button {
             padding: 12px 25px;
             font-size: 18px;
-            background-color: #ffd700;
-            color: #1a1a1a;
+            background: #ff0066;
+            color: #e0e1dd;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 0 10px #ff0066;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         button:hover {
-            background-color: #ffeb3b;
             transform: scale(1.05);
+            box-shadow: 0 0 20px #ff0066;
         }
 
         button:disabled {
-            background-color: #666;
+            background: #555;
+            box-shadow: none;
             cursor: not-allowed;
         }
 
-        #team-display, #battle-display {
-            margin-top: 30px;
+        select {
+            padding: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e1dd;
+            border: 1px solid #00ffcc;
+            border-radius: 5px;
         }
 
         .popup {
@@ -134,25 +130,31 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #1c2526;
-            border: 2px solid #ffd700;
+            background: linear-gradient(135deg, #1b263b, #415a77);
+            border: 2px solid #ff0066;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 30px #ff0066;
             z-index: 1000;
             text-align: center;
+            animation: popupGlow 2s infinite alternate;
+        }
+
+        @keyframes popupGlow {
+            0% { box-shadow: 0 0 30px #ff0066; }
+            100% { box-shadow: 0 0 50px #00ffcc; }
         }
 
         .popup img {
-            width: 100px;
-            height: 100px;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
-    <h1>בחר את הצוות שלך למלחמה!</h1>
+    <h1>מלחמת העולם העתידנית</h1>
     <div id="character-selection"></div>
     <button id="confirm-team" disabled>אשר צוות</button>
     <div id="team-display" style="display: none;"></div>
@@ -181,8 +183,18 @@
             { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" }
         ];
 
+        const weapons = [
+            { name: "M16", image: "https://i.namu.wiki/i/xDo8hsJkfCKFSp-yzjin3gVH021GKsEIU0YnkAuQDKs-crFCCHZ6VnRqt8koRbEa5Ex7JJkq-6TwKli9AR4slw.webp" },
+            { name: "M4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/M4A1-flattop.png/800px-M4A1-flattop.png" },
+            { name: "Uzi", image: "https://www.daileisure.co.uk/image/cache/catalog/Umarex/iwi/iwi-mini-uzi-co2-1-550x550w.jpg" },
+            { name: "MP5", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/MP5.jpg/800px-MP5.jpg" },
+            { name: "Glock", image: "https://content.osgnetworks.tv/photopacks/a-mostly-complete-history-of-the-glock-17-513089_513090/513091_glock17gen2pistol_hero_1200x800.jpg" },
+            { name: "דילדו", image: "https://i.makeup.ie/o/oe/oemyjktpl4go.jpg" }
+        ];
+
         let selectedTeam = [];
         let coins = 100;
+        let usedWeapons = [];
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10 },
             { name: "פארק המים", requiredAvg: 70, damage: 15 },
@@ -193,30 +205,156 @@
             { name: "ביג בוס", requiredAvg: 92, damage: 40 }
         ];
 
+        function showIntroPopup() {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <h2>מעלות תרשיחא בסכנה!</h2>
+                <p>גורמים זרים חדרו לעיר ואתה היחיד שיכול לתקן את זה.<br>בעיר זמינים הצוות הבא, בחר 5 אנשים שישתתפו איתך.</p>
+                <button onclick="this.parentElement.remove()">התחל</button>
+            `;
+            document.body.appendChild(popup);
+        }
+
         function displayCharacters() {
             const selectionDiv = document.getElementById("character-selection");
             characters.forEach(char => {
                 const card = document.createElement("div");
                 card.className = "character-card";
-                card.innerHTML = `<img src="${char.image}"><br>${char.name}`;
+                card.innerHTML = `
+                    <img src="${char.image}">
+                    <div>${char.name}</div>
+                    <select id="role-${char.name}" onchange="updateSelection('${char.name}')">
+                        <option value="">בחר תפקיד</option>
+                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
+                        <option value="חייל">חייל</option>
+                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
+                        ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
+                    </select>
+                    <select id="weapon-${char.name}" onchange="updateSelection('${char.name}')" disabled>
+                        <option value="">בחר נשק</option>
+                    </select>
+                `;
                 card.onclick = () => toggleSelection(char, card);
                 selectionDiv.appendChild(card);
             });
+            showIntroPopup();
         }
 
         function toggleSelection(char, card) {
+            const role = document.getElementById(`role-${char.name}`).value;
+            const weapon = document.getElementById(`weapon-${char.name}`).value;
             const index = selectedTeam.findIndex(c => c.name === char.name);
+
             if (index !== -1) {
                 selectedTeam.splice(index, 1);
+                usedWeapons = usedWeapons.filter(w => w !== weapon);
                 card.classList.remove("selected");
-            } else if (selectedTeam.length < 5) {
-                selectedTeam.push({ ...char, health: char.overall }); // חיים מתחילים שווים ל-Overall
+                document.getElementById(`weapon-${char.name}`).disabled = true;
+            } else if (selectedTeam.length < 5 && role && weapon) {
+                const leaderCount = selectedTeam.filter(c => c.role === "מנהיג").length;
+                const soldierCount = selectedTeam.filter(c => c.role === "חייל").length;
+                const whoreCount = selectedTeam.filter(c => c.role === "זונה").length;
+
+                if (role === "מנהיג" && leaderCount >= 1) return alert("יכול להיות רק מנהיג אחד!");
+                if (role === "חייל" && soldierCount >= 3) return alert("יכולים להיות עד 3 חיילים!");
+                if (role === "זונה" && whoreCount >= 1) return alert("יכולה להיות רק זונה אחת!");
+                if (char.name === "דביר ברקת" && role === "זונה") {
+                    showLosePopup(char);
+                    return;
+                }
+                if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") return alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
+                if (char.name === "אריאל שרביט" && weapon !== "Glock") return alert("אריאל שרביט יכולה להשתמש רק ב-Glock!");
+                if (char.name === "ליאב בן יעקב" && role !== "הגיי של הצוות") {
+                    showLiavConfirmation(char, role, weapon, card);
+                    return;
+                }
+
+                selectedTeam.push({ ...char, health: char.overall, role, weapon });
+                usedWeapons.push(weapon);
                 card.classList.add("selected");
             }
+            updateWeaponOptions();
             document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
         }
 
+        function updateSelection(charName) {
+            const role = document.getElementById(`role-${charName}`).value;
+            const weaponSelect = document.getElementById(`weapon-${charName}`);
+            weaponSelect.disabled = !role;
+
+            if (role) {
+                weaponSelect.innerHTML = '<option value="">בחר נשק</option>';
+                if (role === "זונה") {
+                    if (!usedWeapons.includes("דילדו")) weaponSelect.innerHTML += '<option value="דילדו">דילדו</option>';
+                } else {
+                    weapons.filter(w => w.name !== "דילדו" && (charName !== "אריאל שרביט" || w.name === "Glock")).forEach(w => {
+                        if (!usedWeapons.includes(w.name)) weaponSelect.innerHTML += `<option value="${w.name}">${w.name}</option>`;
+                    });
+                }
+            }
+        }
+
+        function updateWeaponOptions() {
+            characters.forEach(char => {
+                const weaponSelect = document.getElementById(`weapon-${char.name}`);
+                const role = document.getElementById(`role-${char.name}`).value;
+                if (role && !selectedTeam.find(c => c.name === char.name)) {
+                    updateSelection(char.name);
+                }
+            });
+        }
+
+        function showLiavConfirmation(char, role, weapon, card) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <h3>אתה בטוח שלא רוצה שליאב יהיה הגיי של הצוות?</h3>
+                <button onclick="confirmLiav('${char.name}', '${role}', '${weapon}', this.parentElement, true)">כן</button>
+                <button onclick="confirmLiav('${char.name}', '${role}', '${weapon}', this.parentElement, false)">לא</button>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        function confirmLiav(charName, role, weapon, popup, confirm) {
+            popup.remove();
+            const char = characters.find(c => c.name === charName);
+            const card = document.querySelector(`#character-selection .character-card:has(#role-${charName})`);
+            if (confirm) {
+                selectedTeam.push({ ...char, health: char.overall, role, weapon });
+                usedWeapons.push(weapon);
+                card.classList.add("selected");
+            } else {
+                document.getElementById(`role-${charName}`).value = "הגיי של הצוות";
+                updateSelection(charName);
+                document.getElementById(`weapon-${charName}`).value = weapon;
+                selectedTeam.push({ ...char, health: char.overall, role: "הגיי של הצוות", weapon });
+                usedWeapons.push(weapon);
+                card.classList.add("selected");
+            }
+            updateWeaponOptions();
+            document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
+        }
+
+        function showLosePopup(char) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <h3>הפסדת!</h3>
+                <p>דביר ברקת לא יכול להיות זונה והפרטים שלך נשלחו לדביר ברקת.</p>
+                <img src="${char.image}">
+            `;
+            document.body.appendChild(popup);
+        }
+
         function confirmTeam() {
+            selectedTeam.forEach(char => {
+                if (char.role === "מנהיג") char.overall += 3;
+                if (char.role === "חייל") char.overall += 1;
+                if (char.role === "זונה") char.overall -= 2;
+                char.health = char.overall; // עדכון החיים ל-Overall המשופר
+            });
+
             document.getElementById("character-selection").style.display = "none";
             document.getElementById("confirm-team").style.display = "none";
             const teamDisplay = document.getElementById("team-display");
@@ -232,9 +370,10 @@
                 card.innerHTML = `
                     <img src="${char.image}" class="player-img" style="display: none;">
                     <div class="name" style="display: none;">${char.name}</div>
-                    <div class="overall" style="display: none;">Overall: ${char.overall}</div>
+                    <div class="overall" style="display: none;">${char.role} - Overall: ${char.overall}</div>
                     <div class="stars" style="display: none;">${"★".repeat(stars)}</div>
                     <img class="flag" src="${char.flag}" style="display: none;">
+                    <img src="${weapons.find(w => w.name === char.weapon).image}" style="width: 80px; display: none;">
                 `;
                 teamDisplay.appendChild(card);
 
@@ -243,7 +382,8 @@
                 setTimeout(() => card.querySelector(".overall").style.display = "block", delay * 1000 + 1500);
                 setTimeout(() => card.querySelector(".stars").style.display = "block", delay * 1000 + 2000);
                 setTimeout(() => card.querySelector(".flag").style.display = "block", delay * 1000 + 2500);
-                delay += 2.5;
+                setTimeout(() => card.querySelector("img:last-child").style.display = "block", delay * 1000 + 3000);
+                delay += 3;
             });
 
             setTimeout(() => startBattle(0), delay * 1000 + 1000);
@@ -255,19 +395,18 @@
             const battle = battles[battleIndex];
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
 
-            // בדיקת בגידה בשלב 3 (אינדקס 2)
             if (battleIndex === 2) {
                 const traitors = aliveTeam.filter(char => char.name === "ליאב בן יעקב" || char.name === "עמית לסרי");
                 if (traitors.length > 0) {
                     traitors.forEach(traitor => {
                         showTraitorPopup(traitor);
-                        selectedTeam = selectedTeam.filter(char => char.name !== traitor.name); // הסרת הבוגד מהצוות
+                        selectedTeam = selectedTeam.filter(char => char.name !== traitor.name);
                     });
                     setTimeout(() => {
                         document.querySelectorAll(".popup").forEach(popup => popup.remove());
                         displayTeamStatus(battleIndex);
-                    }, 3000); // ממתין 3 שניות לפני שממשיכים
-                    return; // עוצר כאן עד שהפופ-אפ נסגר
+                    }, 3000);
+                    return;
                 }
             }
 
@@ -317,7 +456,7 @@
             selectedTeam.forEach(char => {
                 battleDisplay.innerHTML += `
                     <div>
-                        ${char.name} - חיים: ${char.health}/${char.overall}
+                        ${char.name} (${char.role}) - חיים: ${char.health}/${char.overall}
                         ${char.health > 0 && char.health < char.overall ? `<button onclick="heal('${char.name}', ${battleIndex})">רפא (10 מטבעות)</button>` : ""}
                     </div>`;
             });
