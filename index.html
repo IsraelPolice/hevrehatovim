@@ -512,53 +512,65 @@
         }
 
         function displayCharacters() {
-            clearPopups();
-            const selectionDiv = document.getElementById("character-selection");
-            selectionDiv.style.display = "flex";
-            selectionDiv.innerHTML = "";
-            characters.forEach(char => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `
-                    <img src="${char.image}" alt="${char.name}">
-                    <div>${char.name}</div>
-                    <div>Overall: ${char.overall}</div>
-                `;
-                card.onclick = () => toggleSelection(char, card);
-                selectionDiv.appendChild(card);
-            });
-            selectionDiv.innerHTML += `
-                <div style="width: 100%; text-align: center;">
-                    <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות (${selectedTeam.length}/5)</button>
-                    <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
-                </div>
-            `;
-            hideAllExcept("character-selection");
-        }
+    clearPopups();
+    const selectionDiv = document.getElementById("character-selection");
+    selectionDiv.style.display = "flex";
+    selectionDiv.innerHTML = "";
+    characters.forEach(char => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <img src="${char.image}" alt="${char.name}">
+            <div>${char.name}</div>
+            <div>Overall: ${char.overall}</div>
+        `;
+        card.addEventListener("click", () => toggleSelection(char, card)); // שימוש ב-addEventListener במקום onclick
+        selectionDiv.appendChild(card);
+    });
+    selectionDiv.innerHTML += `
+        <div style="width: 100%; text-align: center;">
+            <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות (${selectedTeam.length}/5)</button>
+            <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
+        </div>
+    `;
+    hideAllExcept("character-selection");
+}
 
-        function toggleSelection(char, card) {
-            const index = selectedTeam.findIndex(c => c.name === char.name);
-            if (index !== -1) {
-                selectedTeam.splice(index, 1);
-                card.classList.remove("selected");
-            } else if (selectedTeam.length < 5) {
-                selectedTeam.push({ ...char, health: char.overall });
-                card.classList.add("selected");
-            }
-            const confirmButton = document.getElementById("confirm-team");
-            confirmButton.disabled = selectedTeam.length !== 5;
-            confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
-        }
+function toggleSelection(char, card) {
+    const index = selectedTeam.findIndex(c => c.name === char.name);
+    if (index !== -1) {
+        selectedTeam.splice(index, 1);
+        card.classList.remove("selected");
+    } else if (selectedTeam.length < 5) {
+        selectedTeam.push({ ...char, health: char.overall });
+        card.classList.add("selected");
+    }
+    const confirmButton = document.getElementById("confirm-team");
+    confirmButton.disabled = selectedTeam.length !== 5;
+    confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
+}
 
-        function selectRandomTeam() {
-            clearPopups();
-            selectedTeam = [];
-            const shuffled = [...characters].sort(() => 0.5 - Math.random());
-            selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
-            assignRandomRoles();
-            confirmTeam();
-        }
+function selectRandomTeam() {
+    clearPopups();
+    selectedTeam = [];
+    const shuffled = [...characters].sort(() => 0.5 - Math.random());
+    selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
+    
+    // עדכון ממשק המשתמש כדי לסמן את הכרטיסים שנבחרו
+    const cards = document.querySelectorAll(".card");
+    cards.forEach(card => card.classList.remove("selected")); // הסרת סימון קודם
+    selectedTeam.forEach(char => {
+        const card = Array.from(cards).find(c => c.querySelector("div").textContent === char.name);
+        if (card) card.classList.add("selected");
+    });
 
+    const confirmButton = document.getElementById("confirm-team");
+    confirmButton.disabled = false; // מאפשר את הכפתור כי יש 5 חברים
+    confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
+
+    assignRandomRoles(); // ממשיך לתפקידים רנדומליים
+    confirmTeam(); // ממשיך לאישור הצוות
+}
         function confirmTeam() {
             clearPopups();
             const teamDisplay = document.getElementById("team-display");
