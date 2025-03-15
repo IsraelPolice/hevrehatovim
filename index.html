@@ -329,7 +329,7 @@
                     <div class="overall">Overall: ${char.overall}</div>
                     <div class="stars">${"★".repeat(stars)}</div>
                     <img class="flag" src="${char.flag}">
-                    <select id="role-${char.name}" onchange="updateTeam()">
+                    <select id="role-${char.name}">
                         <option value="">בחר תפקיד</option>
                         ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
                         <option value="חייל">חייל</option>
@@ -347,43 +347,6 @@
                 confirmRolesButton.onclick = confirmRoles;
                 teamDisplay.appendChild(confirmRolesButton);
             }, delay * 1000 + 500);
-
-            updateTeam(); // עדכון תפקידים ראשוני
-        }
-
-        function updateTeam() {
-            let leaderCount = 0, soldierCount = 0, whoreCount = 0;
-
-            // ספירת התפקידים הנוכחיים
-            selectedTeam.forEach(char => {
-                const role = document.getElementById(`role-${char.name}`).value;
-                if (role === "מנהיג") leaderCount++;
-                if (role === "חייל") soldierCount++;
-                if (role === "זונה") whoreCount++;
-            });
-
-            // עדכון התפריטים בהתאם להגבלות
-            selectedTeam.forEach(char => {
-                const select = document.getElementById(`role-${char.name}`);
-                const currentValue = select.value; // שמירת הערך הנוכחי
-                select.innerHTML = '<option value="">בחר תפקיד</option>';
-
-                // אופציות זמינות לפי הגבלות
-                if (leaderCount < 1 && char.name !== "אריאל עין גל" && char.name !== "חיים מרקס") {
-                    select.innerHTML += '<option value="מנהיג">מנהיג</option>';
-                }
-                if (soldierCount < 3) {
-                    select.innerHTML += '<option value="חייל">חייל</option>';
-                }
-                if (whoreCount < 1 && char.name !== "דביר ברקת") {
-                    select.innerHTML += '<option value="זונה">זונה</option>';
-                }
-                if (char.name === "ליאב בן יעקב") {
-                    select.innerHTML += '<option value="הגיי של הצוות">הגיי של הצוות</option>';
-                }
-
-                select.value = currentValue; // שחזור הערך שנבחר
-            });
         }
 
         function confirmRoles() {
@@ -392,22 +355,30 @@
                 const role = document.getElementById(`role-${char.name}`).value;
 
                 if (!role) return alert("חובה לבחור תפקיד לכל חבר צוות!");
-                if (role === "מנהיג" && ++leaderCount > 1) return alert("יכול להיות רק מנהיג אחד!");
-                if (role === "חייל" && ++soldierCount > 3) return alert("יכולים להיות עד 3 חיילים!");
-                if (role === "זונה" && ++whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
+                if (role === "מנהיג") leaderCount++;
+                if (role === "חייל") soldierCount++;
+                if (role === "זונה") whoreCount++;
+
                 if (char.name === "דביר ברקת" && role === "זונה") return showLosePopup(char);
                 if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") return alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
                 if (char.name === "ליאב בן יעקב" && role !== "הגיי של הצוות") {
                     showLiavConfirmation(char, role);
                     return;
                 }
+            }
 
+            if (leaderCount > 1) return alert("יכול להיות רק מנהיג אחד!");
+            if (soldierCount > 3) return alert("יכולים להיות עד 3 חיילים!");
+            if (whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
+
+            selectedTeam.forEach(char => {
+                const role = document.getElementById(`role-${char.name}`).value;
                 char.role = role;
                 if (role === "מנהיג") char.overall += 3;
                 if (role === "חייל") char.overall += 1;
                 if (role === "זונה") char.overall -= 2;
                 char.health = char.overall;
-            }
+            });
 
             startBattle(0);
         }
