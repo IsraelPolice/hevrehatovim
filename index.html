@@ -160,6 +160,33 @@
             border-radius: 10px;
             margin-bottom: 15px;
         }
+
+        .battle-text {
+            font-size: 1.5em;
+            color: #ff0066;
+            text-shadow: 0 0 10px #ff0066;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .health-bar {
+            width: 100%;
+            background: #333;
+            height: 20px;
+            border-radius: 10px;
+            margin: 5px 0;
+            overflow: hidden;
+        }
+
+        .health-bar-fill {
+            height: 100%;
+            background: #00ffcc;
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -195,13 +222,19 @@
         let selectedTeam = [];
         let coins = 100;
         const battles = [
-            { name: "כיכר ירושלים", requiredAvg: 65, damage: 10 },
-            { name: "פארק המים", requiredAvg: 70, damage: 15 },
-            { name: "המרכז", requiredAvg: 75, damage: 20 },
-            { name: "שכונת האילנות", requiredAvg: 80, damage: 25 },
-            { name: "שכונת סביונים", requiredAvg: 85, damage: 30 },
-            { name: "יפה נוף", requiredAvg: 90, damage: 35 },
-            { name: "ביג בוס", requiredAvg: 92, damage: 40 }
+            { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!" },
+            { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!" },
+            { name: "המרכז", requiredAvg: 75, damage: 20, story: "המרכז המסחרי נפל, הצילו את התושבים!" },
+            { name: "שכונת האילנות", requiredAvg: 80, damage: 25, story: "מלכודות הוטמנו בשכונה, היזהר!" },
+            { name: "שכונת סביונים", requiredAvg: 85, damage: 30, story: "האויב בנה בסיס בסביונים, הרוס אותו!" },
+            { name: "יפה נוף", requiredAvg: 90, damage: 35, story: "קרב גובה קטלני, שלוט בהר!" },
+            { name: "ביג בוס", requiredAvg: 92, damage: 40, story: "המנהיג הסופי מחכה, תביס אותו!" }
+        ];
+
+        const randomEvents = [
+            { text: "מלכודת! הצוות שלך נפגע!", effect: () => selectedTeam.forEach(char => char.health -= 5) },
+            { text: "תגבורת! מצאת אספקה!", effect: () => coins += 20 },
+            { text: "מזל טוב! אויב נרדם!", effect: () => {} }
         ];
 
         function showIntroPopup() {
@@ -233,79 +266,50 @@
                 selectedTeam.splice(index, 1);
                 card.classList.remove("selected");
             } else if (selectedTeam.length < 5) {
-                selectedTeam.push({ ...char, health: char.overall }); // חיים שווים ל-Overall
+                selectedTeam.push({ ...char, health: char.overall });
                 card.classList.add("selected");
             }
             document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
         }
 
-       function confirmTeam() {
-    document.getElementById("character-selection").style.display = "none";
-    document.getElementById("confirm-team").style.display = "none";
-    const teamDisplay = document.getElementById("team-display");
-    teamDisplay.style.display = "block";
-    teamDisplay.innerHTML = "<h2>הצוות שלך:</h2>";
+        function confirmTeam() {
+            document.getElementById("character-selection").style.display = "none";
+            document.getElementById("confirm-team").style.display = "none";
+            const teamDisplay = document.getElementById("team-display");
+            teamDisplay.style.display = "block";
+            teamDisplay.innerHTML = "<h2>הצוות שלך:</h2>";
 
-    let delay = 0;
-    selectedTeam.forEach(char => {
-        const stars = Math.floor(char.overall / 20);
-        const card = document.createElement("div");
-        card.className = "team-card";
-        card.style.animationDelay = `${delay}s`;
-        card.innerHTML = `
-            <img src="${char.image}" class="player-img">
-            <div class="name">${char.name}</div>
-            <div class="overall">Overall: ${char.overall}</div>
-            <div class="stars">${"★".repeat(stars)}</div>
-            <img class="flag" src="${char.flag}">
-            <select id="role-${char.name}" onchange="updateTeam('${char.name}')">
-                <option value="">בחר תפקיד</option>
-                ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
-                <option value="חייל">חייל</option>
-                ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
-                ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
-            </select>
-        `;
-        teamDisplay.appendChild(card);
-        delay += 0.5;
-    });
+            let delay = 0;
+            selectedTeam.forEach(char => {
+                const stars = Math.floor(char.overall / 20);
+                const card = document.createElement("div");
+                card.className = "team-card";
+                card.style.animationDelay = `${delay}s`;
+                card.innerHTML = `
+                    <img src="${char.image}" class="player-img">
+                    <div class="name">${char.name}</div>
+                    <div class="overall">Overall: ${char.overall}</div>
+                    <div class="stars">${"★".repeat(stars)}</div>
+                    <img class="flag" src="${char.flag}">
+                    <select id="role-${char.name}" onchange="updateTeam('${char.name}')">
+                        <option value="">בחר תפקיד</option>
+                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
+                        <option value="חייל">חייל</option>
+                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
+                        ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
+                    </select>
+                `;
+                teamDisplay.appendChild(card);
+                delay += 0.5;
+            });
 
-    setTimeout(() => {
-        const confirmRolesButton = document.createElement("button");
-        confirmRolesButton.innerText = "התחל קרב";
-        confirmRolesButton.onclick = confirmRoles;
-        teamDisplay.appendChild(confirmRolesButton);
-    }, delay * 1000 + 500);
-}
-
-function showLiavConfirmation(char, role) {
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.id = "liav-popup"; // הוספת ID לזיהוי קל
-    popup.innerHTML = `
-        <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
-        <button onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
-        <button onclick="confirmLiav('${char.name}', '${role}', false)">לא</button>
-    `;
-    document.body.appendChild(popup);
-}
-
-function confirmLiav(charName, role, confirm) {
-    const popup = document.getElementById("liav-popup");
-    if (popup) popup.remove(); // סגירת הפופ-אפ
-
-    const char = selectedTeam.find(c => c.name === charName);
-    if (confirm) {
-        char.role = role;
-    } else {
-        char.role = "הגיי של הצוות";
-    }
-    if (char.role === "מנהיג") char.overall += 3;
-    if (char.role === "חייל") char.overall += 1;
-    if (char.role === "זונה") char.overall -= 2;
-    char.health = char.overall;
-    confirmRoles(); // המשך התהליך
-}
+            setTimeout(() => {
+                const confirmRolesButton = document.createElement("button");
+                confirmRolesButton.innerText = "התחל קרב";
+                confirmRolesButton.onclick = confirmRoles;
+                teamDisplay.appendChild(confirmRolesButton);
+            }, delay * 1000 + 500);
+        }
 
         function confirmRoles() {
             let leaderCount = 0, soldierCount = 0, whoreCount = 0;
@@ -327,7 +331,7 @@ function confirmLiav(charName, role, confirm) {
                 if (role === "מנהיג") char.overall += 3;
                 if (role === "חייל") char.overall += 1;
                 if (role === "זונה") char.overall -= 2;
-                char.health = char.overall; // חיים שווים ל-Overall המשופר
+                char.health = char.overall; // חיים מלאים בהתחלה
             }
 
             startBattle(0);
@@ -336,16 +340,19 @@ function confirmLiav(charName, role, confirm) {
         function showLiavConfirmation(char, role) {
             const popup = document.createElement("div");
             popup.className = "popup";
+            popup.id = "liav-popup";
             popup.innerHTML = `
-                <h3>אתה בטוח שלא רוצה שליאב יהיה הגיי של הצוות?</h3>
-                <button onclick="confirmLiav('${char.name}', '${role}', this.parentElement, true)">כן</button>
-                <button onclick="confirmLiav('${char.name}', '${role}', this.parentElement, false)">לא</button>
+                <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
+                <button onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
+                <button onclick="confirmLiav('${char.name}', '${role}', false)">לא</button>
             `;
             document.body.appendChild(popup);
         }
 
-        function confirmLiav(charName, role, popup, confirm) {
-            popup.remove();
+        function confirmLiav(charName, role, confirm) {
+            const popup = document.getElementById("liav-popup");
+            if (popup) popup.remove();
+
             const char = selectedTeam.find(c => c.name === charName);
             if (confirm) {
                 char.role = role;
@@ -378,12 +385,28 @@ function confirmLiav(charName, role, confirm) {
             const battle = battles[battleIndex];
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
 
+            battleDisplay.innerHTML = `
+                <h2>מלחמה: ${battle.name}</h2>
+                <p>${battle.story}</p>
+                <p>דירוג ממוצע נדרש: ${battle.requiredAvg}</p>
+                <p>דירוג ממוצע שלך: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
+                <div class="battle-text">הצוות שלך מתכונן לתקוף...</div>
+                <button onclick="fightBattle(${battleIndex})">תקוף</button>
+            `;
+        }
+
+        function fightBattle(battleIndex) {
+            const battle = battles[battleIndex];
+            let aliveTeam = selectedTeam.filter(char => char.health > 0);
+            const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
+            const battleDisplay = document.getElementById("battle-display");
+
             if (battleIndex === 2) {
                 const traitors = aliveTeam.filter(char => char.name === "ליאב בן יעקב" || char.name === "עמית לסרי");
                 if (traitors.length > 0) {
                     traitors.forEach(traitor => {
                         showTraitorPopup(traitor);
-                        selectedTeam = selectedTeam.filter(char => char.name !== traitor.name); // הסרה מלאה
+                        selectedTeam = selectedTeam.filter(char => char.name !== traitor.name);
                     });
                     setTimeout(() => {
                         document.querySelectorAll(".popup").forEach(popup => popup.remove());
@@ -394,26 +417,28 @@ function confirmLiav(charName, role, confirm) {
                 }
             }
 
-            const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
-            battleDisplay.innerHTML = `
-                <h2>מלחמה: ${battle.name}</h2>
-                <p>דירוג ממוצע נדרש: ${battle.requiredAvg}</p>
-                <p>דירוג ממוצע שלך: ${avg.toFixed(2)}</p>
-            `;
-            
-            if (aliveTeam.length === 0) {
-                battleDisplay.innerHTML += "<p>הפסדת! כל הצוות שלך מת.</p>";
-                return;
-            }
+            battleDisplay.innerHTML = `<h2>מלחמה: ${battle.name}</h2><div class="battle-text">הצוות שלך תוקף את ${battle.name}!</div>`;
+            setTimeout(() => {
+                if (avg >= battle.requiredAvg) {
+                    aliveTeam.forEach(char => {
+                        char.health = Math.max(0, char.health - battle.damage); // נזק רק אחרי הקרב
+                    });
 
-            if (avg >= battle.requiredAvg) {
-                aliveTeam.forEach(char => {
-                    char.health = Math.max(0, char.health - battle.damage);
-                });
-                displayTeamStatus(battleIndex);
-            } else {
-                battleDisplay.innerHTML += "<p>הפסדת! הדירוג שלך נמוך מדי.</p>";
-            }
+                    // אירוע אקראי
+                    if (Math.random() < 0.3) { // 30% סיכוי
+                        const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+                        battleDisplay.innerHTML += `<p>${event.text}</p>`;
+                        event.effect();
+                    }
+
+                    displayTeamStatus(battleIndex);
+                } else {
+                    battleDisplay.innerHTML = `
+                        <h2>מלחמה: ${battle.name}</h2>
+                        <p>הפסדת! הדירוג שלך נמוך מדי (${avg.toFixed(2)} < ${battle.requiredAvg}).</p>
+                    `;
+                }
+            }, 2000); // אנימציית קרב של 2 שניות
         }
 
         function showTraitorPopup(traitor) {
@@ -430,27 +455,30 @@ function confirmLiav(charName, role, confirm) {
 
         function displayTeamStatus(battleIndex) {
             const battleDisplay = document.getElementById("battle-display");
+            const aliveTeam = selectedTeam.filter(char => char.health > 0);
             battleDisplay.innerHTML = `
                 <h2>מלחמה: ${battles[battleIndex].name}</h2>
                 <p>דירוג ממוצע נדרש: ${battles[battleIndex].requiredAvg}</p>
-                <p>דירוג ממוצע שלך: ${(selectedTeam.filter(char => char.health > 0).reduce((sum, char) => sum + char.overall, 0) / selectedTeam.filter(char => char.health > 0).length || 0).toFixed(2)}</p>
+                <p>דירוג ממוצע שלך: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
                 <p>מטבעות: ${coins}</p>
                 <h3>מצב הצוות:</h3>
             `;
             selectedTeam.forEach(char => {
+                const healthPercent = (char.health / char.overall) * 100;
                 battleDisplay.innerHTML += `
                     <div>
                         ${char.name} (${char.role}) - חיים: ${char.health}/${char.overall}
+                        <div class="health-bar"><div class="health-bar-fill" style="width: ${healthPercent}%"></div></div>
                         ${char.health > 0 && char.health < char.overall ? `<button onclick="heal('${char.name}', ${battleIndex})">רפא (10 מטבעות)</button>` : ""}
                     </div>`;
             });
-            const aliveTeam = selectedTeam.filter(char => char.health > 0);
-            if (aliveTeam.length > 0 && battleIndex < battles.length - 1) {
-                battleDisplay.innerHTML += `<button onclick="startBattle(${battleIndex + 1})">המשך לשלב הבא</button>`;
-            } else if (aliveTeam.length > 0 && battleIndex === battles.length - 1) {
-                battleDisplay.innerHTML += "<p>ניצחת את הביג בוס! סיימת את המשחק!</p>";
-            } else {
+
+            if (aliveTeam.length === 0) {
                 battleDisplay.innerHTML += "<p>הפסדת! כל הצוות שלך מת.</p>";
+            } else if (battleIndex < battles.length - 1) {
+                battleDisplay.innerHTML += `<button onclick="startBattle(${battleIndex + 1})">המשך לשלב הבא</button>`;
+            } else {
+                battleDisplay.innerHTML += "<p>ניצחת את הביג בוס! סיימת את המשחק!</p>";
             }
         }
 
