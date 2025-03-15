@@ -239,44 +239,73 @@
             document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
         }
 
-        function confirmTeam() {
-            document.getElementById("character-selection").style.display = "none";
-            document.getElementById("confirm-team").style.display = "none";
-            const teamDisplay = document.getElementById("team-display");
-            teamDisplay.style.display = "block";
-            teamDisplay.innerHTML = "<h2>הצוות שלך:</h2>";
+       function confirmTeam() {
+    document.getElementById("character-selection").style.display = "none";
+    document.getElementById("confirm-team").style.display = "none";
+    const teamDisplay = document.getElementById("team-display");
+    teamDisplay.style.display = "block";
+    teamDisplay.innerHTML = "<h2>הצוות שלך:</h2>";
 
-            let delay = 0;
-            selectedTeam.forEach(char => {
-                const stars = Math.floor(char.overall / 20);
-                const card = document.createElement("div");
-                card.className = "team-card";
-                card.style.animationDelay = `${delay}s`;
-                card.innerHTML = `
-                    <img src="${char.image}" class="player-img">
-                    <div class="name">${char.name}</div>
-                    <div class="overall">Overall: ${char.overall}</div>
-                    <div class="stars">${"★".repeat(stars)}</div>
-                    <img class="flag" src="${char.flag}">
-                    <select id="role-${char.name}" onchange="updateTeam('${char.name}')">
-                        <option value="">בחר תפקיד</option>
-                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
-                        <option value="חייל">חייל</option>
-                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
-                        ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
-                    </select>
-                `;
-                teamDisplay.appendChild(card);
-                delay += 0.5; // מרווח קצר יותר לאנימציה חלקה
-            });
+    let delay = 0;
+    selectedTeam.forEach(char => {
+        const stars = Math.floor(char.overall / 20);
+        const card = document.createElement("div");
+        card.className = "team-card";
+        card.style.animationDelay = `${delay}s`;
+        card.innerHTML = `
+            <img src="${char.image}" class="player-img">
+            <div class="name">${char.name}</div>
+            <div class="overall">Overall: ${char.overall}</div>
+            <div class="stars">${"★".repeat(stars)}</div>
+            <img class="flag" src="${char.flag}">
+            <select id="role-${char.name}" onchange="updateTeam('${char.name}')">
+                <option value="">בחר תפקיד</option>
+                ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
+                <option value="חייל">חייל</option>
+                ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
+                ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
+            </select>
+        `;
+        teamDisplay.appendChild(card);
+        delay += 0.5;
+    });
 
-            setTimeout(() => {
-                const confirmRolesButton = document.createElement("button");
-                confirmRolesButton.innerText = "התחל קרב";
-                confirmRolesButton.onclick = confirmRoles;
-                teamDisplay.appendChild(confirmRolesButton);
-            }, delay * 1000 + 500);
-        }
+    setTimeout(() => {
+        const confirmRolesButton = document.createElement("button");
+        confirmRolesButton.innerText = "התחל קרב";
+        confirmRolesButton.onclick = confirmRoles;
+        teamDisplay.appendChild(confirmRolesButton);
+    }, delay * 1000 + 500);
+}
+
+function showLiavConfirmation(char, role) {
+    const popup = document.createElement("div");
+    popup.className = "popup";
+    popup.id = "liav-popup"; // הוספת ID לזיהוי קל
+    popup.innerHTML = `
+        <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
+        <button onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
+        <button onclick="confirmLiav('${char.name}', '${role}', false)">לא</button>
+    `;
+    document.body.appendChild(popup);
+}
+
+function confirmLiav(charName, role, confirm) {
+    const popup = document.getElementById("liav-popup");
+    if (popup) popup.remove(); // סגירת הפופ-אפ
+
+    const char = selectedTeam.find(c => c.name === charName);
+    if (confirm) {
+        char.role = role;
+    } else {
+        char.role = "הגיי של הצוות";
+    }
+    if (char.role === "מנהיג") char.overall += 3;
+    if (char.role === "חייל") char.overall += 1;
+    if (char.role === "זונה") char.overall -= 2;
+    char.health = char.overall;
+    confirmRoles(); // המשך התהליך
+}
 
         function confirmRoles() {
             let leaderCount = 0, soldierCount = 0, whoreCount = 0;
