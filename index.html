@@ -248,7 +248,7 @@
         ];
 
         let selectedTeam = [];
-        let coins = 100;
+        let coins = 150; // שינוי מ-100 ל-150
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!" },
             { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!" },
@@ -386,7 +386,7 @@
         function showLiavConfirmation(char, role) {
             const popup = document.createElement("div");
             popup.className = "popup";
-            popup.id = "liav-popup"; // הוספת ID לזיהוי חד-משמעי
+            popup.id = "liav-popup";
             popup.innerHTML = `
                 <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
                 <button onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
@@ -398,9 +398,8 @@
         function confirmLiav(charName, role, confirm) {
             const popup = document.getElementById("liav-popup");
             if (popup) {
-                popup.remove(); // סגירת הפופ-אפ בצורה ישירה עם ה-ID
+                popup.remove();
             } else {
-                // אם ה-ID לא נמצא, נסה למצוא כל פופ-אפ קיים ולסגור אותו
                 const existingPopup = document.querySelector(".popup");
                 if (existingPopup) existingPopup.remove();
             }
@@ -415,7 +414,7 @@
             if (char.role === "חייל") char.overall += 1;
             if (char.role === "זונה") char.overall -= 2;
             char.health = char.overall;
-            confirmRoles(); // ממשיך לתהליך האישור
+            confirmRoles();
         }
 
         function showLosePopup(char) {
@@ -551,6 +550,7 @@
             const aliveTeam = selectedTeam.filter(char => char.health > 0 && char.name !== "דביר ברקת");
             if (aliveTeam.length === 0) return;
 
+            // בחירה רנדומלית של דמות חיה (ללא דביר ברקת)
             const randomChar = aliveTeam[Math.floor(Math.random() * aliveTeam.length)];
             const message = postBattleMessages[battleIndex];
 
@@ -562,6 +562,13 @@
                 <button onclick="this.parentElement.remove()">סגור</button>
             `;
             document.body.appendChild(popup);
+
+            // סגירה אוטומטית אחרי 5 שניות
+            setTimeout(() => {
+                if (popup && document.body.contains(popup)) {
+                    popup.remove();
+                }
+            }, 5000);
         }
 
         document.getElementById("confirm-team").onclick = confirmTeam;
