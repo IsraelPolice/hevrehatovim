@@ -386,6 +386,7 @@
         function showLiavConfirmation(char, role) {
             const popup = document.createElement("div");
             popup.className = "popup";
+            popup.id = "liav-popup"; // הוספת ID לזיהוי חד-משמעי
             popup.innerHTML = `
                 <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
                 <button onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
@@ -395,8 +396,14 @@
         }
 
         function confirmLiav(charName, role, confirm) {
-            const popup = document.querySelector(".popup");
-            if (popup) popup.remove();
+            const popup = document.getElementById("liav-popup");
+            if (popup) {
+                popup.remove(); // סגירת הפופ-אפ בצורה ישירה עם ה-ID
+            } else {
+                // אם ה-ID לא נמצא, נסה למצוא כל פופ-אפ קיים ולסגור אותו
+                const existingPopup = document.querySelector(".popup");
+                if (existingPopup) existingPopup.remove();
+            }
 
             const char = selectedTeam.find(c => c.name === charName);
             if (confirm) {
@@ -408,7 +415,7 @@
             if (char.role === "חייל") char.overall += 1;
             if (char.role === "זונה") char.overall -= 2;
             char.health = char.overall;
-            confirmRoles();
+            confirmRoles(); // ממשיך לתהליך האישור
         }
 
         function showLosePopup(char) {
