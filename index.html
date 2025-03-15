@@ -161,6 +161,34 @@
             margin-bottom: 15px;
         }
 
+        .message-popup {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ffcc;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #00ffcc;
+            z-index: 1000;
+            text-align: right;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .message-popup img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            float: right;
+            margin-left: 10px;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
         .battle-text {
             font-size: 1.5em;
             color: #ff0066;
@@ -237,6 +265,13 @@
             { text: "מזל טוב! אויב נרדם!", effect: () => {} }
         ];
 
+        const postBattleMessages = [
+            "אני לא יודע אם אוכל להחזיק מעמד בעוד קרב כזה, אני חייב לאונן מתישהו בקרוב",
+            "אני חייב למצוץ משהו, אני לא יכול, אני חרמן מת, אני נורא מפחד מהקרב הבא",
+            "אני חרמן ממש, נראה לי אני אכניס איזה מלפפון לתחת או שמישהו רגע יזיין אותי, אני לא יודע אם נחזור הביתה, הקרב האחרון היה קשה ואני מפחד מאוד, בבקשה שזה יגמר...",
+            "טוב אני רגע מביא ביד, אני מצטער פה מולכם, זה יקרה, אין ברירה, לא נראה לי שנשרוד, תודה לכולם על הכל, הייתם חברים מדהימים"
+        ];
+
         function showIntroPopup() {
             const popup = document.createElement("div");
             popup.className = "popup";
@@ -277,7 +312,10 @@
             document.getElementById("confirm-team").style.display = "none";
             const teamDisplay = document.getElementById("team-display");
             teamDisplay.style.display = "block";
-            teamDisplay.innerHTML = "<h2>הצוות שלך:</h2>";
+            teamDisplay.innerHTML = `
+                <h2>הצוות שלך:</h2>
+                <p style="color: #ff0066; font-size: 1.2em;">שימו לב: ניתן לבחור מנהיג אחד, עד 3 חיילים וזונה אחת</p>
+            `;
 
             let delay = 0;
             selectedTeam.forEach(char => {
@@ -291,17 +329,15 @@
                     <div class="overall">Overall: ${char.overall}</div>
                     <div class="stars">${"★".repeat(stars)}</div>
                     <img class="flag" src="${char.flag}">
-                    <select id="role-${char.name}" onchange="updateTeam('${char.name}')">
+                    <select id="role-${char.name}" onchange="updateTeam()">
                         <option value="">בחר תפקיד</option>
-                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
-                        <option value="חייל">חייל</option>
-                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
-                        ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
                     </select>
                 `;
                 teamDisplay.appendChild(card);
                 delay += 0.5;
             });
+
+            updateTeam(); // עדכון התפקידים הראשוני
 
             setTimeout(() => {
                 const confirmRolesButton = document.createElement("button");
@@ -309,6 +345,36 @@
                 confirmRolesButton.onclick = confirmRoles;
                 teamDisplay.appendChild(confirmRolesButton);
             }, delay * 1000 + 500);
+        }
+
+        function updateTeam() {
+            let leaderCount = 0, soldierCount = 0, whoreCount = 0;
+            selectedTeam.forEach(char => {
+                const role = document.getElementById(`role-${char.name}`).value;
+                if (role === "מנהיג") leaderCount++;
+                if (role === "חייל") soldierCount++;
+                if (role === "זונה") whoreCount++;
+            });
+
+            selectedTeam.forEach(char => {
+                const select = document.getElementById(`role-${char.name}`);
+                select.innerHTML = '<option value="">בחר תפקיד</option>';
+                if (leaderCount === 0 && char.name !== "אריאל עין גל" && char.name !== "חיים מרקס") {
+                    select.innerHTML += '<option value="מנהיג">מנהיג</option>';
+                }
+                if (soldierCount < 3) {
+                    select.innerHTML += '<option value="חייל">חייל</option>';
+                }
+                if (whoreCount === 0 && char.name !== "דביר ברקת") {
+                    select.innerHTML += '<option value="זונה">זונה</option>';
+                }
+                if (char.name === "ליאב בן יעקב") {
+                    select.innerHTML += '<option value="הגיי של הצוות">הגיי של הצוות</option>';
+                }
+
+                const currentRole = selectedTeam.find(c => c.name === char.name).role;
+                if (currentRole) select.value = currentRole;
+            });
         }
 
         function confirmRoles() {
@@ -331,7 +397,7 @@
                 if (role === "מנהיג") char.overall += 3;
                 if (role === "חייל") char.overall += 1;
                 if (role === "זונה") char.overall -= 2;
-                char.health = char.overall; // חיים מלאים בהתחלה
+                char.health = char.overall;
             }
 
             startBattle(0);
@@ -340,7 +406,6 @@
         function showLiavConfirmation(char, role) {
             const popup = document.createElement("div");
             popup.className = "popup";
-            popup.id = "liav-popup";
             popup.innerHTML = `
                 <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
                 <button onclick="confirmLiav('${char.name}', '${role}', true)">כן</button>
@@ -350,8 +415,8 @@
         }
 
         function confirmLiav(charName, role, confirm) {
-            const popup = document.getElementById("liav-popup");
-            if (popup) popup.remove();
+            const popup = document.querySelector(".popup");
+            if (popup) popup.remove(); // סגירת הפופ-אפ
 
             const char = selectedTeam.find(c => c.name === charName);
             if (confirm) {
@@ -421,24 +486,24 @@
             setTimeout(() => {
                 if (avg >= battle.requiredAvg) {
                     aliveTeam.forEach(char => {
-                        char.health = Math.max(0, char.health - battle.damage); // נזק רק אחרי הקרב
+                        char.health = Math.max(0, char.health - battle.damage);
                     });
 
-                    // אירוע אקראי
-                    if (Math.random() < 0.3) { // 30% סיכוי
+                    if (Math.random() < 0.3) {
                         const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
                         battleDisplay.innerHTML += `<p>${event.text}</p>`;
                         event.effect();
                     }
 
                     displayTeamStatus(battleIndex);
+                    if (battleIndex < 4) showPostBattleMessage(battleIndex); // הודעה עד קרב 4
                 } else {
                     battleDisplay.innerHTML = `
                         <h2>מלחמה: ${battle.name}</h2>
                         <p>הפסדת! הדירוג שלך נמוך מדי (${avg.toFixed(2)} < ${battle.requiredAvg}).</p>
                     `;
                 }
-            }, 2000); // אנימציית קרב של 2 שניות
+            }, 2000);
         }
 
         function showTraitorPopup(traitor) {
@@ -493,6 +558,23 @@
             } else {
                 alert("אין מספיק מטבעות!");
             }
+        }
+
+        function showPostBattleMessage(battleIndex) {
+            const aliveTeam = selectedTeam.filter(char => char.health > 0 && char.name !== "דביר ברקת");
+            if (aliveTeam.length === 0) return;
+
+            const randomChar = aliveTeam[Math.floor(Math.random() * aliveTeam.length)];
+            const message = postBattleMessages[battleIndex];
+
+            const popup = document.createElement("div");
+            popup.className = "message-popup";
+            popup.innerHTML = `
+                <img src="${randomChar.image}">
+                <p><strong>${randomChar.name}:</strong> ${message}</p>
+                <button onclick="this.parentElement.remove()">סגור</button>
+            `;
+            document.body.appendChild(popup);
         }
 
         document.getElementById("confirm-team").onclick = confirmTeam;
