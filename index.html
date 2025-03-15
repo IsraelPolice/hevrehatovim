@@ -37,7 +37,7 @@
             font-size: 2em;
         }
 
-        .character-card {
+        .character-card, .transfer-card {
             display: inline-block;
             margin: 15px;
             padding: 15px;
@@ -51,7 +51,7 @@
             text-align: center;
         }
 
-        .character-card:hover {
+        .character-card:hover, .transfer-card:hover {
             transform: scale(1.1);
             box-shadow: 0 0 25px #ff0066;
         }
@@ -61,7 +61,7 @@
             box-shadow: 0 0 20px #ff0066;
         }
 
-        .character-card img {
+        .character-card img, .transfer-card img {
             border-radius: 10px;
             width: 120px;
             height: 120px;
@@ -148,6 +148,8 @@
             z-index: 1000;
             text-align: center;
             animation: popupGlow 2s infinite alternate;
+            width: 80%;
+            max-width: 800px;
         }
 
         @keyframes popupGlow {
@@ -235,31 +237,33 @@
 
     <script>
         const characters = [
-            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png" },
-            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png" },
-            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png" },
-            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" },
-            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" }
+            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((79 / 96) * 36000000) },
+            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round((88 / 96) * 36000000) },
+            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((90 / 96) * 36000000) },
+            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((82 / 96) * 36000000) },
+            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((90 / 96) * 36000000) },
+            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((86 / 96) * 36000000) },
+            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((92 / 96) * 36000000) },
+            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((80 / 96) * 36000000) },
+            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((74 / 96) * 36000000) },
+            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((83 / 96) * 36000000) },
+            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((58 / 96) * 36000000) },
+            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((85 / 96) * 36000000) },
+            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((89 / 96) * 36000000) },
+            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((82 / 96) * 36000000) },
+            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round((66 / 96) * 36000000) },
+            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round((71 / 96) * 36000000) },
+            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((88 / 96) * 36000000) },
+            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round((57 / 96) * 36000000) },
+            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000 }
         ];
 
         let selectedTeam = [];
         let coins = 150;
+        let teamBudget = 15000000; // תקציב קבוצה התחלתי: 15 מיליון אירו
         let playerName = "שחקן";
         let completedBattles = [];
+        let lastBattleName = "";
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!", altOption: "lake" },
             { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!", altOption: "zamira" },
@@ -312,7 +316,7 @@
             characters.forEach(char => {
                 const card = document.createElement("div");
                 card.className = "character-card";
-                card.innerHTML = `<img src="${char.image}"><div>${char.name}</div>`;
+                card.innerHTML = `<img src="${char.image}"><div>${char.name} (${char.value.toLocaleString()} €)</div>`;
                 card.onclick = () => toggleSelection(char, card);
                 selectionDiv.appendChild(card);
             });
@@ -487,7 +491,7 @@
             if (popup) popup.remove();
 
             const selectElement = document.getElementById(`role-${charName}`);
-            selectElement.value = role; // שומר את התפקיד שבחרת
+            selectElement.value = role;
             confirmRoles();
         }
 
@@ -530,6 +534,7 @@
 
         function startLakeBattle(battleIndex) {
             completedBattles.push("lake");
+            lastBattleName = "האגם";
             const battleDisplay = document.getElementById("battle-display");
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             battleDisplay.innerHTML = `
@@ -556,6 +561,7 @@
 
         function confirmSuckChoice(battleIndex) {
             completedBattles.push("suck");
+            lastBattleName = "למי אתה מוכן למצוץ?";
             const chosenName = document.getElementById("suck-choice").value;
             const popup = document.createElement("div");
             popup.className = "popup fancy";
@@ -569,6 +575,7 @@
 
         function fightZamira(battleIndex) {
             completedBattles.push("zamira");
+            lastBattleName = "זמירה קחלר";
             const battleDisplay = document.getElementById("battle-display");
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             let zamiraHealth = 100;
@@ -602,6 +609,8 @@
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
             const battleDisplay = document.getElementById("battle-display");
+
+            if (!isLake) lastBattleName = battle.name;
 
             if (battleIndex === 2 && !isLake) {
                 const traitors = aliveTeam.filter(char => char.name === "ליאב בן יעקב" || char.name === "עמית לסרי");
@@ -664,11 +673,12 @@
             const battleDisplay = document.getElementById("battle-display");
             const aliveTeam = selectedTeam.filter(char => char.health > 0);
             battleDisplay.innerHTML = `
-                <h2>מלחמה: ${battles[battleIndex].name}</h2>
-                <p>דירוג ממוצע נדרש: ${battles[battleIndex].requiredAvg}</p>
+                <h2>מצב הקבוצה</h2>
+                <p>הקרב האחרון: ${lastBattleName || "טרם התחיל"}</p>
+                <p>דירוג ממוצע נדרש לשלב הבא: ${battles[battleIndex].requiredAvg}</p>
                 <p>דירוג ממוצע שלך: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
-                <p>מטבעות: ${coins}</p>
-                <h3>מצב הצוות:</h3>
+                <p>מטבעות: ${coins} | תקציב קבוצה: ${teamBudget.toLocaleString()} €</p>
+                <h3>רפא חיילים:</h3>
             `;
             selectedTeam.forEach(char => {
                 const healthPercent = (char.health / char.overall) * 100;
@@ -682,10 +692,13 @@
 
             if (aliveTeam.length === 0) {
                 battleDisplay.innerHTML += "<p>הפסדת! כל הצוות שלך מת.</p>";
-            } else if (battleIndex < battles.length - 1) {
-                battleDisplay.innerHTML += `<button onclick="startBattle(${battleIndex + 1})">המשך לשלב הבא</button>`;
             } else {
-                battleDisplay.innerHTML += "<p>ניצחת את הביג בוס! סיימת את המשחק!</p>";
+                battleDisplay.innerHTML += `
+                    <div style="margin-top: 20px;">
+                        ${battleIndex < battles.length - 1 ? `<button onclick="startBattle(${battleIndex + 1})">התחל קרב הבא</button>` : `<p>ניצחת את הביג בוס! סיימת את המשחק!</p>`}
+                        <button onclick="showTransferWindow(${battleIndex})">חלון העברות</button>
+                    </div>
+                `;
             }
         }
 
@@ -699,6 +712,70 @@
                 }
             } else {
                 alert("אין מספיק מטבעות!");
+            }
+        }
+
+        function showTransferWindow(battleIndex) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <h2>חלון העברות</h2>
+                <p>תקציב קבוצה: ${teamBudget.toLocaleString()} €</p>
+                <h3>מכירת שחקנים</h3>
+                <div id="sell-section"></div>
+                <h3>קניית שחקנים</h3>
+                <div id="buy-section"></div>
+                <button onclick="this.parentElement.remove()">סגור</button>
+            `;
+            document.body.appendChild(popup);
+
+            const sellSection = document.getElementById("sell-section");
+            selectedTeam.forEach(char => {
+                const card = document.createElement("div");
+                card.className = "transfer-card";
+                card.innerHTML = `
+                    <img src="${char.image}">
+                    <div>${char.name} (${char.value.toLocaleString()} €)</div>
+                    <button onclick="sellPlayer('${char.name}', ${battleIndex})">מכור</button>
+                `;
+                sellSection.appendChild(card);
+            });
+
+            const buySection = document.getElementById("buy-section");
+            const availablePlayers = characters.filter(c => !selectedTeam.some(t => t.name === c.name));
+            availablePlayers.forEach(char => {
+                const card = document.createElement("div");
+                card.className = "transfer-card";
+                card.innerHTML = `
+                    <img src="${char.image}">
+                    <div>${char.name} (${char.value.toLocaleString()} €)</div>
+                    <button onclick="buyPlayer('${char.name}', ${battleIndex})" ${teamBudget < char.value ? "disabled" : ""}>קנה</button>
+                `;
+                buySection.appendChild(card);
+            });
+        }
+
+        function sellPlayer(charName, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            if (char) {
+                teamBudget += char.value;
+                selectedTeam = selectedTeam.filter(c => c.name !== charName);
+                document.querySelector(".popup").remove();
+                showTransferWindow(battleIndex); // רענון החלון
+            }
+        }
+
+        function buyPlayer(charName, battleIndex) {
+            const char = characters.find(c => c.name === charName);
+            if (teamBudget >= char.value && selectedTeam.length < 5) {
+                teamBudget -= char.value;
+                selectedTeam.push({ ...char, health: char.overall });
+                document.querySelector(".popup").remove();
+                showTransferWindow(battleIndex); // רענון החלון
+            } else if (selectedTeam.length >= 5) {
+                alert("חייב למכור שחקן לפני קנייה חדשה!");
+            } else {
+                alert("אין מספיק תקציב!");
             }
         }
 
