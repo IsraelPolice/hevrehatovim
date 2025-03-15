@@ -4,86 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מלחמת הבלאקיף</title>
-    <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Helvetica', sans-serif;
-            background: #1a1a1a;
-            color: #e0e0e0;
+            font-family: 'Roboto Mono', monospace;
+            background: linear-gradient(135deg, #1a1a1a, #2b0f0f);
+            color: #fff;
             direction: rtl;
             margin: 0;
-            padding: 40px;
+            padding: 20px;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
+            animation: bgPulse 10s infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% { background: linear-gradient(135deg, #1a1a1a, #2b0f0f); }
+            100% { background: linear-gradient(135deg, #2b0f0f, #1a1a1a); }
         }
 
         h1 {
-            color: #fff;
-            font-size: 2.5em;
+            color: #ff1a1a;
+            font-size: 3em;
             text-align: center;
-            margin: 0 0 30px;
-            letter-spacing: 1px;
+            text-shadow: 0 0 10px #ff1a1a;
+            margin: 0 0 20px;
         }
 
         h2 {
             color: #fff;
-            font-size: 1.8em;
-            margin: 20px 0 10px;
+            font-size: 2em;
+            text-shadow: 0 0 5px #00ccff;
+            margin: 15px 0;
         }
 
         .container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
-            max-width: 1200px;
+            gap: 15px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
         }
 
         .card {
-            background: #252525;
-            border: 1px solid #404040;
-            border-radius: 10px;
-            padding: 15px;
-            width: 180px;
+            background: #2c2c2c;
+            border: 2px solid #00ccff;
+            border-radius: 8px;
+            padding: 10px;
+            width: 160px;
             text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 204, 255, 0.3);
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-        }
-
-        .card.selected {
-            border-color: #00ccff;
-            box-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 204, 255, 0.6);
         }
 
         .card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
+            width: 90px;
+            height: 90px;
+            border-radius: 5px;
             object-fit: cover;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .team-card {
-            background: linear-gradient(135deg, #252525, #353535);
-            border: 1px solid #00ccff;
-            border-radius: 10px;
-            padding: 20px;
-            width: 200px;
+            background: linear-gradient(135deg, #2c2c2c, #3a3a3a);
+            border: 2px solid #ff1a1a;
+            border-radius: 8px;
+            padding: 15px;
+            width: 180px;
             text-align: center;
-            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 26, 26, 0.3);
         }
 
         .team-card img {
-            width: 120px;
-            height: 120px;
-            border-radius: 8px;
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
             margin-bottom: 10px;
         }
 
@@ -95,31 +98,42 @@
         button {
             padding: 10px 20px;
             font-size: 16px;
-            background: #00ccff;
+            background: #ff1a1a;
             color: #fff;
-            border: none;
-            border-radius: 8px;
+            border: 2px solid #00ccff;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
-            margin: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 26, 26, 0.5);
+            animation: buttonPulse 1.5s infinite;
+        }
+
+        @keyframes buttonPulse {
+            0% { box-shadow: 0 0 10px rgba(255, 26, 26, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 26, 26, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(255, 26, 26, 0.5); }
         }
 
         button:hover {
-            background: #0099cc;
-            transform: translateY(-2px);
+            background: #00ccff;
+            color: #000;
+            transform: scale(1.1);
         }
 
         button:disabled {
             background: #555;
+            border-color: #333;
+            box-shadow: none;
             cursor: not-allowed;
+            animation: none;
         }
 
         select {
             padding: 8px;
             font-size: 14px;
-            background: #252525;
-            color: #e0e0e0;
-            border: 1px solid #404040;
+            background: #2c2c2c;
+            color: #fff;
+            border: 1px solid #00ccff;
             border-radius: 5px;
             margin: 5px 0;
             width: 100%;
@@ -130,17 +144,51 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #252525;
-            border: 1px solid #00ccff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 26, 26, 0.5);
             z-index: 1000;
             width: 90%;
-            max-width: 800px;
+            max-width: 600px;
             max-height: 80vh;
             overflow-y: auto;
             animation: fadeIn 0.5s ease;
+        }
+
+        .chat-popup {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ccff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
+            z-index: 999;
+            width: 300px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .chat-popup img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            float: right;
+            margin-left: 10px;
+        }
+
+        .chat-popup p {
+            margin: 0;
+            font-size: 14px;
+            color: #fff;
+            text-shadow: 0 0 5px #00ccff;
         }
 
         @keyframes fadeIn {
@@ -151,91 +199,96 @@
         .popup-content {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             text-align: center;
         }
 
         .battle-screen {
-            background: #252525;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid #404040;
-            max-width: 1000px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ff1a1a;
+            max-width: 1200px;
             margin: 0 auto;
+            box-shadow: 0 0 20px rgba(255, 26, 26, 0.3);
         }
 
         .team-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .health-bar {
             width: 100%;
             background: #333;
-            height: 8px;
-            border-radius: 4px;
+            height: 6px;
+            border-radius: 3px;
             margin: 5px 0;
         }
 
         .health-bar-fill {
             height: 100%;
-            background: #00ccff;
+            background: #ff1a1a;
             transition: width 0.5s ease;
-            border-radius: 4px;
+            border-radius: 3px;
         }
 
         .weapon-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .weapon-card {
-            background: #303030;
-            border: 1px solid #404040;
-            border-radius: 10px;
-            padding: 15px;
-            width: 160px;
+            background: #2c2c2c;
+            border: 2px solid #00ccff;
+            border-radius: 8px;
+            padding: 10px;
+            width: 140px;
             text-align: center;
-            transition: transform 0.2s ease;
+            box-shadow: 0 0 10px rgba(0, 204, 255, 0.3);
         }
 
         .weapon-card:hover {
-            transform: translateY(-5px);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 204, 255, 0.6);
         }
 
         .weapon-card img {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 5px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .city-image {
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             height: auto;
             border-radius: 10px;
-            margin: 20px auto;
+            margin: 15px auto;
             display: block;
+            box-shadow: 0 0 20px rgba(255, 26, 26, 0.3);
         }
 
         details {
             margin: 10px 0;
-            background: #303030;
-            border-radius: 8px;
+            background: #2c2c2c;
+            border: 1px solid #00ccff;
+            border-radius: 5px;
             padding: 10px;
         }
 
         summary {
             cursor: pointer;
             font-size: 1.2em;
-            color: #00ccff;
+            color: #ff1a1a;
+            text-shadow: 0 0 5px #ff1a1a;
         }
 
         details[open] summary {
@@ -252,11 +305,13 @@
         @media (max-width: 600px) {
             h1 { font-size: 2em; }
             h2 { font-size: 1.5em; }
-            .card, .team-card { width: 140px; }
-            .card img, .team-card img { width: 80px; height: 80px; }
+            .card, .team-card { width: 120px; }
+            .card img, .team-card img { width: 70px; height: 70px; }
             button { font-size: 14px; padding: 8px 15px; }
-            .popup { padding: 20px; }
-            .city-image { max-width: 300px; }
+            .popup { padding: 15px; max-width: 90%; }
+            .chat-popup { width: 200px; }
+            .chat-popup img { width: 40px; height: 40px; }
+            .city-image { max-width: 100%; }
         }
     </style>
 </head>
@@ -385,13 +440,18 @@
         const prostitutesList = ["לאה אוחנה", "אמא של רפי", "זמירה קחלר", "ורד עין גל"];
 
         const funnyMessages = [
-            "אני חייב לאונן עכשיו, תכסה אותי!",
-            "האויב זרק עליי גרב מסריחה!",
-            "מישהו ראה את הסנדוויץ' שלי?",
-            "אני עייף, אפשר הפסקת קפה?"
+            "אני מרגיש שאני חייב לאונן, אני מאוד מפחד לקרב הבא",
+            "אני מרגיש שאני חייב למצוץ או משהו בקטנה כזה למישהו, אני מאוד מפחד מהקרב הבא",
+            "אני חייב לדחוף איזה משהו לתחת או שמישהו יזיין אותי רגע בתחת, אני לא יודע אם נצא מהקרב הבא, הייתם החברים הטובים בעולם",
+            "אני מרגיש שזה הסוף, בואו תעמדו סביבי ותאוננו, אני ממש לא יודע אם נראה את הבית שוב.."
         ];
 
+        function clearPopups() {
+            document.querySelectorAll('.popup, .chat-popup').forEach(popup => popup.remove());
+        }
+
         function showMainMenu() {
+            clearPopups();
             const mainMenu = document.getElementById("main-menu");
             mainMenu.style.display = "flex";
             mainMenu.innerHTML = `
@@ -402,13 +462,14 @@
         }
 
         function showIntroPopup() {
+            clearPopups();
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
                 <div class="popup-content">
                     <h2>מעלות בסכנה!</h2>
-                    <p>בחר את הצוות שאיתו תצא למלחמה</p>
-                    <button onclick="this.parentElement.parentElement.remove(); displayCharacters()">המשך</button>
+                    <p>הצוות שלך ייבחר אוטומטית למלחמה</p>
+                    <button onclick="this.parentElement.parentElement.remove(); selectRandomTeam()">המשך</button>
                 </div>
             `;
             document.body.appendChild(popup);
@@ -421,38 +482,19 @@
         }
 
         function displayCharacters() {
+            clearPopups();
             const selectionDiv = document.getElementById("character-selection");
             selectionDiv.style.display = "flex";
-            selectionDiv.innerHTML = "";
-            characters.forEach(char => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `<img src="${char.image}" alt="${char.name}"><div>${char.name}</div>`;
-                card.onclick = () => toggleSelection(char, card);
-                selectionDiv.appendChild(card);
-            });
-            selectionDiv.innerHTML += `
+            selectionDiv.innerHTML = `
                 <div style="width: 100%; text-align: center;">
-                    <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות</button>
                     <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
                 </div>
             `;
             hideAllExcept("character-selection");
         }
 
-        function toggleSelection(char, card) {
-            const index = selectedTeam.findIndex(c => c.name === char.name);
-            if (index !== -1) {
-                selectedTeam.splice(index, 1);
-                card.classList.remove("selected");
-            } else if (selectedTeam.length < 5) {
-                selectedTeam.push({ ...char, health: char.overall });
-                card.classList.add("selected");
-            }
-            document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
-        }
-
         function selectRandomTeam() {
+            clearPopups();
             selectedTeam = [];
             const shuffled = [...characters].sort(() => 0.5 - Math.random());
             selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
@@ -461,6 +503,7 @@
         }
 
         function confirmTeam() {
+            clearPopups();
             const teamDisplay = document.getElementById("team-display");
             teamDisplay.style.display = "flex";
             teamDisplay.innerHTML = `<h2>הצוות שלך:</h2>`;
@@ -510,6 +553,7 @@
         }
 
         function confirmRoles() {
+            clearPopups();
             let leaderCount = 0, soldierCount = 0, whoreCount = 0;
             for (const char of selectedTeam) {
                 const role = char.role || document.getElementById(`role-${char.name}`).value;
@@ -536,6 +580,7 @@
         }
 
         function showLosePopup(char) {
+            clearPopups();
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
@@ -550,6 +595,7 @@
         }
 
         function startBattle(battleIndex) {
+            clearPopups();
             const battleDisplay = document.getElementById("battle-display");
             battleDisplay.style.display = "block";
             const battle = battles[battleIndex];
@@ -579,22 +625,21 @@
         }
 
         function showFunnyPopup() {
+            clearPopups();
             const char = selectedTeam[Math.floor(Math.random() * selectedTeam.length)];
             const message = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
             const popup = document.createElement("div");
-            popup.className = "popup";
+            popup.className = "chat-popup";
             popup.innerHTML = `
-                <div class="popup-content">
-                    <h3>הודעה מ${char.name}</h3>
-                    <p>"${message}"</p>
-                    <img src="${char.image}" alt="${char.name}">
-                    <button onclick="this.parentElement.parentElement.remove()">סגור</button>
-                </div>
+                <img src="${char.image}" alt="${char.name}">
+                <p>${char.name}: "${message}"</p>
             `;
             document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 5000);
         }
 
         function fightBattle(battleIndex) {
+            clearPopups();
             const battle = battles[battleIndex];
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
@@ -620,6 +665,7 @@
         }
 
         function displayTeamStatus(battleIndex) {
+            clearPopups();
             const battleDisplay = document.getElementById("battle-display");
             const aliveTeam = selectedTeam.filter(char => char.health > 0);
             battleDisplay.innerHTML = `
@@ -646,6 +692,7 @@
         }
 
         function showTransferWindow(battleIndex) {
+            clearPopups();
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
@@ -706,6 +753,7 @@
         }
 
         function showTeamManagement(battleIndex) {
+            clearPopups();
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
@@ -751,6 +799,7 @@
         }
 
         function showWeaponShop(charName, battleIndex) {
+            clearPopups();
             const char = selectedTeam.find(c => c.name === charName);
             const popup = document.createElement("div");
             popup.className = "popup";
@@ -834,6 +883,7 @@
 
         function showCityManagement() {
             if (!bigBossDefeated) return;
+            clearPopups();
             const cityDisplay = document.getElementById("city-management");
             cityDisplay.style.display = "flex";
             cityDisplay.innerHTML = `
@@ -907,6 +957,7 @@
         }
 
         function triggerCityEvent() {
+            clearPopups();
             const events = [
                 { text: "תקלה במים! תיקון עולה 4,000 ₪", cost: 4000 },
                 { text: "הצפה בשכונת רבין! תיקון עולה 10,000 ₪", cost: 10000 },
@@ -927,6 +978,7 @@
         }
 
         function showCityMenu(section) {
+            clearPopups();
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `<div class="popup-content"><h2>ניהול ${cityName}</h2>`;
@@ -1042,6 +1094,7 @@
         }
 
         function assignJob(job) {
+            clearPopups();
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
