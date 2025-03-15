@@ -228,6 +228,20 @@
             background: #00ffcc;
             transition: width 0.5s ease;
         }
+
+        .player-details {
+            text-align: right;
+            padding: 10px;
+        }
+
+        .player-details p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+
+        .player-details strong {
+            color: #00ffcc;
+        }
     </style>
 </head>
 <body>
@@ -239,31 +253,30 @@
 
     <script>
         const characters = [
-            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((79 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((86 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((92 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((80 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((74 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((83 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((58 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((85 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((89 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round(80000 + ((66 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round(80000 + ((71 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)) },
-            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 80000 },
-            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000 }
+            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((79 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 75, defense: 70, fatPercentage: 18, report: "ביצועים סבירים, אבל יש נטייה לעייפות מהירה ולחוסר ריכוז בשדה הקרב." },
+            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 90, defense: 85, fatPercentage: 12, report: "לוחם מצוין עם כוח התקפי מרשים והגנה יציבה." },
+            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 92, defense: 88, fatPercentage: 10, report: "כישרון טבעי, מהיר וחד בקרבות." },
+            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 78, fatPercentage: 15, report: "ביצועים טובים, אך נדרשת משמעת טובה יותר." },
+            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 93, defense: 87, fatPercentage: 9, report: "חייל עילית עם יכולות התקפה והגנה מרשימות." },
+            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((86 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 88, defense: 82, fatPercentage: 13, report: "לוחם אמין עם כוח התקפי גבוה." },
+            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((92 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 95, defense: 90, fatPercentage: 8, report: "כוכב עליון, קרוב לשלמות בקרב." },
+            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((80 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 78, defense: 75, fatPercentage: 17, report: "ממוצע, נוטה להתעייף בלחימה ממושכת." },
+            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((74 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 70, defense: 68, fatPercentage: 22, report: "חלש יחסית, נדרש שיפור משמעותי בכושר הקרבי." },
+            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((83 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 82, defense: 80, fatPercentage: 14, report: "ביצועים טובים, אך לפעמים חסר יציבות." },
+            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((58 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 55, defense: 50, fatPercentage: 30, report: "חלש מאוד, נוטה להיכשל במשימות קרביות בסיסיות." },
+            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((85 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 87, defense: 83, fatPercentage: 11, report: "לוחם חזק ואמין, כמעט ללא חולשות." },
+            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((89 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 91, defense: 86, fatPercentage: 10, report: "מצוין, כוח התקפי והגנתי מרשים." },
+            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 79, fatPercentage: 16, report: "סביר, אך נדרשת עבודה על סיבולת." },
+            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round(80000 + ((66 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 65, defense: 60, fatPercentage: 25, report: "ביצועים נמוכים, חוסר כושר גופני בולט." },
+            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round(80000 + ((71 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 68, defense: 66, fatPercentage: 23, report: "חלש, נוטה להיכשל תחת לחץ." },
+            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 89, defense: 85, fatPercentage: 12, report: "לוחם מעולה עם ביצועים גבוהים." },
+            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 80000, attack: 50, defense: 45, fatPercentage: 32, report: "חלשה ביותר, כמעט חסרת תועלת בקרב, נדרשת החלפה דחופה." },
+            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000, attack: 99, defense: 98, fatPercentage: 5, report: "מושלם, לוחם עליון עם כוח התקפי והגנתי ללא תחרות, גוף חטוב ומלא כריזמה." }
         ];
 
         let selectedTeam = [];
         let coins = 150;
         let teamBudget = 15000000; // תקציב קבוצה התחלתי: 15 מיליון אירו
-        let playerName = "שחקן";
         let completedBattles = [];
         let lastBattleName = "";
         const battles = [
@@ -291,38 +304,15 @@
             "טוב אני רגע מביא ביד, אני מצטער פה מולכם, זה יקרה, אין ברירה, לא נראה לי שנשרוד, תודה לכולם על הכל, הייתם חברים מדהימים"
         ];
 
-        function showIntroPopup() {
-            const popup = document.createElement("div");
-            popup.className = "popup";
-            popup.innerHTML = `
-                <h2>מעלות תרשיחא בסכנה!</h2>
-                <p>גורמים זרים חדרו לעיר ואתה היחיד שיכול לתקן את זה.<br>בעיר זמינים הצ Sunshineוות הבא, בחר 5 אנשים שישתתפו איתך.</p>
-                <input type="text" id="player-name" placeholder="הכנס את שמך" style="margin: 10px; padding: 5px;">
-                <button onclick="setPlayerName()">התחל</button>
-            `;
-            document.body.appendChild(popup);
-        }
-
-        function setPlayerName() {
-            const nameInput = document.getElementById("player-name").value.trim();
-            if (nameInput) {
-                playerName = nameInput;
-                document.querySelector(".popup").remove();
-            } else {
-                alert("אנא הכנס שם!");
-            }
-        }
-
         function displayCharacters() {
             const selectionDiv = document.getElementById("character-selection");
             characters.forEach(char => {
                 const card = document.createElement("div");
                 card.className = "character-card";
-                card.innerHTML = `<img src="${char.image}"><div>${char.name}</div>`; // השווי הוסר
+                card.innerHTML = `<img src="${char.image}"><div>${char.name}</div>`;
                 card.onclick = () => toggleSelection(char, card);
                 selectionDiv.appendChild(card);
             });
-            showIntroPopup();
         }
 
         function toggleSelection(char, card) {
@@ -381,8 +371,8 @@
 
                 const randomRolesButton = document.createElement("button");
                 randomRolesButton.innerText = "בחירה רנדומלית של תפקידים";
-                randomRolesButton.style.background = "#00cc99"; // צבע פחות בוהק
-                randomRolesButton.style.textShadow = "0 0 3px #000"; // שיפור קריאות
+                randomRolesButton.style.background = "#00cc99";
+                randomRolesButton.style.textShadow = "0 0 3px #000";
                 randomRolesButton.style.marginRight = "10px";
                 randomRolesButton.onclick = randomizeRoles;
 
@@ -474,7 +464,6 @@
             `;
             document.body.appendChild(popup);
 
-            // סגירה אוטומטית אחרי 3 שניות
             setTimeout(() => {
                 if (document.getElementById("liav-popup")) {
                     closeLiavPopup(char.name, role);
@@ -487,7 +476,7 @@
             if (popup) popup.remove();
 
             const selectElement = document.getElementById(`role-${charName}`);
-            selectElement.value = role; // שומר את התפקיד שבחרת
+            selectElement.value = role;
             confirmRoles();
         }
 
@@ -563,7 +552,7 @@
             popup.className = "popup fancy";
             popup.innerHTML = `
                 <h3>בחירה מרשימה!</h3>
-                <p>אני ${playerName} בחרתי את ${chosenName} בתור בן אדם שאשמח למצוץ לו :)</p>
+                <p>בחרתי את ${chosenName} בתור בן אדם שאשמח למצוץ לו :)</p>
                 <button onclick="this.parentElement.remove(); fightBattle(${battleIndex})">המשך לקרב</button>
             `;
             document.body.appendChild(popup);
@@ -734,6 +723,9 @@
                     <div>${char.name} (${char.value.toLocaleString()} €)</div>
                     <button onclick="sellPlayer('${char.name}', ${battleIndex})">מכור</button>
                 `;
+                card.onclick = (e) => {
+                    if (e.target.tagName !== "BUTTON") showPlayerDetails(char);
+                };
                 sellSection.appendChild(card);
             });
 
@@ -747,8 +739,28 @@
                     <div>${char.name} (${char.value.toLocaleString()} €)</div>
                     <button onclick="buyPlayer('${char.name}', ${battleIndex})" ${teamBudget < char.value ? "disabled" : ""}>קנה</button>
                 `;
+                card.onclick = (e) => {
+                    if (e.target.tagName !== "BUTTON") showPlayerDetails(char);
+                };
                 buySection.appendChild(card);
             });
+        }
+
+        function showPlayerDetails(char) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <h2>${char.name}</h2>
+                <img src="${char.image}">
+                <div class="player-details">
+                    <p><strong>התקפה:</strong> ${char.attack}</p>
+                    <p><strong>הגנה:</strong> ${char.defense}</p>
+                    <p><strong>אחוז שומן:</strong> ${char.fatPercentage}%</p>
+                    <p><strong>דוח ביצועים:</strong> ${char.report}</p>
+                </div>
+                <button onclick="this.parentElement.remove()">סגור</button>
+            `;
+            document.body.appendChild(popup);
         }
 
         function sellPlayer(charName, battleIndex) {
@@ -757,7 +769,7 @@
                 teamBudget += char.value;
                 selectedTeam = selectedTeam.filter(c => c.name !== charName);
                 document.querySelector(".popup").remove();
-                showTransferWindow(battleIndex); // רענון החלון
+                showTransferWindow(battleIndex);
             }
         }
 
@@ -767,7 +779,7 @@
                 teamBudget -= char.value;
                 selectedTeam.push({ ...char, health: char.overall });
                 document.querySelector(".popup").remove();
-                showTransferWindow(battleIndex); // רענון החלון
+                showTransferWindow(battleIndex);
             } else if (selectedTeam.length >= 5) {
                 alert("חייב למכור שחקן לפני קנייה חדשה!");
             } else {
