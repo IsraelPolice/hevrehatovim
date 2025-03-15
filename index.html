@@ -399,7 +399,6 @@
             const popup = document.getElementById("liav-popup");
             if (popup) popup.remove();
 
-            const char = selectedTeam.find(c => c.name === charName);
             const selectElement = document.getElementById(`role-${charName}`);
             if (confirm) {
                 selectElement.value = role; // שומר את התפקיד שבחרו
