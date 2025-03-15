@@ -4,123 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מלחמת הבלאקיף</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Rubik', sans-serif;
-            background: #2d2d2d url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGUlEQVQYV2NkYGD4z8DAwMgABXAG2gQ8ABwFAgB0uJ5aAAAAAElFTkSuQmCC') repeat;
-            color: #333;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            color: #e0e1dd;
             direction: rtl;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJUlEQVQYV2NkYGD4z8DAwMgABXAG2gQ8ABwFAgB0uJ5aAAAAAElFTkSuQmCC') repeat;
+            opacity: 0.05;
+            z-index: -1;
         }
 
         h1 {
-            color: #fff;
-            font-size: 2.5em;
+            font-family: 'Orbitron', sans-serif;
+            color: #00d4ff;
+            font-size: 3em;
             text-align: center;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
             margin: 0 0 20px;
         }
 
         h2 {
-            color: #fff;
-            font-size: 1.8em;
+            font-family: 'Orbitron', sans-serif;
+            color: #00b4d8;
+            font-size: 2em;
             margin: 15px 0;
+            text-shadow: 0 0 5px rgba(0, 180, 216, 0.5);
         }
 
         .container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            max-width: 1200px;
+            gap: 20px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 15px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background: rgba(27, 38, 59, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid #415a77;
         }
 
         .card {
-            background: #f9f9f9;
-            border: 1px solid #1e3a8a;
-            border-radius: 5px;
-            padding: 10px;
-            width: 160px;
-            text-align: center;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .card.selected {
-            border-color: #22c55e;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
-        }
-
-        .card img {
-            width: 90px;
-            height: 90px;
-            border-radius: 5px;
-            object-fit: cover;
-            margin-bottom: 8px;
-        }
-
-        .team-card {
-            background: #f9f9f9;
-            border: 1px solid #1e3a8a;
-            border-radius: 5px;
+            background: #1b263b;
+            border: 2px solid #415a77;
+            border-radius: 8px;
             padding: 15px;
             width: 180px;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
+            border-color: #00d4ff;
+        }
+
+        .card.selected {
+            border-color: #00ff85;
+            box-shadow: 0 0 15px rgba(0, 255, 133, 0.5);
+        }
+
+        .card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 1px solid #778da9;
+        }
+
+        .team-card {
+            background: #1b263b;
+            border: 2px solid #415a77;
+            border-radius: 8px;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
         }
 
         .team-card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 5px;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
             margin-bottom: 10px;
         }
 
         .stars {
-            color: #f59e0b;
+            color: #ffd60a;
             margin: 5px 0;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
-            background: #1e3a8a;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(45deg, #00b4d8, #00d4ff);
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 212, 255, 0.4);
         }
 
         button:hover {
-            background: #fff;
-            color: #1e3a8a;
-            border: 1px solid #1e3a8a;
+            background: linear-gradient(45deg, #00d4ff, #00b4d8);
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.6);
         }
 
         button:disabled {
-            background: #d1d5db;
-            color: #6b7280;
+            background: #415a77;
+            color: #778da9;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         select {
-            padding: 8px;
+            padding: 10px;
             font-size: 14px;
-            background: #f9f9f9;
-            color: #333;
-            border: 1px solid #1e3a8a;
-            border-radius: 5px;
+            background: #1b263b;
+            color: #e0e1dd;
+            border: 1px solid #415a77;
+            border-radius: 6px;
             margin: 5px 0;
             width: 100%;
         }
@@ -130,15 +159,15 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #fff;
-            border: 1px solid #1e3a8a;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(27, 38, 59, 0.95);
+            border: 2px solid #00d4ff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
             z-index: 1000;
             width: 90%;
-            max-width: 700px;
-            max-height: 80vh;
+            max-width: 800px;
+            max-height: 85vh;
             overflow-y: auto;
         }
 
@@ -146,150 +175,158 @@
             position: fixed;
             bottom: 20px;
             left: 20px;
-            background: #1e3a8a;
-            color: #fff;
+            background: #1b263b;
+            border: 2px solid #00d4ff;
+            color: #e0e1dd;
             padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             z-index: 999;
-            width: 250px;
+            width: 280px;
         }
 
         .chat-popup img {
-            width: 40px;
-            height: 40px;
-            border-radius: 5px;
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
             float: right;
             margin-left: 10px;
         }
 
-        .chat-popup p {
-            margin: 0;
-            font-size: 14px;
-        }
-
         .battle-screen {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #1e3a8a;
-            max-width: 1000px;
-            margin: 0 auto;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: rgba(27, 38, 59, 0.9);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #415a77;
+            max-width: 1200px;
+            margin: 20px auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .team-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
             justify-content: center;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
         .health-bar {
             width: 100%;
-            background: #e5e7eb;
-            height: 6px;
-            border-radius: 3px;
+            background: #415a77;
+            height: 8px;
+            border-radius: 4px;
             margin: 5px 0;
         }
 
         .health-bar-fill {
             height: 100%;
-            background: #22c55e;
+            background: #00ff85;
             transition: width 0.5s ease;
-            border-radius: 3px;
+            border-radius: 4px;
         }
 
-        .weapon-grid {
+        .weapon-grid, .army-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
-        .weapon-card {
-            background: #f9f9f9;
-            border: 1px solid #1e3a8a;
-            border-radius: 5px;
-            padding: 10px;
-            width: 140px;
+        .weapon-card, .army-card {
+            background: #1b263b;
+            border: 2px solid #415a77;
+            border-radius: 8px;
+            padding: 15px;
+            width: 160px;
             text-align: center;
+            transition: all 0.3s ease;
         }
 
-        .weapon-card img {
-            width: 70px;
-            height: 70px;
-            border-radius: 5px;
-            margin-bottom: 8px;
+        .weapon-card:hover, .army-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .weapon-card img, .army-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+            margin-bottom: 10px;
         }
 
         .city-image {
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             height: auto;
-            border-radius: 8px;
-            margin: 15px auto;
+            border-radius: 12px;
+            margin: 20px auto;
             display: block;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid #00d4ff;
         }
 
         .upgrade-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
+            margin: 20px 0;
+            background: #1b263b;
+            border: 2px solid #415a77;
         }
 
         .upgrade-table th, .upgrade-table td {
-            border: 1px solid #1e3a8a;
-            padding: 10px;
+            border: 1px solid #415a77;
+            padding: 12px;
             text-align: center;
         }
 
         .upgrade-table th {
-            background: #1e3a8a;
+            background: #00b4d8;
             color: #fff;
+            font-family: 'Orbitron', sans-serif;
         }
 
         .upgrade-table td {
-            background: #f9f9f9;
+            background: #1b263b;
+            color: #e0e1dd;
         }
 
         details {
-            margin: 10px 0;
-            background: #f9f9f9;
-            border: 1px solid #1e3a8a;
-            border-radius: 5px;
-            padding: 10px;
+            margin: 15px 0;
+            background: #1b263b;
+            border: 2px solid #415a77;
+            border-radius: 8px;
+            padding: 15px;
         }
 
         summary {
             cursor: pointer;
-            font-size: 1.2em;
-            color: #1e3a8a;
+            font-size: 1.3em;
+            color: #00d4ff;
+            font-family: 'Orbitron', sans-serif;
         }
 
         details[open] summary {
-            color: #333;
+            color: #e0e1dd;
         }
 
         .submenu {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            padding: 10px;
+            gap: 15px;
+            padding: 15px;
         }
 
         @media (max-width: 600px) {
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.5em; }
-            .card, .team-card { width: 120px; }
-            .card img, .team-card img { width: 70px; height: 70px; }
-            button { font-size: 14px; padding: 8px 15px; }
-            .popup { padding: 15px; max-width: 90%; }
-            .chat-popup { width: 200px; }
-            .chat-popup img { width: 30px; height: 30px; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            .card, .team-card { width: 140px; }
+            .card img { width: 80px; height: 80px; }
+            .team-card img { width: 100px; height: 100px; }
+            button { font-size: 14px; padding: 10px 18px; }
+            .popup { padding: 20px; max-width: 95%; }
+            .chat-popup { width: 220px; }
+            .chat-popup img { width: 40px; height: 40px; }
             .city-image { max-width: 100%; }
         }
     </style>
@@ -301,10 +338,9 @@
     <div id="team-display" class="container" style="display: none;"></div>
     <div id="battle-display" class="battle-screen" style="display: none;"></div>
     <div id="city-management" class="container" style="display: none;"></div>
-
     <script>
         const weapons = {
-            "גלוק": { cost: 1000, bonus: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-U913muhRYPQf90Rdx6lU2mNovdSLPQTV6A&s" },
+            "גלוק": { cost: 1000, bonus: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn9GcR-U913muhRYPQf90Rdx6lU2mNovdSLPQTV6A&s" },
             "MP5": { cost: 5000, bonus: 2, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn9GcRTcYN7Ay8P0akauOPxiBm9vQ1XTg2fSNOL6w&s" },
             "M16": { cost: 15000, bonus: 3, image: "https://airsoftmania.eu/cdn/shop/products/1152230674_1.webp?v=1662630204" },
             "M4": { cost: 30000, bonus: 4, image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/M4A1-flattop.png/800px-M4A1-flattop.png" },
@@ -365,21 +401,31 @@
             { name: "מגרש הכדורגל העירוני", value: 2500000, sold: false }
         ];
         let cityUpgrades = {
-            newNeighborhood: { bought: false, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים" },
+            newNeighborhood: { count: 0, max: 5, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים (עד 5)" },
             airport: { bought: false, cost: 50000000, population: 10000, income: 100000, description: "נמל תעופה בינלאומי (דרוש 50,000 תושבים)" },
             hotel: { bought: false, cost: 20000000, population: 3000, income: 50000, description: "מלון מפואר לתיירים" },
             trainStation: { bought: false, cost: 30000000, population: 5000, income: 60000, description: "תחנת רכבת מהירה" },
             busTerminal: { bought: false, cost: 15000000, population: 2000, income: 30000, description: "תחנה מרכזית לאוטובוסים" },
             mall: { bought: false, cost: 25000000, population: 4000, income: 70000, description: "קניון ענק לקניות" },
             hospital: { bought: false, cost: 40000000, population: 3000, income: 50000, description: "בית חולים מודרני" },
-            university: { bought: false, cost: 60000000, population: 8000, income: 80000, description: "אוניברסיטה למחקר והשכלה" },
+            university: { count: 0, max: 3, cost: 60000000, population: 8000, income: 80000, description: "אוניברסיטה למחקר והשכלה (עד 3)" },
             sportsComplex: { bought: false, cost: 20000000, population: 2000, income: 40000, description: "מתחם ספורט עירוני" },
             theater: { bought: false, cost: 15000000, population: 1000, income: 30000, description: "תיאטרון לתרבות ובידור" },
             bridge: { bought: false, cost: 8000000, population: 1000, income: 20000, description: "גשר לשיפור תנועה" },
             tunnel: { bought: false, cost: 12000000, population: 1500, income: 25000, description: "מנהרה להקלת עומסי תנועה" },
             amusementPark: { bought: false, cost: 35000000, population: 5000, income: 90000, description: "פארק שעשועים לתיירות" },
             powerPlant: { bought: false, cost: 45000000, population: 2000, income: 60000, description: "תחנת כוח לאספקת חשמל" },
-            researchCenter: { bought: false, cost: 70000000, population: 10000, income: 120000, description: "מרכז מחקר טכנולוגי" }
+            researchCenter: { bought: false, cost: 70000000, population: 10000, income: 120000, description: "מרכז מחקר טכנולוגי" },
+            seaport: { bought: false, cost: 65000000, population: 7000, income: 110000, description: "נמל ימי לסחר ותיירות (דרוש 75,000 תושבים)" }
+        };
+        let army = {
+            level: 0,
+            strength: 0,
+            costToBuild: 20000000,
+            costToUpgrade: 15000000,
+            maxLevel: 5,
+            defenseBonus: 0,
+            incomeBonus: 0
         };
         let bigBossDefeated = false;
         let assignedJobs = {};
@@ -473,13 +519,17 @@
             characters.forEach(char => {
                 const card = document.createElement("div");
                 card.className = "card";
-                card.innerHTML = `<img src="${char.image}" alt="${char.name}"><div>${char.name}</div>`;
+                card.innerHTML = `
+                    <img src="${char.image}" alt="${char.name}">
+                    <div>${char.name}</div>
+                    <div>Overall: ${char.overall}</div>
+                `;
                 card.onclick = () => toggleSelection(char, card);
                 selectionDiv.appendChild(card);
             });
             selectionDiv.innerHTML += `
                 <div style="width: 100%; text-align: center;">
-                    <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות</button>
+                    <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות (${selectedTeam.length}/5)</button>
                     <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
                 </div>
             `;
@@ -495,7 +545,9 @@
                 selectedTeam.push({ ...char, health: char.overall });
                 card.classList.add("selected");
             }
-            document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
+            const confirmButton = document.getElementById("confirm-team");
+            confirmButton.disabled = selectedTeam.length !== 5;
+            confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
         }
 
         function selectRandomTeam() {
@@ -561,7 +613,7 @@
             clearPopups();
             let leaderCount = 0, soldierCount = 0, whoreCount = 0;
             for (const char of selectedTeam) {
-                const role = char.role || document.getElementById(`role-${char.name}`).value;
+                const role = document.getElementById(`role-${char.name}`).value;
                 if (!role) return alert("חובה לבחור תפקיד לכל חבר צוות!");
                 if (role === "מנהיג") leaderCount++;
                 if (role === "חייל") soldierCount++;
@@ -574,7 +626,7 @@
             if (whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
 
             selectedTeam.forEach(char => {
-                const role = char.role || document.getElementById(`role-${char.name}`).value;
+                const role = document.getElementById(`role-${char.name}`).value;
                 char.role = role;
                 if (role === "מנהיג") char.overall += 3;
                 if (role === "חייל") char.overall += 1;
@@ -652,7 +704,7 @@
 
             if (avg >= battle.requiredAvg) {
                 aliveTeam.forEach(char => {
-                    if (char.weapon !== "RPG") char.health = Math.max(0, char.health - battle.damage);
+                    if (char.weapon !== "RPG") char.health = Math.max(0, char.health - battle.damage * (1 - army.defenseBonus / 100));
                 });
                 if (battleIndex === battles.length - 1) bigBossDefeated = true;
                 displayTeamStatus(battleIndex);
@@ -894,7 +946,7 @@
             cityDisplay.innerHTML = `
                 <h2>ניהול ${cityName}</h2>
                 <img src="${getCityImage()}" alt="${cityName}" class="city-image">
-                <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
+                <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()} | צבא: רמה ${army.level} (הגנה: ${army.defenseBonus}%, הכנסה: ${army.incomeBonus.toLocaleString()} ₪)</p>
                 <div class="team-grid">
                     <div class="team-card">
                         <h3>שכונות</h3>
@@ -908,8 +960,13 @@
                     </div>
                     <div class="team-card">
                         <h3>שדרוגים ומכירות</h3>
-                        <p>${Object.values(cityUpgrades).filter(u => u.bought).length} שדרוגים</p>
+                        <p>${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)} שדרוגים</p>
                         <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
+                    </div>
+                    <div class="team-card">
+                        <h3>צבא</h3>
+                        <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
+                        <button onclick="showCityMenu('army')">נהל צבא</button>
                     </div>
                 </div>
                 <div style="width: 100%; text-align: center;">
@@ -923,8 +980,9 @@
         function startCityIncome() {
             setInterval(() => {
                 let jobIncome = Object.keys(assignedJobs).reduce((sum, job) => sum + Math.floor(cityJobs[job] / 10), 0);
-                let upgradeIncome = Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? u.income : 0), 0);
-                cityBudget += 20 + (prostitutes.length * 30) + upgradeIncome + jobIncome;
+                let upgradeIncome = Object.values(cityUpgrades).reduce((sum, u) => sum + ((u.bought ? u.income : (u.count || 0) * u.income) || 0), 0);
+                let armyIncome = army.incomeBonus;
+                cityBudget += 20 + (prostitutes.length * 30) + upgradeIncome + jobIncome + armyIncome;
                 if (Math.random() < 0.02) triggerCityEvent();
                 updateCityDisplay();
             }, 5000);
@@ -936,7 +994,7 @@
                 cityDisplay.innerHTML = `
                     <h2>ניהול ${cityName}</h2>
                     <img src="${getCityImage()}" alt="${cityName}" class="city-image">
-                    <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
+                    <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()} | צבא: רמה ${army.level} (הגנה: ${army.defenseBonus}%, הכנסה: ${army.incomeBonus.toLocaleString()} ₪)</p>
                     <div class="team-grid">
                         <div class="team-card">
                             <h3>שכונות</h3>
@@ -950,8 +1008,13 @@
                         </div>
                         <div class="team-card">
                             <h3>שדרוגים ומכירות</h3>
-                            <p>${Object.values(cityUpgrades).filter(u => u.bought).length} שדרוגים</p>
+                            <p>${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)} שדרוגים</p>
                             <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
+                        </div>
+                        <div class="team-card">
+                            <h3>צבא</h3>
+                            <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
+                            <button onclick="showCityMenu('army')">נהל צבא</button>
                         </div>
                     </div>
                     <div style="width: 100%; text-align: center;">
@@ -1035,22 +1098,36 @@
                             </tr>
                             ${Object.keys(cityUpgrades).map(key => `
                                 <tr>
-                                    <td>${key === 'newNeighborhood' ? 'שכונה חדשה' : key === 'airport' ? 'נמל תעופה' : key === 'hotel' ? 'מלון' : key === 'trainStation' ? 'תחנת רכבת' : key === 'busTerminal' ? 'תחנה מרכזית' : key === 'mall' ? 'קניון' : key === 'hospital' ? 'בית חולים' : key === 'university' ? 'אוניברסיטה' : key === 'sportsComplex' ? 'מתחם ספורט' : key === 'theater' ? 'תיאטרון' : key === 'bridge' ? 'גשר' : key === 'tunnel' ? 'מנהרה' : key === 'amusementPark' ? 'פארק שעשועים' : key === 'powerPlant' ? 'תחנת כוח' : 'מרכז מחקר'}</td>
+                                    <td>${key === 'newNeighborhood' ? `שכונה חדשה (${cityUpgrades[key].count}/${cityUpgrades[key].max})` : key === 'airport' ? 'נמל תעופה' : key === 'hotel' ? 'מלון' : key === 'trainStation' ? 'תחנת רכבת' : key === 'busTerminal' ? 'תחנה מרכזית' : key === 'mall' ? 'קניון' : key === 'hospital' ? 'בית חולים' : key === 'university' ? `אוניברסיטה (${cityUpgrades[key].count}/${cityUpgrades[key].max})` : key === 'sportsComplex' ? 'מתחם ספורט' : key === 'theater' ? 'תיאטרון' : key === 'bridge' ? 'גשר' : key === 'tunnel' ? 'מנהרה' : key === 'amusementPark' ? 'פארק שעשועים' : key === 'powerPlant' ? 'תחנת כוח' : key === 'researchCenter' ? 'מרכז מחקר' : 'נמל ימי'}</td>
                                     <td>${cityUpgrades[key].cost.toLocaleString()}</td>
                                     <td>+${cityUpgrades[key].population.toLocaleString()}</td>
                                     <td>+${cityUpgrades[key].income.toLocaleString()}</td>
                                     <td>${cityUpgrades[key].description}</td>
-                                    <td><button onclick="buyUpgrade('${key}')" ${cityUpgrades[key].bought || (key === 'airport' && cityPopulation < 50000) ? "disabled" : ""}>קנה</button></td>
+                                    <td><button onclick="buyUpgrade('${key}')" ${(cityUpgrades[key].bought || (cityUpgrades[key].count >= cityUpgrades[key].max) || (key === 'airport' && cityPopulation < 50000) || (key === 'seaport' && cityPopulation < 75000)) ? "disabled" : ""}>קנה</button></td>
                                 </tr>
                             `).join('')}
                         </table>
                     </details>
                 `;
+            } else if (section === "army") {
+                popup.innerHTML += `
+                    <h3>ניהול צבא</h3>
+                    <div class="army-grid">
+                        <div class="army-card">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3048/3048428.png" alt="צבא">
+                            <div>רמה: ${army.level}/${army.maxLevel}</div>
+                            <div>כוח: ${army.strength}</div>
+                            <div>בונוס הגנה: ${army.defenseBonus}%</div>
+                            <div>בונוס הכנסה: ${army.incomeBonus.toLocaleString()} ₪</div>
+                            ${army.level === 0 ? `<button onclick="buildArmy()">בנה צבא (${army.costToBuild.toLocaleString()} ₪)</button>` : army.level < army.maxLevel ? `<button onclick="upgradeArmy()">שדרג צבא (${army.costToUpgrade.toLocaleString()} ₪)</button>` : '<div>רמה מקסימלית</div>'}
+                        </div>
+                    </div>
+                `;
             }
             popup.innerHTML += `
                 <div style="text-align: center;">
                     <button onclick="changeCityName()">שנה שם עיר (3,000,000 ₪)</button>
-                    <button style="background: #dc2626; color: #fff;" onclick="this.parentElement.parentElement.remove()">סגור</button>
+                    <button style="background: #dc2626;" onclick="this.parentElement.parentElement.remove()">סגור</button>
                 </div>
             </div>`;
             document.body.appendChild(popup);
@@ -1106,7 +1183,7 @@
             }
         }
 
-        function assignJob(job) {
+              function assignJob(job) {
             clearPopups();
             const popup = document.createElement("div");
             popup.className = "popup";
@@ -1114,15 +1191,15 @@
                 <div class="popup-content">
                     <h3>בחר עובד ל${job}</h3>
                     <div class="team-grid">
-                        ${characters.map(char => `
-                            <div class="team-card" onclick="assignJobToPlayer('${job}', '${char.name}')">
+                        ${selectedTeam.filter(char => !Object.values(assignedJobs).includes(char.name)).map(char => `
+                            <div class="team-card">
                                 <img src="${char.image}" alt="${char.name}">
                                 <div>${char.name}</div>
-                                <div>Overall: ${char.overall}</div>
+                                <button onclick="assignJobToPlayer('${job}', '${char.name}')">בחר</button>
                             </div>
                         `).join('')}
                     </div>
-                    <button onclick="this.parentElement.parentElement.remove()">סגור</button>
+                    <button style="background: #dc2626;" onclick="this.parentElement.parentElement.remove(); showCityMenu('jobs')">סגור</button>
                 </div>
             `;
             document.body.appendChild(popup);
@@ -1134,17 +1211,59 @@
             showCityMenu('jobs');
         }
 
-        function buyUpgrade(upgradeName) {
-            const upgrade = cityUpgrades[upgradeName];
-            if (cityBudget >= upgrade.cost && !upgrade.bought && (upgradeName !== 'airport' || cityPopulation >= 50000)) {
+        function buyUpgrade(upgradeKey) {
+            const upgrade = cityUpgrades[upgradeKey];
+            if (cityBudget >= upgrade.cost && (!upgrade.bought || (upgrade.count < upgrade.max))) {
+                if ((upgradeKey === 'airport' && cityPopulation < 50000) || (upgradeKey === 'seaport' && cityPopulation < 75000)) {
+                    alert(`דרוש לפחות ${upgradeKey === 'airport' ? '50,000' : '75,000'} תושבים!`);
+                    return;
+                }
                 cityBudget -= upgrade.cost;
                 cityPopulation += upgrade.population;
-                upgrade.bought = true;
+                if ('count' in upgrade) {
+                    upgrade.count = (upgrade.count || 0) + 1;
+                    if (upgradeKey === 'newNeighborhood') {
+                        const newName = prompt("הזן שם לשכונה החדשה:");
+                        cityNeighborhoods.push(newName || `שכונה ${upgrade.count}`);
+                    }
+                } else {
+                    upgrade.bought = true;
+                }
                 updateCityDisplay();
                 document.querySelector(".popup").remove();
                 showCityMenu('upgrades');
             } else {
-                alert(upgradeName === 'airport' && cityPopulation < 50000 ? "צריך לפחות 50,000 תושבים!" : "אין מספיק תקציב!");
+                alert("אין מספיק תקציב או שכבר קנית את המקסימום!");
+            }
+        }
+
+        function buildArmy() {
+            if (cityBudget >= army.costToBuild && army.level === 0) {
+                cityBudget -= army.costToBuild;
+                army.level = 1;
+                army.strength = 100;
+                army.defenseBonus = 10;
+                army.incomeBonus = 10000;
+                updateCityDisplay();
+                document.querySelector(".popup").remove();
+                showCityMenu('army');
+            } else {
+                alert("אין מספיק תקציב או שכבר יש צבא!");
+            }
+        }
+
+        function upgradeArmy() {
+            if (cityBudget >= army.costToUpgrade && army.level < army.maxLevel) {
+                cityBudget -= army.costToUpgrade;
+                army.level += 1;
+                army.strength += 50;
+                army.defenseBonus += 5;
+                army.incomeBonus += 5000;
+                updateCityDisplay();
+                document.querySelector(".popup").remove();
+                showCityMenu('army');
+            } else {
+                alert("אין מספיק תקציב או שכבר הגעת לרמה מקסימלית!");
             }
         }
 
@@ -1152,3 +1271,4 @@
     </script>
 </body>
 </html>
+
