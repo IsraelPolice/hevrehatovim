@@ -248,7 +248,7 @@
         ];
 
         let selectedTeam = [];
-        let coins = 150; // שינוי מ-100 ל-150
+        let coins = 150;
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!" },
             { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!" },
@@ -397,24 +397,17 @@
 
         function confirmLiav(charName, role, confirm) {
             const popup = document.getElementById("liav-popup");
-            if (popup) {
-                popup.remove();
-            } else {
-                const existingPopup = document.querySelector(".popup");
-                if (existingPopup) existingPopup.remove();
-            }
+            if (popup) popup.remove();
 
             const char = selectedTeam.find(c => c.name === charName);
+            const selectElement = document.getElementById(`role-${charName}`);
             if (confirm) {
-                char.role = role;
+                selectElement.value = role; // שומר את התפקיד שבחרו
             } else {
-                char.role = "הגיי של הצוות";
+                selectElement.value = "הגיי של הצוות"; // משנה ל"הגיי של הצוות"
             }
-            if (char.role === "מנהיג") char.overall += 3;
-            if (char.role === "חייל") char.overall += 1;
-            if (char.role === "זונה") char.overall -= 2;
-            char.health = char.overall;
-            confirmRoles();
+
+            confirmRoles(); // ממשיך לתהליך האישור
         }
 
         function showLosePopup(char) {
@@ -550,7 +543,6 @@
             const aliveTeam = selectedTeam.filter(char => char.health > 0 && char.name !== "דביר ברקת");
             if (aliveTeam.length === 0) return;
 
-            // בחירה רנדומלית של דמות חיה (ללא דביר ברקת)
             const randomChar = aliveTeam[Math.floor(Math.random() * aliveTeam.length)];
             const message = postBattleMessages[battleIndex];
 
@@ -563,7 +555,6 @@
             `;
             document.body.appendChild(popup);
 
-            // סגירה אוטומטית אחרי 5 שניות
             setTimeout(() => {
                 if (popup && document.body.contains(popup)) {
                     popup.remove();
