@@ -2,17 +2,17 @@
 <html lang="he">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מלחמת הבלאקיף</title>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Rubik', sans-serif;
-            text-align: center;
             background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77);
             color: #e0e1dd;
             direction: rtl;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             min-height: 100vh;
             overflow-x: hidden;
             animation: glowBackground 5s infinite alternate;
@@ -25,85 +25,55 @@
 
         h1 {
             color: #00ffcc;
-            text-shadow: 0 0 5px #00ffcc;
-            font-size: 3em;
-            font-weight: 700;
-            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ffcc;
+            font-size: 2.5em;
+            margin: 10px 0;
         }
 
         h2 {
             color: #ff0066;
             text-shadow: 0 0 5px #ff0066;
-            font-size: 2em;
+            font-size: 1.8em;
         }
 
-        .character-card, .transfer-card, .team-management-card {
-            display: inline-block;
-            margin: 15px;
-            padding: 15px;
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .card {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid #00ffcc;
             border-radius: 15px;
             box-shadow: 0 0 15px #00ffcc;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            width: 200px;
+            padding: 10px;
+            width: 180px;
             text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .character-card:hover, .transfer-card:hover, .team-management-card:hover {
-            transform: scale(1.1);
+        .card:hover {
+            transform: scale(1.05);
             box-shadow: 0 0 25px #ff0066;
         }
 
-        .character-card.selected {
+        .card.selected {
             border-color: #ff0066;
             box-shadow: 0 0 20px #ff0066;
         }
 
-        .character-card img, .transfer-card img, .team-management-card img {
+        .card img {
+            width: 100px;
+            height: 100px;
             border-radius: 10px;
-            width: 120px;
-            height: 120px;
             object-fit: cover;
         }
 
-        .team-card {
-            display: inline-block;
-            margin: 20px;
-            padding: 20px;
-            width: 220px;
-            height: 350px;
-            background: linear-gradient(135deg, rgba(0, 255, 204, 0.2), rgba(255, 0, 102, 0.2));
-            border: 2px solid #ff0066;
-            border-radius: 15px;
-            box-shadow: 0 0 20px #ff0066;
-            position: relative;
-            animation: dropFromSpace 1.5s ease-out forwards;
-        }
-
-        @keyframes dropFromSpace {
-            0% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
-            50% { transform: translateY(20px) scale(1.1); opacity: 0.7; }
-            100% { transform: translateY(0) scale(1); opacity: 1; }
-        }
-
-        .team-card img.player-img {
-            width: 130px;
-            height: 130px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 2px solid #00ffcc;
-        }
-
-        .team-card .name { font-size: 22px; color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
-        .team-card .overall { font-size: 20px; color: #e0e1dd; }
-        .team-card .stars { font-size: 18px; color: #ff0066; }
-        .team-card .flag { position: absolute; top: 10px; right: 10px; width: 40px; }
-
         button {
-            padding: 12px 25px;
-            font-size: 18px;
+            padding: 10px 20px;
+            font-size: 16px;
             background: #ff0066;
             color: #e0e1dd;
             border: none;
@@ -111,7 +81,7 @@
             cursor: pointer;
             box-shadow: 0 0 10px #ff0066;
             transition: transform 0.3s, box-shadow 0.3s;
-            margin: 10px;
+            margin: 5px;
         }
 
         button:hover {
@@ -127,12 +97,12 @@
 
         select {
             padding: 8px;
-            font-size: 16px;
+            font-size: 14px;
             background: rgba(255, 255, 255, 0.1);
             color: #e0e1dd;
             border: 1px solid #00ffcc;
             border-radius: 5px;
-            margin-top: 10px;
+            margin: 5px 0;
         }
 
         .popup {
@@ -141,86 +111,57 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #1b263b, #415a77);
-            border: 2px solid #ff0066;
+            border: 3px solid #ff0066;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 30px #ff0066;
+            border-radius: 20px;
+            box-shadow: 0 0 40px #ff0066;
             z-index: 1000;
-            text-align: center;
-            animation: popupGlow 2s infinite alternate;
-            width: 80%;
-            max-width: 800px;
+            width: 90%;
+            max-width: 600px;
             max-height: 80vh;
             overflow-y: auto;
+            animation: popupGlow 2s infinite alternate;
         }
 
         @keyframes popupGlow {
-            0% { box-shadow: 0 0 30px #ff0066; }
-            100% { box-shadow: 0 0 50px #00ffcc; }
+            0% { box-shadow: 0 0 40px #ff0066; }
+            100% { box-shadow: 0 0 60px #00ffcc; }
         }
 
-        .popup.fancy {
-            background: linear-gradient(135deg, #ff0066, #00ffcc);
-            color: #000;
-            font-weight: bold;
-            border: 4px solid #e0e1dd;
-            box-shadow: 0 0 40px #ff0066, 0 0 60px #00ffcc;
+        .popup-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .popup img {
-            width: 120px;
-            height: 120px;
+        .transfer-card {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ffcc;
             border-radius: 10px;
-            margin-bottom: 15px;
+            padding: 10px;
+            margin: 10px 0;
+            transition: transform 0.3s;
         }
 
-        .message-popup {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 300px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #00ffcc;
-            padding: 15px;
+        .transfer-card:hover {
+            transform: scale(1.02);
+        }
+
+        .transfer-card img {
+            width: 80px;
+            height: 80px;
             border-radius: 10px;
-            box-shadow: 0 0 15px #00ffcc;
-            z-index: 1000;
-            text-align: right;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        .message-popup img {
-            width: 50px;
-            height: 50px;
-            border-radius: 5px;
-            float: right;
             margin-left: 10px;
-        }
-
-        @keyframes slideIn {
-            0% { transform: translateX(-100%); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-
-        .battle-text {
-            font-size: 1.5em;
-            color: #ff0066;
-            text-shadow: 0 0 10px #ff0066;
-            animation: pulse 1s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
         }
 
         .health-bar {
             width: 100%;
             background: #333;
-            height: 20px;
+            height: 15px;
             border-radius: 10px;
             margin: 5px 0;
-            overflow: hidden;
         }
 
         .health-bar-fill {
@@ -229,31 +170,27 @@
             transition: width 0.5s ease;
         }
 
-        .player-details, .team-management-section {
-            text-align: right;
-            padding: 10px;
-        }
-
-        .player-details p, .team-management-section p {
-            margin: 5px 0;
-            font-size: 1.1em;
-        }
-
-        .player-details strong, .team-management-section strong {
-            color: #00ffcc;
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            .card { width: 140px; }
+            .card img { width: 80px; height: 80px; }
+            button { font-size: 14px; padding: 8px 15px; }
+            .popup { width: 95%; padding: 15px; }
         }
     </style>
 </head>
 <body>
     <h1>מלחמת הבלאקיף</h1>
-    <div id="character-selection"></div>
-    <button id="confirm-team" disabled>אשר צוות</button>
-    <div id="team-display" style="display: none;"></div>
-    <div id="battle-display" style="display: none;"></div>
+    <div id="main-menu" class="container"></div>
+    <div id="character-selection" class="container" style="display: none;"></div>
+    <div id="team-display" class="container" style="display: none;"></div>
+    <div id="battle-display" class="container" style="display: none;"></div>
+    <div id="city-management" class="container" style="display: none;"></div>
 
     <script>
         const weapons = {
-            "גלוק": { cost: 1000, bonus: 1, image: "https://example.com/glock.png" }, // תחליף ללינק אמיתי
+            "גלוק": { cost: 1000, bonus: 1, image: "https://example.com/glock.png" },
             "עוזי": { cost: 5000, bonus: 2, image: "https://example.com/uzi.png" },
             "M16": { cost: 15000, bonus: 3, image: "https://example.com/m16.png" },
             "M4": { cost: 30000, bonus: 4, image: "https://example.com/m4.png" },
@@ -261,66 +198,105 @@
         };
 
         const characters = [
-            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((79 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 75, defense: 70, fatPercentage: 18, report: "ביצועים סבירים, אבל יש נטייה לעייפות מהירה ולחוסר ריכוז בשדה הקרב.", weapon: "גלוק", trained: false },
-            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 90, defense: 85, fatPercentage: 12, report: "לוחם מצוין עם כוח התקפי מרשים והגנה יציבה.", weapon: "גלוק", trained: false },
-            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 92, defense: 88, fatPercentage: 10, report: "כישרון טבעי, מהיר וחד בקרבות.", weapon: "גלוק", trained: false },
-            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 78, fatPercentage: 15, report: "ביצועים טובים, אך נדרשת משמעת טובה יותר.", weapon: "גלוק", trained: false },
-            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 93, defense: 87, fatPercentage: 9, report: "חייל עילית עם יכולות התקפה והגנה מרשימות.", weapon: "גלוק", trained: false },
-            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((86 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 88, defense: 82, fatPercentage: 13, report: "לוחם אמין עם כוח התקפי גבוה.", weapon: "גלוק", trained: false },
-            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((92 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 95, defense: 90, fatPercentage: 8, report: "כוכב עליון, קרוב לשלמות בקרב.", weapon: "גלוק", trained: false },
-            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((80 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 78, defense: 75, fatPercentage: 17, report: "ממוצע, נוטה להתעייף בלחימה ממושכת.", weapon: "גלוק", trained: false },
-            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((74 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 70, defense: 68, fatPercentage: 22, report: "חלש יחסית, נדרש שיפור משמעותי בכושר הקרבי.", weapon: "גלוק", trained: false },
-            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((83 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 82, defense: 80, fatPercentage: 14, report: "ביצועים טובים, אך לפעמים חסר יציבות.", weapon: "גלוק", trained: false },
-            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((58 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 55, defense: 50, fatPercentage: 30, report: "חלש מאוד, נוטה להיכשל במשימות קרביות בסיסיות.", weapon: "גלוק", trained: false },
-            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((85 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 87, defense: 83, fatPercentage: 11, report: "לוחם חזק ואמין, כמעט ללא חולשות.", weapon: "גלוק", trained: false },
-            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((89 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 91, defense: 86, fatPercentage: 10, report: "מצוין, כוח התקפי והגנתי מרשים.", weapon: "גלוק", trained: false },
-            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 79, fatPercentage: 16, report: "סביר, אך נדרשת עבודה על סיבולת.", weapon: "גלוק", trained: false },
-            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round(80000 + ((66 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 65, defense: 60, fatPercentage: 25, report: "ביצועים נמוכים, חוסר כושר גופני בולט.", weapon: "גלוק", trained: false },
-            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round(80000 + ((71 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 68, defense: 66, fatPercentage: 23, report: "חלש, נוטה להיכשל תחת לחץ.", weapon: "גלוק", trained: false },
-            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 89, defense: 85, fatPercentage: 12, report: "לוחם מעולה עם ביצועים גבוהים.", weapon: "גלוק", trained: false },
-            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 80000, attack: 50, defense: 45, fatPercentage: 32, report: "חלשה ביותר, כמעט חסרת תועלת בקרב, נדרשת החלפה דחופה.", weapon: "גלוק", trained: false },
-            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000, attack: 99, defense: 98, fatPercentage: 5, report: "מושלם, לוחם עליון עם כוח התקפי והגנתי ללא תחרות, גוף חטוב ומלא כריזמה.", weapon: "גלוק", trained: false }
+            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((79 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 75, defense: 70, fatPercentage: 18, report: "ביצועים סבירים", weapon: "גלוק", trained: false },
+            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 90, defense: 85, fatPercentage: 12, report: "לוחם מצוין", weapon: "גלוק", trained: false },
+            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 92, defense: 88, fatPercentage: 10, report: "כישרון טבעי", weapon: "גלוק", trained: false },
+            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 78, fatPercentage: 15, report: "ביצועים טובים", weapon: "גלוק", trained: false },
+            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 93, defense: 87, fatPercentage: 9, report: "חייל עילית", weapon: "גלוק", trained: false },
+            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((86 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 88, defense: 82, fatPercentage: 13, report: "לוחם אמין", weapon: "גלוק", trained: false },
+            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((92 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 95, defense: 90, fatPercentage: 8, report: "כוכב עליון", weapon: "גלוק", trained: false },
+            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((80 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 78, defense: 75, fatPercentage: 17, report: "ממוצע", weapon: "גלוק", trained: false },
+            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((74 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 70, defense: 68, fatPercentage: 22, report: "חלש יחסית", weapon: "גלוק", trained: false },
+            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((83 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 82, defense: 80, fatPercentage: 14, report: "ביצועים טובים", weapon: "גלוק", trained: false },
+            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((58 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 55, defense: 50, fatPercentage: 30, report: "חלש מאוד", weapon: "גלוק", trained: false },
+            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((85 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 87, defense: 83, fatPercentage: 11, report: "לוחם חזק", weapon: "גלוק", trained: false },
+            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((89 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 91, defense: 86, fatPercentage: 10, report: "מצוין", weapon: "גלוק", trained: false },
+            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 79, fatPercentage: 16, report: "סביר", weapon: "גלוק", trained: false },
+            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round(80000 + ((66 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 65, defense: 60, fatPercentage: 25, report: "ביצועים נמוכים", weapon: "גלוק", trained: false },
+            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round(80000 + ((71 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 68, defense: 66, fatPercentage: 23, report: "חלש", weapon: "גלוק", trained: false },
+            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 89, defense: 85, fatPercentage: 12, report: "לוחם מעולה", weapon: "גלוק", trained: false },
+            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 80000, attack: 50, defense: 45, fatPercentage: 32, report: "חלשה ביותר", weapon: "גלוק", trained: false },
+            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000, attack: 99, defense: 98, fatPercentage: 5, report: "מושלם", weapon: "גלוק", trained: false }
         ];
 
         let selectedTeam = [];
         let coins = 150;
-        let teamBudget = 15000000; // תקציב קבוצה התחלתי: 15 מיליון אירו
+        let teamBudget = 15000000;
         let completedBattles = [];
         let lastBattleName = "";
+        let cityBudget = 1000000;
+        let cityPopulation = 22000;
+        let cityName = "מעלות תרשיחא";
+        let cityNeighborhoods = ["יפה נוף", "סביונים", "מרכז העיר", "שכונת רבין", "גבעת הזיתים", "אילנות", "סביונים"];
+        let prostitutes = [];
+        let buildings = [
+            { name: "הבית של ג׳ורדן", value: 4000000, sold: false },
+            { name: "הבית של איתי אוחנה", value: 3000000, sold: false },
+            { name: "הבית של יוסף קחלר", value: 1500000, sold: false },
+            { name: "הבית של יוגב שבתאי", value: 200000, sold: false },
+            { name: "הבית של דביר אוחנה", value: 450000, sold: false }
+        ];
+        let cityUpgrades = { newNeighborhood: false, airport: false, hotel: false };
+
         const battles = [
-            { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית, שחרר אותה!", altOption: "lake" },
-            { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות, תקוף אותם!", altOption: "zamira" },
-            { name: "המרכז", requiredAvg: 75, damage: 20, story: "המרכז המסחרי נפל, הצילו את התושבים!", altOption: "suck" },
-            { name: "שכונת האילנות", requiredAvg: 80, damage: 25, story: "מלכודות הוטמנו בשכונה, היזהר!" },
-            { name: "שכונת סביונים", requiredAvg: 85, damage: 30, story: "האויב בנה בסיס בסביונים, הרוס אותו!" },
-            { name: "יפה נוף", requiredAvg: 90, damage: 35, story: "קרב גובה קטלני, שלוט בהר!" },
-            { name: "ביג בוס", requiredAvg: 92, damage: 40, story: "המנהיג הסופי מחכה, תביס אותו!" }
+            { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית!" },
+            { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות!" },
+            { name: "המרכז", requiredAvg: 75, damage: 20, story: "המרכז המסחרי נפל!" },
+            { name: "שכונת האילנות", requiredAvg: 80, damage: 25, story: "מלכודות הוטמנו בשכונה!" },
+            { name: "שכונת סביונים", requiredAvg: 85, damage: 30, story: "האויב בנה בסיס בסביונים!" },
+            { name: "יפה נוף", requiredAvg: 90, damage: 35, story: "קרב גובה קטלני!" },
+            { name: "ביג בוס", requiredAvg: 92, damage: 40, story: "המנהיג הסופי מחכה!" }
         ];
 
-        const randomEvents = [
-            { text: "מלכודת קטלנית! הצוות שלך נפגע קשה!", effect: () => selectedTeam.forEach(char => char.health = Math.max(0, char.health - 15)) },
-            { text: "מצאת ארגז זהב! מטבעות נוספים!", effect: () => coins += 30 },
-            { text: "האויב נרדם, התקפה קלה!", effect: () => selectedTeam.forEach(char => char.health += 10) },
-            { text: "אריאל שרביט נתקעה בשירותים!", effect: () => selectedTeam.filter(c => c.name === "אריאל שרביט").forEach(c => c.health = Math.max(0, c.health - 20)) },
-            { text: "רפי אלגרבלי אכל יותר מדי שווארמה!", effect: () => selectedTeam.filter(c => c.name === "רפי אלגרבלי").forEach(c => c.health = Math.max(0, c.health - 10)) }
-        ];
+        const cityJobs = {
+            "ראש העיר": 200000,
+            "סמנכ״ל": 50000,
+            "עובד בזבל": 6000,
+            "נהג משאית": 8000,
+            "מזכיר/ה": 7000,
+            "מנהל בית ספר": 25000,
+            "מנהל אבטחה": 10000,
+            "שומר בית ספר": 7000,
+            "עובד במפעל עטיפית": 5500,
+            "עובד בפסקל": 5500,
+            "עובד ביילו": 5000,
+            "עובד במים": 7000,
+            "עובד בחשמל": 7000,
+            "מנהל האגם": 20000
+        };
 
-        const postBattleMessages = [
-            "אני לא יודע אם אוכל להחזיק מעמד בעוד קרב כזה, אני חייב לאונן מתישהו בקרוב",
-            "אני חייב למצוץ משהו, אני לא יכול, אני חרמן מת, אני נורא מפחד מהקרב הבא",
-            "אני חרמן ממש, נראה לי אני אכניס איזה מלפפון לתחת או שמישהו רגע יזיין אותי, אני לא יודע אם נחזור הביתה, הקרב האחרון היה קשה ואני מפחד מאוד, בבקשה שזה יגמר...",
-            "טוב אני רגע מביא ביד, אני מצטער פה מולכם, זה יקרה, אין ברירה, לא נראה לי שנשרוד, תודה לכולם על הכל, הייתם חברים מדהימים"
-        ];
+        const prostitutesList = ["לאה אוחנה", "אמא של רפי", "זמירה קחלר", "ורד עין גל"];
+
+        function showMainMenu() {
+            const mainMenu = document.getElementById("main-menu");
+            mainMenu.style.display = "flex";
+            mainMenu.innerHTML = `
+                <button onclick="displayCharacters()">התחל משחק</button>
+                ${cityBudget > 0 ? `<button onclick="showCityManagement()">ניהול עיר</button>` : ""}
+            `;
+            hideAllExcept("main-menu");
+        }
+
+        function hideAllExcept(activeId) {
+            ["main-menu", "character-selection", "team-display", "battle-display", "city-management"].forEach(id => {
+                document.getElementById(id).style.display = id === activeId ? "flex" : "none";
+            });
+        }
 
         function displayCharacters() {
             const selectionDiv = document.getElementById("character-selection");
+            selectionDiv.style.display = "flex";
+            selectionDiv.innerHTML = "";
             characters.forEach(char => {
                 const card = document.createElement("div");
-                card.className = "character-card";
+                card.className = "card";
                 card.innerHTML = `<img src="${char.image}"><div>${char.name}</div>`;
                 card.onclick = () => toggleSelection(char, card);
                 selectionDiv.appendChild(card);
             });
+            selectionDiv.innerHTML += `<button id="confirm-team" disabled>אשר צוות</button>`;
+            document.getElementById("confirm-team").onclick = confirmTeam;
+            hideAllExcept("character-selection");
         }
 
         function toggleSelection(char, card) {
@@ -336,113 +312,42 @@
         }
 
         function confirmTeam() {
-            document.getElementById("character-selection").style.display = "none";
-            document.getElementById("confirm-team").style.display = "none";
             const teamDisplay = document.getElementById("team-display");
-            teamDisplay.style.display = "block";
-            teamDisplay.innerHTML = `
-                <h2>הצוות שלך:</h2>
-                <p style="color: #ff0066; font-size: 1.2em;">שימו לב: ניתן לבחור מנהיג אחד, עד 3 חיילים וזונה אחת</p>
-            `;
-
-            let delay = 0;
+            teamDisplay.style.display = "flex";
+            teamDisplay.innerHTML = `<h2>הצוות שלך:</h2>`;
             selectedTeam.forEach(char => {
-                const stars = Math.floor(char.overall / 20);
                 const card = document.createElement("div");
-                card.className = "team-card";
-                card.style.animationDelay = `${delay}s`;
+                card.className = "card";
                 card.innerHTML = `
-                    <img src="${char.image}" class="player-img">
-                    <div class="name">${char.name}</div>
-                    <div class="overall">Overall: ${char.overall}</div>
-                    <div class="stars">${"★".repeat(stars)}</div>
-                    <img class="flag" src="${char.flag}">
+                    <img src="${char.image}">
+                    <div>${char.name}</div>
                     <select id="role-${char.name}">
                         <option value="">בחר תפקיד</option>
                         ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
                         <option value="חייל">חייל</option>
                         ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
-                        ${char.name === "ליאב בן יעקב" ? '<option value="הגיי של הצוות">הגיי של הצוות</option>' : ''}
                     </select>
                 `;
                 teamDisplay.appendChild(card);
-                delay += 0.5;
             });
-
-            setTimeout(() => {
-                const buttonContainer = document.createElement("div");
-                buttonContainer.style.marginTop = "20px";
-
-                const confirmRolesButton = document.createElement("button");
-                confirmRolesButton.innerText = "התחל קרב";
-                confirmRolesButton.onclick = confirmRoles;
-
-                const randomRolesButton = document.createElement("button");
-                randomRolesButton.innerText = "בחירה רנדומלית של תפקידים";
-                randomRolesButton.style.background = "#00cc99";
-                randomRolesButton.style.textShadow = "0 0 3px #000";
-                randomRolesButton.style.marginRight = "10px";
-                randomRolesButton.onclick = randomizeRoles;
-
-                buttonContainer.appendChild(randomRolesButton);
-                buttonContainer.appendChild(confirmRolesButton);
-                teamDisplay.appendChild(buttonContainer);
-            }, delay * 1000 + 500);
-        }
-
-        function randomizeRoles() {
-            const teamCopy = [...selectedTeam];
-            const rolesAssigned = [];
-
-            const leaderCandidates = teamCopy.filter(char => char.name !== "אריאל עין גל" && char.name !== "חיים מרקס");
-            const leader = leaderCandidates[Math.floor(Math.random() * leaderCandidates.length)];
-            document.getElementById(`role-${leader.name}`).value = "מנהיג";
-            rolesAssigned.push(leader.name);
-            teamCopy.splice(teamCopy.findIndex(c => c.name === leader.name), 1);
-
-            const whoreCandidates = teamCopy.filter(char => char.name !== "דביר ברקת");
-            const whore = whoreCandidates[Math.floor(Math.random() * whoreCandidates.length)];
-            document.getElementById(`role-${whore.name}`).value = "זונה";
-            rolesAssigned.push(whore.name);
-            teamCopy.splice(teamCopy.findIndex(c => c.name === whore.name), 1);
-
-            for (let i = 0; i < 3 && teamCopy.length > 0; i++) {
-                const soldier = teamCopy[0];
-                document.getElementById(`role-${soldier.name}`).value = "חייל";
-                rolesAssigned.push(soldier.name);
-                teamCopy.splice(0, 1);
-            }
-
-            if (teamCopy.length > 0) {
-                const remaining = teamCopy[0];
-                if (remaining.name === "ליאב בן יעקב" && Math.random() < 0.5) {
-                    document.getElementById(`role-${remaining.name}`).value = "הגיי של הצוות";
-                } else {
-                    document.getElementById(`role-${remaining.name}`).value = "חייל";
-                }
-            }
-
-            confirmRoles();
+            teamDisplay.innerHTML += `
+                <button onclick="confirmRoles()">התחל קרב</button>
+                <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+            `;
+            hideAllExcept("team-display");
         }
 
         function confirmRoles() {
             let leaderCount = 0, soldierCount = 0, whoreCount = 0;
             for (const char of selectedTeam) {
                 const role = document.getElementById(`role-${char.name}`).value;
-
                 if (!role) return alert("חובה לבחור תפקיד לכל חבר צוות!");
                 if (role === "מנהיג") leaderCount++;
                 if (role === "חייל") soldierCount++;
                 if (role === "זונה") whoreCount++;
-
                 if (char.name === "דביר ברקת" && role === "זונה") return showLosePopup(char);
                 if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") return alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
-                if (char.name === "ליאב בן יעקב" && role !== "הגיי של הצוות") {
-                    showLiavConfirmation(char, role);
-                    return;
-                }
             }
-
             if (leaderCount > 1) return alert("יכול להיות רק מנהיג אחד!");
             if (soldierCount > 3) return alert("יכולים להיות עד 3 חיילים!");
             if (whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
@@ -455,214 +360,56 @@
                 if (role === "זונה") char.overall -= 2;
                 char.health = char.overall;
             });
-
             startBattle(0);
-        }
-
-        function showLiavConfirmation(char, role) {
-            const existingPopup = document.querySelector(".popup");
-            if (existingPopup) existingPopup.remove();
-
-            const popup = document.createElement("div");
-            popup.className = "popup";
-            popup.id = "liav-popup";
-            popup.innerHTML = `
-                <h3>האם אתה בטוח? ליאב יכול להיות הגיי של הצוות!</h3>
-                <button onclick="closeLiavPopup('${char.name}', '${role}')">סגור</button>
-            `;
-            document.body.appendChild(popup);
-
-            setTimeout(() => {
-                if (document.getElementById("liav-popup")) {
-                    closeLiavPopup(char.name, role);
-                }
-            }, 3000);
-        }
-
-        function closeLiavPopup(charName, role) {
-            const popup = document.getElementById("liav-popup");
-            if (popup) popup.remove();
-
-            const selectElement = document.getElementById(`role-${charName}`);
-            selectElement.value = role;
-            confirmRoles();
         }
 
         function showLosePopup(char) {
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
-                <h3>הפסדת!</h3>
-                <p>דביר ברקת לא יכול להיות זונה והפרטים שלך נשלחו לדביר ברקת.</p>
-                <img src="${char.image}">
+                <div class="popup-content">
+                    <h3>הפסדת!</h3>
+                    <p>דביר ברקת לא יכול להיות זונה!</p>
+                    <img src="${char.image}">
+                    <button onclick="this.parentElement.parentElement.remove(); showMainMenu()">חזור לתפריט ראשי</button>
+                </div>
             `;
             document.body.appendChild(popup);
         }
 
         function startBattle(battleIndex) {
             const battleDisplay = document.getElementById("battle-display");
-            battleDisplay.style.display = "block";
-            const teamDisplay = document.getElementById("team-display");
-            teamDisplay.style.display = "none";
+            battleDisplay.style.display = "flex";
             const battle = battles[battleIndex];
-
-            let optionsHtml = `
-                <h2>בחר את דרכך בקרב ${battle.name}</h2>
+            battleDisplay.innerHTML = `
+                <h2>קרב: ${battle.name}</h2>
                 <p>${battle.story}</p>
-                <button onclick="fightBattle(${battleIndex})">להילחם על ${battle.name}</button>
+                <button onclick="fightBattle(${battleIndex})">להילחם</button>
+                <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
             `;
-
-            if (battleIndex < 3 && battle.altOption && !completedBattles.includes(battle.altOption)) {
-                if (battle.altOption === "lake") {
-                    optionsHtml += `<button onclick="startLakeBattle(${battleIndex})">כבוש את האגם</button>`;
-                } else if (battle.altOption === "zamira") {
-                    optionsHtml += `<button onclick="fightZamira(${battleIndex})">להילחם בזמירה קחלר</button>`;
-                } else if (battle.altOption === "suck") {
-                    optionsHtml += `<button onclick="showSuckChoice(${battleIndex})">למי אתה מוכן למצוץ?</button>`;
-                }
-            }
-
-            battleDisplay.innerHTML = optionsHtml;
+            hideAllExcept("battle-display");
         }
 
-        function startLakeBattle(battleIndex) {
-            completedBattles.push("lake");
-            lastBattleName = "האגם";
-            const battleDisplay = document.getElementById("battle-display");
-            let aliveTeam = selectedTeam.filter(char => char.health > 0);
-            battleDisplay.innerHTML = `
-                <h2>כבוש את האגם</h2>
-                <p>האויב שולט באגם, תקוף אותו!</p>
-                <p>דירוג ממוצע נדרש: 85</p>
-                <p>דירוג ממוצע שלך: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
-                <div class="battle-text">הצוות שלך מתכונן לתקוף...</div>
-                <button onclick="fightBattle(${battleIndex}, true)">תקוף את האגם</button>
-            `;
-        }
-
-        function showSuckChoice(battleIndex) {
-            const battleDisplay = document.getElementById("battle-display");
-            battleDisplay.innerHTML = `
-                <h2>למי אתה מוכן למצוץ?</h2>
-                <p>בחר דמות להצהרה מיוחדת:</p>
-                <select id="suck-choice">
-                    ${characters.filter(c => c.name !== "אריאל שרביט").map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
-                </select>
-                <button onclick="confirmSuckChoice(${battleIndex})">אשר</button>
-            `;
-        }
-
-        function confirmSuckChoice(battleIndex) {
-            completedBattles.push("suck");
-            lastBattleName = "למי אתה מוכן למצוץ?";
-            const chosenName = document.getElementById("suck-choice").value;
-            const popup = document.createElement("div");
-            popup.className = "popup fancy";
-            popup.innerHTML = `
-                <h3>בחירה מרשימה!</h3>
-                <p>בחרתי את ${chosenName} בתור בן אדם שאשמח למצוץ לו :)</p>
-                <button onclick="this.parentElement.remove(); fightBattle(${battleIndex})">המשך לקרב</button>
-            `;
-            document.body.appendChild(popup);
-        }
-
-        function fightZamira(battleIndex) {
-            completedBattles.push("zamira");
-            lastBattleName = "זמירה קחלר";
-            const battleDisplay = document.getElementById("battle-display");
-            let aliveTeam = selectedTeam.filter(char => char.health > 0);
-            let zamiraHealth = 100;
-            battleDisplay.innerHTML = `
-                <h2>קרב נגד זמירה קחלר השמנה והמגעילה</h2>
-                <p>Overall: 85 | Health: ${zamiraHealth} | שומן: 150 (מסריח ומגעיל)</p>
-                <div class="battle-text">הצוות שלך תוקף את זמירה!</div>
-            `;
-            setTimeout(() => {
-                const teamDamage = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / 2;
-                zamiraHealth = Math.max(0, zamiraHealth - teamDamage);
-                aliveTeam.forEach(char => {
-                    if (char.weapon !== "RPG") char.health = Math.max(0, char.health - 20);
-                });
-                if (zamiraHealth <= 0) {
-                    battleDisplay.innerHTML = `<p>ניצחת את זמירה קחלר השמנה והמגעילה! הריח נעלם!</p>`;
-                    coins += 50;
-                    setTimeout(() => displayTeamStatus(battleIndex), 2000);
-                } else if (aliveTeam.every(char => char.health <= 0)) {
-                    battleDisplay.innerHTML = `<p>זמירה קחלר השמנה והמגעילה ניצחה אותך! השומן חנק אותך!</p>`;
-                } else {
-                    battleDisplay.innerHTML = `
-                        <h2>קרב נגד זמירה קחלר</h2>
-                        <p>Health: ${zamiraHealth} | שומן: 150 (מסריח ומגעיל)</p>
-                        <button onclick="fightZamira(${battleIndex})">המשך לתקוף</button>
-                    `;
-                }
-            }, 2000);
-        }
-
-        function fightBattle(battleIndex, isLake = false) {
-            const battle = isLake ? { name: "האגם", requiredAvg: 85, damage: 30 } : battles[battleIndex];
+        function fightBattle(battleIndex) {
+            const battle = battles[battleIndex];
             let aliveTeam = selectedTeam.filter(char => char.health > 0);
             const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
             const battleDisplay = document.getElementById("battle-display");
+            lastBattleName = battle.name;
 
-            if (!isLake) lastBattleName = battle.name;
-
-            if (battleIndex === 2 && !isLake) {
-                const traitors = aliveTeam.filter(char => char.name === "ליאב בן יעקב" || char.name === "עמית לסרי");
-                if (traitors.length > 0) {
-                    traitors.forEach(traitor => {
-                        showTraitorPopup(traitor);
-                        selectedTeam = selectedTeam.filter(char => char.name !== traitor.name);
-                    });
-                    setTimeout(() => {
-                        document.querySelectorAll(".popup").forEach(popup => popup.remove());
-                        aliveTeam = selectedTeam.filter(char => char.health > 0);
-                        displayTeamStatus(battleIndex);
-                    }, 3000);
-                    return;
-                }
+            if (avg >= battle.requiredAvg) {
+                aliveTeam.forEach(char => {
+                    if (char.weapon !== "RPG") char.health = Math.max(0, char.health - battle.damage);
+                });
+                displayTeamStatus(battleIndex);
+            } else {
+                battleDisplay.innerHTML = `
+                    <h2>מלחמה: ${battle.name}</h2>
+                    <p>הפסדת! הדירוג שלך נמוך מדי (${avg.toFixed(2)} < ${battle.requiredAvg}).</p>
+                    <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
+                    <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+                `;
             }
-
-            battleDisplay.innerHTML = `<h2>מלחמה: ${battle.name}</h2><div class="battle-text">הצוות שלך תוקף את ${battle.name}!</div>`;
-            setTimeout(() => {
-                if (avg >= battle.requiredAvg) {
-                    aliveTeam.forEach(char => {
-                        if (char.weapon !== "RPG") char.health = Math.max(0, char.health - battle.damage);
-                    });
-
-                    if (Math.random() < 0.2 && aliveTeam.some(c => c.name === "דביר ברקת" && c.health > 0)) {
-                        battleDisplay.innerHTML += `<p>דביר ברקת השתמש ב'צליפה מדויקת' וגרם 30 נזק נוסף לאויב!</p>`;
-                        aliveTeam.forEach(char => char.health += 5);
-                    }
-
-                    if (Math.random() < 0.4) {
-                        const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
-                        battleDisplay.innerHTML += `<p>${event.text}</p>`;
-                        event.effect();
-                    }
-
-                    displayTeamStatus(battleIndex);
-                    if (battleIndex < 4 && !isLake) showPostBattleMessage(battleIndex);
-                } else {
-                    battleDisplay.innerHTML = `
-                        <h2>מלחמה: ${battle.name}</h2>
-                        <p>הפסדת! הדירוג שלך נמוך מדי (${avg.toFixed(2)} < ${battle.requiredAvg}).</p>
-                        <button onclick="showTeamManagement(${battleIndex}, ${isLake})">ניהול צוות</button>
-                    `;
-                }
-            }, 2000);
-        }
-
-        function showTraitorPopup(traitor) {
-            traitor.flag = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/1200px-Flag_of_Iran.svg.png";
-            const popup = document.createElement("div");
-            popup.className = "popup";
-            popup.innerHTML = `
-                <img src="${traitor.image}">
-                <h3>${traitor.name} היה סוכן זר והוא עוזר ליריב!</h3>
-                <img src="${traitor.flag}" style="width: 40px;">
-            `;
-            document.body.appendChild(popup);
         }
 
         function displayTeamStatus(battleIndex) {
@@ -670,120 +417,70 @@
             const aliveTeam = selectedTeam.filter(char => char.health > 0);
             battleDisplay.innerHTML = `
                 <h2>מצב הקבוצה</h2>
-                <p>הקרב האחרון: ${lastBattleName || "טרם התחיל"}</p>
-                <p>דירוג ממוצע נדרש לשלב הבא: ${battles[battleIndex].requiredAvg}</p>
-                <p>דירוג ממוצע שלך: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
-                <p>מטבעות: ${coins} | תקציב קבוצה: ${teamBudget.toLocaleString()} €</p>
-                <h3>רפא חיילים:</h3>
+                <p>דירוג ממוצע: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
+                <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
             `;
             selectedTeam.forEach(char => {
                 const healthPercent = (char.health / char.overall) * 100;
                 battleDisplay.innerHTML += `
-                    <div>
-                        ${char.name} (${char.role}) - חיים: ${char.health}/${char.overall}
+                    <div class="card">
+                        <img src="${char.image}">
+                        <div>${char.name} (${char.role})</div>
+                        <div>חיים: ${char.health}/${char.overall}</div>
                         <div class="health-bar"><div class="health-bar-fill" style="width: ${healthPercent}%"></div></div>
-                        ${char.health > 0 && char.health < char.overall ? `<button onclick="heal('${char.name}', ${battleIndex})">רפא (10 מטבעות)</button>` : ""}
                     </div>`;
             });
-
-            if (aliveTeam.length === 0) {
-                battleDisplay.innerHTML += "<p>הפסדת! כל הצוות שלך מת.</p>";
-            } else {
-                battleDisplay.innerHTML += `
-                    <div style="margin-top: 20px;">
-                        ${battleIndex < battles.length - 1 ? `<button onclick="startBattle(${battleIndex + 1})">התחל קרב הבא</button>` : `<p>ניצחת את הביג בוס! סיימת את המשחק!</p>`}
-                        <button onclick="showTransferWindow(${battleIndex})">חלון העברות</button>
-                        <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
-                    </div>
-                `;
-            }
-        }
-
-        function heal(charName, battleIndex) {
-            if (coins >= 10) {
-                const char = selectedTeam.find(c => c.name === charName);
-                if (char && char.health > 0 && char.health < char.overall) {
-                    char.health = Math.min(char.overall, char.health + 10);
-                    coins -= 10;
-                    displayTeamStatus(battleIndex);
-                }
-            } else {
-                alert("אין מספיק מטבעות!");
-            }
+            battleDisplay.innerHTML += `
+                <button onclick="${battleIndex < battles.length - 1 ? `startBattle(${battleIndex + 1})` : `showCityManagement()`}">${battleIndex < battles.length - 1 ? "קרב הבא" : "ניהול עיר"}</button>
+                <button onclick="showTransferWindow(${battleIndex})">חלון העברות</button>
+                <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
+                <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+            `;
         }
 
         function showTransferWindow(battleIndex) {
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
-                <h2>חלון העברות</h2>
-                <p>תקציב קבוצה: ${teamBudget.toLocaleString()} €</p>
-                <h3>מכירת שחקנים</h3>
-                <div id="sell-section"></div>
-                <h3>קניית שחקנים</h3>
-                <div id="buy-section"></div>
-                <button onclick="this.parentElement.remove()">סגור</button>
+                <div class="popup-content">
+                    <h2>חלון העברות</h2>
+                    <p>תקציב: ${teamBudget.toLocaleString()} €</p>
+                    <h3>מכירה</h3>
+                    <div id="sell-section"></div>
+                    <h3>קנייה</h3>
+                    <div id="buy-section"></div>
+                    <button onclick="this.parentElement.parentElement.remove(); displayTeamStatus(${battleIndex})">חזור</button>
+                </div>
             `;
             document.body.appendChild(popup);
 
             const sellSection = document.getElementById("sell-section");
             selectedTeam.forEach(char => {
-                const card = document.createElement("div");
-                card.className = "transfer-card";
-                card.innerHTML = `
-                    <img src="${char.image}">
-                    <div>${char.name} (${char.value.toLocaleString()} €)</div>
-                    <button onclick="sellPlayer('${char.name}', ${battleIndex})">מכור</button>
-                `;
-                card.onclick = (e) => {
-                    if (e.target.tagName !== "BUTTON") showPlayerDetails(char);
-                };
-                sellSection.appendChild(card);
+                sellSection.innerHTML += `
+                    <div class="transfer-card">
+                        <img src="${char.image}">
+                        <div>${char.name}<br>שווי: ${char.value.toLocaleString()} €</div>
+                        <button onclick="sellPlayer('${char.name}', ${battleIndex})">מכור</button>
+                    </div>`;
             });
 
             const buySection = document.getElementById("buy-section");
-            const availablePlayers = characters.filter(c => !selectedTeam.some(t => t.name === c.name));
-            availablePlayers.forEach(char => {
-                const card = document.createElement("div");
-                card.className = "transfer-card";
-                card.innerHTML = `
-                    <img src="${char.image}">
-                    <div>${char.name} (${char.value.toLocaleString()} €)</div>
-                    <button onclick="buyPlayer('${char.name}', ${battleIndex})" ${teamBudget < char.value ? "disabled" : ""}>קנה</button>
-                `;
-                card.onclick = (e) => {
-                    if (e.target.tagName !== "BUTTON") showPlayerDetails(char);
-                };
-                buySection.appendChild(card);
+            characters.filter(c => !selectedTeam.some(t => t.name === c.name)).forEach(char => {
+                buySection.innerHTML += `
+                    <div class="transfer-card">
+                        <img src="${char.image}">
+                        <div>${char.name}<br>שווי: ${char.value.toLocaleString()} €<br>Overall: ${char.overall}</div>
+                        <button onclick="buyPlayer('${char.name}', ${battleIndex})" ${teamBudget < char.value ? "disabled" : ""}>קנה</button>
+                    </div>`;
             });
-        }
-
-        function showPlayerDetails(char) {
-            const popup = document.createElement("div");
-            popup.className = "popup";
-            popup.innerHTML = `
-                <h2>${char.name}</h2>
-                <img src="${char.image}">
-                <div class="player-details">
-                    <p><strong>התקפה:</strong> ${char.attack}</p>
-                    <p><strong>הגנה:</strong> ${char.defense}</p>
-                    <p><strong>אחוז שומן:</strong> ${char.fatPercentage}%</p>
-                    <p><strong>נשק נוכחי:</strong> ${char.weapon}</p>
-                    <p><strong>דוח ביצועים:</strong> ${char.report}</p>
-                </div>
-                <button onclick="this.parentElement.remove()">סגור</button>
-            `;
-            document.body.appendChild(popup);
         }
 
         function sellPlayer(charName, battleIndex) {
             const char = selectedTeam.find(c => c.name === charName);
-            if (char) {
-                teamBudget += char.value;
-                selectedTeam = selectedTeam.filter(c => c.name !== charName);
-                document.querySelector(".popup").remove();
-                showTransferWindow(battleIndex);
-            }
+            teamBudget += char.value;
+            selectedTeam = selectedTeam.filter(c => c.name !== charName);
+            document.querySelector(".popup").remove();
+            showTransferWindow(battleIndex);
         }
 
         function buyPlayer(charName, battleIndex) {
@@ -793,58 +490,54 @@
                 selectedTeam.push({ ...char, health: char.overall });
                 document.querySelector(".popup").remove();
                 showTransferWindow(battleIndex);
-            } else if (selectedTeam.length >= 5) {
-                alert("חייב למכור שחקן לפני קנייה חדשה!");
             } else {
-                alert("אין מספיק תקציב!");
+                alert(selectedTeam.length >= 5 ? "צוות מלא!" : "אין מספיק תקציב!");
             }
         }
 
-        function showTeamManagement(battleIndex, isLake = false) {
+        function showTeamManagement(battleIndex) {
             const popup = document.createElement("div");
             popup.className = "popup";
             popup.innerHTML = `
-                <h2>ניהול צוות</h2>
-                <p>מטבעות: ${coins} | תקציב קבוצה: ${teamBudget.toLocaleString()} €</p>
-                <h3>אימון</h3>
-                <div id="training-section" class="team-management-section"></div>
-                <h3>נשקים</h3>
-                <div id="weapons-section" class="team-management-section"></div>
-                <button onclick="this.parentElement.remove(); startBattle(${battleIndex})">חזור לקרב</button>
+                <div class="popup-content">
+                    <h2>ניהול צוות</h2>
+                    <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
+                    <h3>אימון</h3>
+                    <div id="training-section"></div>
+                    <h3>נשקים</h3>
+                    <div id="weapons-section"></div>
+                    <button onclick="this.parentElement.parentElement.remove(); startBattle(${battleIndex})">חזור לקרב</button>
+                    <button onclick="this.parentElement.parentElement.remove(); showMainMenu()">חזור לתפריט ראשי</button>
+                </div>
             `;
             document.body.appendChild(popup);
 
             const trainingSection = document.getElementById("training-section");
             selectedTeam.forEach(char => {
-                const card = document.createElement("div");
-                card.className = "team-management-card";
-                card.innerHTML = `
-                    <img src="${char.image}">
-                    <div>${char.name}</div>
-                    <div>Overall: ${char.overall}</div>
-                    <button onclick="trainPlayer('${char.name}', ${battleIndex})" ${char.trained || coins < 5 ? "disabled" : ""}>אמן (5 מטבעות)</button>
-                `;
-                trainingSection.appendChild(card);
+                trainingSection.innerHTML += `
+                    <div class="card">
+                        <img src="${char.image}">
+                        <div>${char.name}</div>
+                        <div>Overall: ${char.overall}</div>
+                        <button onclick="trainPlayer('${char.name}', ${battleIndex})" ${char.trained || coins < 5 ? "disabled" : ""}>אמן (5 מטבעות)</button>
+                    </div>`;
             });
 
             const weaponsSection = document.getElementById("weapons-section");
             selectedTeam.forEach(char => {
-                const card = document.createElement("div");
-                card.className = "team-management-card";
-                card.innerHTML = `
-                    <img src="${char.image}">
-                    <div>${char.name}</div>
-                    <div>נשק נוכחי: ${char.weapon}</div>
-                    <div>Overall: ${char.overall}</div>
-                    <button onclick="sellWeapon('${char.name}', ${battleIndex})" ${char.weapon === "גלוק" ? "disabled" : ""}>מכור נשק</button>
-                    <select id="weapon-select-${char.name}" onchange="buyWeapon('${char.name}', this.value, ${battleIndex})">
-                        <option value="">בחר נשק</option>
-                        ${Object.keys(weapons).filter(w => (char.name !== "אריאל שרביט" || w === "גלוק") && (w !== "RPG" || char.name === "דביר ברקת")).map(w => `
-                            <option value="${w}" ${teamBudget < weapons[w].cost || char.weapon === w ? "disabled" : ""}>${w} (${weapons[w].cost.toLocaleString()} €, +${weapons[w].bonus})</option>
-                        `).join('')}
-                    </select>
-                `;
-                weaponsSection.appendChild(card);
+                weaponsSection.innerHTML += `
+                    <div class="card">
+                        <img src="${char.image}">
+                        <div>${char.name}</div>
+                        <div>נשק: ${char.weapon}</div>
+                        <button onclick="sellWeapon('${char.name}', ${battleIndex})" ${char.weapon === "גלוק" ? "disabled" : ""}>מכור</button>
+                        <select onchange="buyWeapon('${char.name}', this.value, ${battleIndex})">
+                            <option value="">בחר נשק</option>
+                            ${Object.keys(weapons).filter(w => (char.name !== "אריאל שרביט" || w === "גלוק") && (w !== "RPG" || char.name === "דביר ברקת")).map(w => `
+                                <option value="${w}" ${teamBudget < weapons[w].cost || char.weapon === w ? "disabled" : ""}>${w} (${weapons[w].cost.toLocaleString()} €, +${weapons[w].bonus})</option>
+                            `).join('')}
+                        </select>
+                    </div>`;
             });
         }
 
@@ -857,17 +550,12 @@
                 char.trained = true;
                 document.querySelector(".popup").remove();
                 showTeamManagement(battleIndex);
-            } else if (char.trained) {
-                alert("השחקן כבר עבר אימון!");
-            } else {
-                alert("אין מספיק מטבעות!");
             }
         }
 
         function buyWeapon(charName, weapon, battleIndex) {
             const char = selectedTeam.find(c => c.name === charName);
             if (!weapon || char.weapon === weapon) return;
-
             const newWeaponCost = weapons[weapon].cost;
             if (teamBudget >= newWeaponCost) {
                 const oldWeaponBonus = weapons[char.weapon].bonus;
@@ -877,8 +565,6 @@
                 char.weapon = weapon;
                 document.querySelector(".popup").remove();
                 showTeamManagement(battleIndex);
-            } else {
-                alert("אין מספיק תקציב!");
             }
         }
 
@@ -887,7 +573,7 @@
             if (char.weapon !== "גלוק") {
                 const oldWeaponCost = weapons[char.weapon].cost;
                 const oldWeaponBonus = weapons[char.weapon].bonus;
-                teamBudget += Math.floor(oldWeaponCost / 2); // החזר 50%
+                teamBudget += Math.floor(oldWeaponCost / 2);
                 char.overall = char.overall - oldWeaponBonus + weapons["גלוק"].bonus;
                 char.health = char.health - oldWeaponBonus + weapons["גלוק"].bonus;
                 char.weapon = "גלוק";
@@ -896,31 +582,169 @@
             }
         }
 
-        function showPostBattleMessage(battleIndex) {
-            const aliveTeam = selectedTeam.filter(char => char.health > 0 && char.name !== "דביר ברקת");
-            if (aliveTeam.length === 0) return;
-
-            const randomChar = aliveTeam[Math.floor(Math.random() * aliveTeam.length)];
-            const message = postBattleMessages[battleIndex];
-
-            const popup = document.createElement("div");
-            popup.className = "message-popup";
-            popup.innerHTML = `
-                <img src="${randomChar.image}">
-                <p><strong>${randomChar.name}:</strong> ${message}</p>
-                <button onclick="this.parentElement.remove()">סגור</button>
+        function showCityManagement() {
+            const cityDisplay = document.getElementById("city-management");
+            cityDisplay.style.display = "flex";
+            cityDisplay.innerHTML = `
+                <h2>ניהול ${cityName}</h2>
+                <p>תקציב העיר: ${cityBudget.toLocaleString()} ₪</p>
+                <p>אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
+                <button onclick="showCityMenu()">תפריט ניהול</button>
+                <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
             `;
-            document.body.appendChild(popup);
+            hideAllExcept("city-management");
+            startCityIncome();
+        }
 
-            setTimeout(() => {
-                if (popup && document.body.contains(popup)) {
-                    popup.remove();
-                }
+        function startCityIncome() {
+            setInterval(() => {
+                cityBudget += 20 + (prostitutes.length * 30) + (cityUpgrades.newNeighborhood ? 40000 : 0) + (cityUpgrades.airport ? 100000 : 0) + (cityUpgrades.hotel ? 50000 : 0);
+                if (Math.random() < 0.1) triggerCityEvent();
+                updateCityDisplay();
             }, 5000);
         }
 
-        document.getElementById("confirm-team").onclick = confirmTeam;
-        displayCharacters();
+        function updateCityDisplay() {
+            const cityDisplay = document.getElementById("city-management");
+            if (cityDisplay.style.display === "flex") {
+                cityDisplay.innerHTML = `
+                    <h2>ניהול ${cityName}</h2>
+                    <p>תקציב העיר: ${cityBudget.toLocaleString()} ₪</p>
+                    <p>אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
+                    <button onclick="showCityMenu()">תפריט ניהול</button>
+                    <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+                `;
+            }
+        }
+
+        function triggerCityEvent() {
+            const events = [
+                { text: "תקלה במים! תיקון עולה 4,000 ₪", cost: 4000 },
+                { text: "הצפה בשכונת רבין! תיקון עולה 10,000 ₪", cost: 10000 },
+                { text: "שריפה במרכז העיר! תיקון עולה 15,000 ₪", cost: 15000 }
+            ];
+            const event = events[Math.floor(Math.random() * events.length)];
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h3>אירוע בעיר!</h3>
+                    <p>${event.text}</p>
+                    <button onclick="cityBudget -= ${event.cost}; this.parentElement.parentElement.remove(); updateCityDisplay()">תקן (${event.cost.toLocaleString()} ₪)</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        function showCityMenu() {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h2>תפריט ניהול ${cityName}</h2>
+                    <h3>שינוי שמות</h3>
+                    <button onclick="changeCityName()">שנה שם עיר (3,000,000 ₪)</button>
+                    <h3>שכונות</h3>
+                    ${cityNeighborhoods.map((n, i) => `<div>${n} <button onclick="changeNeighborhoodName(${i})">שנה שם (1,000,000 ₪)</button></div>`).join('')}
+                    <h3>תפקידים</h3>
+                    ${Object.keys(cityJobs).map(job => `<div>${job}: ${cityJobs[job].toLocaleString()} ₪</div>`).join('')}
+                    <h3>זונות (${prostitutes.length}/4)</h3>
+                    ${prostitutesList.filter(p => !prostitutes.includes(p)).map(p => `<button onclick="hireProstitute('${p}')">${p} (+30 ₪/5ש)</button>`).join('')}
+                    <h3>מכירת מבנים</h3>
+                    ${buildings.filter(b => !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
+                    <h3>שדרוגים</h3>
+                    <button onclick="buyNewNeighborhood()" ${cityUpgrades.newNeighborhood ? "disabled" : ""}>שכונה חדשה (10,000,000 ₪)</button>
+                    <button onclick="buyAirport()" ${cityPopulation < 50000 || cityUpgrades.airport ? "disabled" : ""}>נמל תעופה (50,000,000 ₪)</button>
+                    <button onclick="buyHotel()" ${cityUpgrades.hotel ? "disabled" : ""}>מלון (20,000,000 ₪)</button>
+                    <button onclick="this.parentElement.parentElement.remove()">חזור</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        function changeCityName() {
+            if (cityBudget >= 3000000) {
+                const newName = prompt("הזן שם חדש לעיר:");
+                if (newName) {
+                    cityBudget -= 3000000;
+                    cityName = newName;
+                    updateCityDisplay();
+                    document.querySelector(".popup").remove();
+                    showCityMenu();
+                }
+            } else {
+                alert("אין מספיק תקציב!");
+            }
+        }
+
+        function changeNeighborhoodName(index) {
+            if (cityBudget >= 1000000) {
+                const newName = prompt(`הזן שם חדש לשכונה ${cityNeighborhoods[index]}:`);
+                if (newName) {
+                    cityBudget -= 1000000;
+                    cityNeighborhoods[index] = newName;
+                    updateCityDisplay();
+                    document.querySelector(".popup").remove();
+                    showCityMenu();
+                }
+            } else {
+                alert("אין מספיק תקציב!");
+            }
+        }
+
+        function hireProstitute(name) {
+            if (prostitutes.length < 4) {
+                prostitutes.push(name);
+                document.querySelector(".popup").remove();
+                showCityMenu();
+            } else {
+                alert("מגיע עד 4 זונות!");
+            }
+        }
+
+        function sellBuilding(name) {
+            const building = buildings.find(b => b.name === name);
+            if (!building.sold) {
+                cityBudget += building.value;
+                building.sold = true;
+                document.querySelector(".popup").remove();
+                showCityMenu();
+            }
+        }
+
+        function buyNewNeighborhood() {
+            if (cityBudget >= 10000000 && !cityUpgrades.newNeighborhood) {
+                cityBudget -= 10000000;
+                cityPopulation += 4000;
+                cityUpgrades.newNeighborhood = true;
+                updateCityDisplay();
+                document.querySelector(".popup").remove();
+                showCityMenu();
+            }
+        }
+
+        function buyAirport() {
+            if (cityBudget >= 50000000 && cityPopulation >= 50000 && !cityUpgrades.airport) {
+                cityBudget -= 50000000;
+                cityUpgrades.airport = true;
+                updateCityDisplay();
+                document.querySelector(".popup").remove();
+                showCityMenu();
+            }
+        }
+
+        function buyHotel() {
+            if (cityBudget >= 20000000 && !cityUpgrades.hotel) {
+                cityBudget -= 20000000;
+                cityPopulation += 3000;
+                cityUpgrades.hotel = true;
+                updateCityDisplay();
+                document.querySelector(".popup").remove();
+                showCityMenu();
+            }
+        }
+
+        showMainMenu();
     </script>
 </body>
 </html>
