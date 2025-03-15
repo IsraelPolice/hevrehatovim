@@ -8,8 +8,8 @@
     <style>
         body {
             font-family: 'Helvetica', sans-serif;
-            background: #000;
-            color: #fff;
+            background: #1a1a1a;
+            color: #e0e0e0;
             direction: rtl;
             margin: 0;
             padding: 40px;
@@ -18,34 +18,35 @@
         }
 
         h1 {
-            color: #d4af37;
+            color: #fff;
             font-size: 2.5em;
             text-align: center;
             margin: 0 0 30px;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         h2 {
             color: #fff;
             font-size: 1.8em;
             margin: 20px 0 10px;
-            letter-spacing: 1px;
         }
 
         .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
         .card {
-            background: #1a1a1a;
-            border: 1px solid #d4af37;
+            background: #252525;
+            border: 1px solid #404040;
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
+            width: 180px;
             text-align: center;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
@@ -53,12 +54,12 @@
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
         }
 
         .card.selected {
-            border-color: #fff;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            border-color: #00ccff;
+            box-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
         }
 
         .card img {
@@ -67,23 +68,44 @@
             border-radius: 8px;
             object-fit: cover;
             margin-bottom: 10px;
-            border: 1px solid #d4af37;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, #252525, #353535);
+            border: 1px solid #00ccff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .team-card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .stars {
+            color: #ffd700;
+            margin: 5px 0;
         }
 
         button {
             padding: 10px 20px;
             font-size: 16px;
-            background: #d4af37;
-            color: #000;
+            background: #00ccff;
+            color: #fff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s ease, transform 0.2s ease;
-            margin: 10px 5px;
+            margin: 5px;
         }
 
         button:hover {
-            background: #fff;
+            background: #0099cc;
             transform: translateY(-2px);
         }
 
@@ -95,9 +117,9 @@
         select {
             padding: 8px;
             font-size: 14px;
-            background: #1a1a1a;
-            color: #fff;
-            border: 1px solid #d4af37;
+            background: #252525;
+            color: #e0e0e0;
+            border: 1px solid #404040;
             border-radius: 5px;
             margin: 5px 0;
             width: 100%;
@@ -108,37 +130,45 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #1a1a1a;
-            border: 1px solid #d4af37;
+            background: #252525;
+            border: 1px solid #00ccff;
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             z-index: 1000;
             width: 90%;
-            max-width: 800px;
+            max-width: 700px;
             max-height: 80vh;
             overflow-y: auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .popup-content {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
+            text-align: center;
         }
 
         .battle-screen {
-            background: #1a1a1a;
+            background: #252525;
             padding: 30px;
             border-radius: 15px;
-            border: 1px solid #d4af37;
+            border: 1px solid #404040;
             max-width: 1000px;
             margin: 0 auto;
         }
 
         .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
+            justify-content: center;
             margin: 20px 0;
         }
 
@@ -152,23 +182,25 @@
 
         .health-bar-fill {
             height: 100%;
-            background: #d4af37;
+            background: #00ccff;
             transition: width 0.5s ease;
             border-radius: 4px;
         }
 
         .weapon-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 15px;
+            justify-content: center;
             margin: 20px 0;
         }
 
         .weapon-card {
-            background: #222;
-            border: 1px solid #d4af37;
+            background: #303030;
+            border: 1px solid #404040;
             border-radius: 10px;
             padding: 15px;
+            width: 160px;
             text-align: center;
             transition: transform 0.2s ease;
         }
@@ -187,8 +219,8 @@
         @media (max-width: 600px) {
             h1 { font-size: 2em; }
             h2 { font-size: 1.5em; }
-            .card { padding: 15px; }
-            .card img { width: 80px; height: 80px; }
+            .card, .team-card { width: 140px; }
+            .card img, .team-card img { width: 80px; height: 80px; }
             button { font-size: 14px; padding: 8px 15px; }
             .popup { padding: 20px; }
         }
@@ -204,11 +236,11 @@
 
     <script>
         const weapons = {
-            "גלוק": { cost: 1000, bonus: 1, image: "https://via.placeholder.com/80?text=גלוק" },
-            "עוזי": { cost: 5000, bonus: 2, image: "https://via.placeholder.com/80?text=עוזי" },
-            "M16": { cost: 15000, bonus: 3, image: "https://via.placeholder.com/80?text=M16" },
-            "M4": { cost: 30000, bonus: 4, image: "https://via.placeholder.com/80?text=M4" },
-            "RPG": { cost: 50000, bonus: 5, image: "https://via.placeholder.com/80?text=RPG" }
+            "גלוק": { cost: 1000, bonus: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-U913muhRYPQf90Rdx6lU2mNovdSLPQTV6A&s" },
+            "MP5": { cost: 5000, bonus: 2, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTcYN7Ay8P0akauOPxiBm9vQ1XTg2fSNOL6w&s" },
+            "M16": { cost: 15000, bonus: 3, image: "https://airsoftmania.eu/cdn/shop/products/1152230674_1.webp?v=1662630204" },
+            "M4": { cost: 30000, bonus: 4, image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/M4A1-flattop.png/800px-M4A1-flattop.png" },
+            "RPG": { cost: 50000, bonus: 5, image: "https://static.wikia.nocookie.net/maxpayne/images/4/40/Rpg.png" }
         };
 
         const characters = [
@@ -292,23 +324,36 @@
 
         function showMainMenu() {
             const mainMenu = document.getElementById("main-menu");
-            mainMenu.style.display = "grid";
+            mainMenu.style.display = "flex";
             mainMenu.innerHTML = `
-                <button onclick="displayCharacters()">התחל משחק</button>
+                <button onclick="showIntroPopup()">התחל משחק</button>
                 ${bigBossDefeated ? `<button onclick="showCityManagement()">ניהול ${cityName}</button>` : ""}
             `;
             hideAllExcept("main-menu");
         }
 
+        function showIntroPopup() {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h2>מעלות בסכנה!</h2>
+                    <p>בחר את הצוות שאיתו תצא למלחמה</p>
+                    <button onclick="this.parentElement.parentElement.remove(); displayCharacters()">המשך</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
         function hideAllExcept(activeId) {
             ["main-menu", "character-selection", "team-display", "battle-display", "city-management"].forEach(id => {
-                document.getElementById(id).style.display = id === activeId ? "grid" : "none";
+                document.getElementById(id).style.display = id === activeId ? "flex" : "none";
             });
         }
 
         function displayCharacters() {
             const selectionDiv = document.getElementById("character-selection");
-            selectionDiv.style.display = "grid";
+            selectionDiv.style.display = "flex";
             selectionDiv.innerHTML = "";
             characters.forEach(char => {
                 const card = document.createElement("div");
@@ -317,12 +362,12 @@
                 card.onclick = () => toggleSelection(char, card);
                 selectionDiv.appendChild(card);
             });
-            const confirmButton = document.createElement("button");
-            confirmButton.id = "confirm-team";
-            confirmButton.innerText = "אשר צוות";
-            confirmButton.disabled = true;
-            confirmButton.onclick = confirmTeam;
-            selectionDiv.appendChild(confirmButton);
+            selectionDiv.innerHTML += `
+                <div style="width: 100%; text-align: center;">
+                    <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות</button>
+                    <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
+                </div>
+            `;
             hideAllExcept("character-selection");
         }
 
@@ -338,16 +383,27 @@
             document.getElementById("confirm-team").disabled = selectedTeam.length !== 5;
         }
 
+        function selectRandomTeam() {
+            selectedTeam = [];
+            const shuffled = [...characters].sort(() => 0.5 - Math.random());
+            selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
+            assignRandomRoles();
+            confirmTeam();
+        }
+
         function confirmTeam() {
             const teamDisplay = document.getElementById("team-display");
-            teamDisplay.style.display = "grid";
+            teamDisplay.style.display = "flex";
             teamDisplay.innerHTML = `<h2>הצוות שלך:</h2>`;
             selectedTeam.forEach(char => {
+                const stars = Math.round(char.overall / 20);
                 const card = document.createElement("div");
-                card.className = "card";
+                card.className = "team-card";
                 card.innerHTML = `
                     <img src="${char.image}" alt="${char.name}">
                     <div>${char.name}</div>
+                    <div>Overall: ${char.overall}</div>
+                    <div class="stars">${"★".repeat(stars)}${"☆".repeat(5 - stars)}</div>
                     <select id="role-${char.name}">
                         <option value="">בחר תפקיד</option>
                         ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
@@ -358,7 +414,7 @@
                 teamDisplay.appendChild(card);
             });
             teamDisplay.innerHTML += `
-                <div style="grid-column: span 5; text-align: center;">
+                <div style="width: 100%; text-align: center;">
                     <button onclick="confirmRoles()">אשר תפקידים</button>
                     <button onclick="assignRandomRoles()">בחר תפקידים אוטומטית</button>
                     <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
@@ -434,7 +490,7 @@
                 <h3>הצוות שלך:</h3>
                 <div class="team-grid">
                     ${selectedTeam.map(char => `
-                        <div class="card">
+                        <div class="team-card">
                             <img src="${char.image}" alt="${char.name}">
                             <div>${char.name}</div>
                             <div>תפקיד: ${char.role}</div>
@@ -503,7 +559,7 @@
                 <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
                 <div class="team-grid">
                     ${selectedTeam.map(char => `
-                        <div class="card">
+                        <div class="team-card">
                             <img src="${char.image}" alt="${char.name}">
                             <div>${char.name} (${char.role})</div>
                             <div>חיים: ${char.health}/${char.overall}</div>
@@ -539,7 +595,7 @@
             const sellSection = document.getElementById("sell-section");
             selectedTeam.forEach(char => {
                 sellSection.innerHTML += `
-                    <div class="card">
+                    <div class="team-card">
                         <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}</div>
                         <div>שווי: ${char.value.toLocaleString()} €</div>
@@ -550,7 +606,7 @@
             const buySection = document.getElementById("buy-section");
             characters.filter(c => !selectedTeam.some(t => t.name === c.name)).forEach(char => {
                 buySection.innerHTML += `
-                    <div class="card">
+                    <div class="team-card">
                         <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}</div>
                         <div>שווי: ${char.value.toLocaleString()} €</div>
@@ -602,7 +658,7 @@
             const trainingSection = document.getElementById("training-section");
             selectedTeam.forEach(char => {
                 trainingSection.innerHTML += `
-                    <div class="card">
+                    <div class="team-card">
                         <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}</div>
                         <div>Overall: ${char.overall}</div>
@@ -615,7 +671,7 @@
             const weaponsSection = document.getElementById("weapons-section");
             selectedTeam.forEach(char => {
                 weaponsSection.innerHTML += `
-                    <div class="card">
+                    <div class="team-card">
                         <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}</div>
                         <div>נשק נוכחי: ${char.weapon} (+${weapons[char.weapon].bonus})</div>
@@ -634,7 +690,7 @@
                     <h2>חנות נשקים - ${charName}</h2>
                     <p>תקציב: ${teamBudget.toLocaleString()} €</p>
                     <div class="weapon-grid" id="weapon-options"></div>
-                    <button onclick="this.parentElement.parentElement.remove()">סגור</button>
+                    <button onclick="this.parentElement.parentElement.remove(); showTeamManagement(${battleIndex})">סגור</button>
                 </div>
             `;
             document.body.appendChild(popup);
@@ -706,28 +762,28 @@
         function showCityManagement() {
             if (!bigBossDefeated) return;
             const cityDisplay = document.getElementById("city-management");
-            cityDisplay.style.display = "grid";
+            cityDisplay.style.display = "flex";
             cityDisplay.innerHTML = `
                 <h2>ניהול ${cityName}</h2>
                 <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
                 <div class="team-grid">
-                    <div class="card">
+                    <div class="team-card">
                         <h3>שכונות</h3>
                         <p>${cityNeighborhoods.join(', ')}</p>
                         <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
                     </div>
-                    <div class="card">
+                    <div class="team-card">
                         <h3>תפקידים</h3>
                         <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
                         <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
                     </div>
-                    <div class="card">
+                    <div class="team-card">
                         <h3>שדרוגים</h3>
                         <p>${Object.values(cityUpgrades).filter(u => u).length}/3 שדרוגים</p>
                         <button onclick="showCityMenu('upgrades')">נהל שדרוגים</button>
                     </div>
                 </div>
-                <div style="grid-column: span 3; text-align: center;">
+                <div style="width: 100%; text-align: center;">
                     <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
                 </div>
             `;
@@ -746,28 +802,28 @@
 
         function updateCityDisplay() {
             const cityDisplay = document.getElementById("city-management");
-            if (cityDisplay.style.display === "grid") {
+            if (cityDisplay.style.display === "flex") {
                 cityDisplay.innerHTML = `
                     <h2>ניהול ${cityName}</h2>
                     <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
                     <div class="team-grid">
-                        <div class="card">
+                        <div class="team-card">
                             <h3>שכונות</h3>
                             <p>${cityNeighborhoods.join(', ')}</p>
                             <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
                         </div>
-                        <div class="card">
+                        <div class="team-card">
                             <h3>תפקידים</h3>
                             <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
                             <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
                         </div>
-                        <div class="card">
+                        <div class="team-card">
                             <h3>שדרוגים</h3>
                             <p>${Object.values(cityUpgrades).filter(u => u).length}/3 שדרוגים</p>
                             <button onclick="showCityMenu('upgrades')">נהל שדרוגים</button>
                         </div>
                     </div>
-                    <div style="grid-column: span 3; text-align: center;">
+                    <div style="width: 100%; text-align: center;">
                         <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
                     </div>
                 `;
@@ -893,7 +949,7 @@
                     <h3>בחר עובד ל${job}</h3>
                     <div class="team-grid">
                         ${characters.map(char => `
-                            <div class="card" onclick="assignJobToPlayer('${job}', '${char.name}')">
+                            <div class="team-card" onclick="assignJobToPlayer('${job}', '${char.name}')">
                                 <img src="${char.image}" alt="${char.name}">
                                 <div>${char.name}</div>
                                 <div>Overall: ${char.overall}</div>
