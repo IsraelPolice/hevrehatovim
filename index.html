@@ -8,48 +8,51 @@
     <style>
         body {
             font-family: 'Rubik', sans-serif;
-            background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77);
+            background: linear-gradient(135deg, #1a1a1a, #2b2b2b);
             color: #e0e1dd;
             direction: rtl;
             margin: 0;
-            padding: 10px;
+            padding: 20px;
             min-height: 100vh;
             overflow-x: hidden;
             animation: glowBackground 5s infinite alternate;
         }
 
         @keyframes glowBackground {
-            0% { background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77); }
-            100% { background: linear-gradient(135deg, #1b263b, #415a77, #778da9); }
+            0% { background: linear-gradient(135deg, #1a1a1a, #2b2b2b); }
+            100% { background: linear-gradient(135deg, #2b2b2b, #3c3c3c); }
         }
 
         h1 {
-            color: #00ffcc;
-            text-shadow: 0 0 10px #00ffcc;
-            font-size: 2.5em;
+            color: #ffcc00;
+            text-shadow: 0 0 15px #ffcc00;
+            font-size: 3em;
+            text-align: center;
             margin: 10px 0;
         }
 
         h2 {
             color: #ff0066;
-            text-shadow: 0 0 5px #ff0066;
-            font-size: 1.8em;
+            text-shadow: 0 0 10px #ff0066;
+            font-size: 2em;
+            margin: 10px 0;
         }
 
         .container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
+            padding: 10px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #00ffcc;
-            border-radius: 15px;
-            box-shadow: 0 0 15px #00ffcc;
-            padding: 10px;
-            width: 180px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+            padding: 15px;
+            width: 200px;
             text-align: center;
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
@@ -66,28 +69,29 @@
         }
 
         .card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
             object-fit: cover;
+            border: 1px solid #ffcc00;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 12px 25px;
             font-size: 16px;
-            background: #ff0066;
-            color: #e0e1dd;
+            background: linear-gradient(45deg, #ff0066, #ffcc00);
+            color: #fff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 0 10px #ff0066;
+            box-shadow: 0 0 15px #ff0066;
             transition: transform 0.3s, box-shadow 0.3s;
             margin: 5px;
         }
 
         button:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px #ff0066;
+            box-shadow: 0 0 25px #ffcc00;
         }
 
         button:disabled {
@@ -101,7 +105,7 @@
             font-size: 14px;
             background: rgba(255, 255, 255, 0.1);
             color: #e0e1dd;
-            border: 1px solid #00ffcc;
+            border: 1px solid #ffcc00;
             border-radius: 5px;
             margin: 5px 0;
         }
@@ -111,14 +115,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #1b263b, #415a77);
+            background: linear-gradient(135deg, #2b2b2b, #3c3c3c);
             border: 3px solid #ff0066;
             padding: 20px;
-            border-radius: 20px;
+            border-radius: 15px;
             box-shadow: 0 0 40px #ff0066;
             z-index: 1000;
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             max-height: 80vh;
             overflow-y: auto;
             animation: popupGlow 2s infinite alternate;
@@ -126,49 +130,47 @@
 
         @keyframes popupGlow {
             0% { box-shadow: 0 0 40px #ff0066; }
-            100% { box-shadow: 0 0 60px #00ffcc; }
+            100% { box-shadow: 0 0 60px #ffcc00; }
         }
 
         .popup-content {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
         }
 
-        .transfer-card {
+        .battle-screen {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid #00ffcc;
-            border-radius: 10px;
-            padding: 10px;
-            margin: 10px 0;
-            transition: transform 0.3s;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px #ff0066;
         }
 
-        .transfer-card:hover {
-            transform: scale(1.02);
-        }
-
-        .transfer-card img {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            margin-left: 10px;
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
         }
 
         .health-bar {
             width: 100%;
             background: #333;
-            height: 15px;
-            border-radius: 10px;
+            height: 10px;
+            border-radius: 5px;
             margin: 5px 0;
         }
 
         .health-bar-fill {
             height: 100%;
-            background: #00ffcc;
+            background: #ffcc00;
             transition: width 0.5s ease;
+            border-radius: 5px;
         }
 
         @media (max-width: 600px) {
@@ -186,7 +188,7 @@
     <div id="main-menu" class="container"></div>
     <div id="character-selection" class="container" style="display: none;"></div>
     <div id="team-display" class="container" style="display: none;"></div>
-    <div id="battle-display" class="container" style="display: none;"></div>
+    <div id="battle-display" class="battle-screen" style="display: none;"></div>
     <div id="city-management" class="container" style="display: none;"></div>
 
     <script>
@@ -225,7 +227,7 @@
         let teamBudget = 15000000;
         let completedBattles = [];
         let lastBattleName = "";
-        let cityBudget = 1000000;
+        let cityBudget = 5000000;
         let cityPopulation = 22000;
         let cityName = "מעלות תרשיחא";
         let cityNeighborhoods = ["יפה נוף", "סביונים", "מרכז העיר", "שכונת רבין", "גבעת הזיתים", "אילנות", "סביונים"];
@@ -239,6 +241,7 @@
         ];
         let cityUpgrades = { newNeighborhood: false, airport: false, hotel: false };
         let bigBossDefeated = false;
+        let assignedJobs = {};
 
         const battles = [
             { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית!" },
@@ -269,12 +272,19 @@
 
         const prostitutesList = ["לאה אוחנה", "אמא של רפי", "זמירה קחלר", "ורד עין גל"];
 
+        const funnyMessages = [
+            "אני חייב לאונן עכשיו, תכסה אותי!",
+            "האויב זרק עליי גרב מסריחה!",
+            "מישהו ראה את הסנדוויץ' שלי?",
+            "אני עייף, אפשר הפסקת קפה?"
+        ];
+
         function showMainMenu() {
             const mainMenu = document.getElementById("main-menu");
             mainMenu.style.display = "flex";
             mainMenu.innerHTML = `
                 <button onclick="displayCharacters()">התחל משחק</button>
-                ${bigBossDefeated ? `<button onclick="showCityManagement()">ניהול עיר</button>` : ""}
+                ${bigBossDefeated ? `<button onclick="showCityManagement()">ניהול ${cityName}</button>` : ""}
             `;
             hideAllExcept("main-menu");
         }
@@ -337,16 +347,41 @@
                 teamDisplay.appendChild(card);
             });
             teamDisplay.innerHTML += `
-                <button onclick="confirmRoles()">התחל קרב</button>
+                <button onclick="confirmRoles()">אשר תפקידים</button>
+                <button onclick="assignRandomRoles()">בחר תפקידים אוטומטית</button>
                 <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
             `;
             hideAllExcept("team-display");
         }
 
+        function assignRandomRoles() {
+            let available = [...selectedTeam];
+            selectedTeam.forEach(char => char.role = "");
+
+            // מנהיג אחד
+            let leaderCandidates = available.filter(c => c.name !== "אריאל עין גל" && c.name !== "חיים מרקס");
+            const leader = leaderCandidates[Math.floor(Math.random() * leaderCandidates.length)];
+            leader.role = "מנהיג";
+            available = available.filter(c => c.name !== leader.name);
+
+            // זונה אחת
+            let whoreCandidates = available.filter(c => c.name !== "דביר ברקת");
+            const whore = whoreCandidates[Math.floor(Math.random() * whoreCandidates.length)];
+            whore.role = "זונה";
+            available = available.filter(c => c.name !== whore.name);
+
+            // עד 3 חיילים
+            for (let i = 0; i < Math.min(3, available.length); i++) {
+                available[i].role = "חייל";
+            }
+
+            confirmRoles();
+        }
+
         function confirmRoles() {
             let leaderCount = 0, soldierCount = 0, whoreCount = 0;
             for (const char of selectedTeam) {
-                const role = document.getElementById(`role-${char.name}`).value;
+                const role = char.role || document.getElementById(`role-${char.name}`).value;
                 if (!role) return alert("חובה לבחור תפקיד לכל חבר צוות!");
                 if (role === "מנהיג") leaderCount++;
                 if (role === "חייל") soldierCount++;
@@ -359,7 +394,7 @@
             if (whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
 
             selectedTeam.forEach(char => {
-                const role = document.getElementById(`role-${char.name}`).value;
+                const role = char.role || document.getElementById(`role-${char.name}`).value;
                 char.role = role;
                 if (role === "מנהיג") char.overall += 3;
                 if (role === "חייל") char.overall += 1;
@@ -390,10 +425,40 @@
             battleDisplay.innerHTML = `
                 <h2>קרב: ${battle.name}</h2>
                 <p>${battle.story}</p>
-                <button onclick="fightBattle(${battleIndex})">להילחם</button>
+                <h3>הצוות שלך:</h3>
+                <div class="team-grid">
+                    ${selectedTeam.map(char => `
+                        <div class="card">
+                            <img src="${char.image}" alt="${char.name}">
+                            <div>${char.name}</div>
+                            <div>תפקיד: ${char.role}</div>
+                            <div>חיים: ${char.health}/${char.overall}</div>
+                            <div class="health-bar"><div class="health-bar-fill" style="width: ${(char.health / char.overall) * 100}%"></div></div>
+                        </div>
+                    `).join('')}
+                </div>
+                <button onclick="fightBattle(${battleIndex})">להילחם!</button>
+                <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
                 <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
             `;
             hideAllExcept("battle-display");
+            if (Math.random() < 0.2) showFunnyPopup();
+        }
+
+        function showFunnyPopup() {
+            const char = selectedTeam[Math.floor(Math.random() * selectedTeam.length)];
+            const message = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h3>הודעה מ${char.name}</h3>
+                    <p>"${message}"</p>
+                    <img src="${char.image}" alt="${char.name}">
+                    <button onclick="this.parentElement.parentElement.remove()">סגור</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
         }
 
         function fightBattle(battleIndex) {
@@ -411,7 +476,7 @@
                 displayTeamStatus(battleIndex);
             } else {
                 battleDisplay.innerHTML = `
-                    <h2>מלחמה: ${battle.name}</h2>
+                    <h2>קרב: ${battle.name}</h2>
                     <p>הפסדת! הדירוג שלך נמוך מדי (${avg.toFixed(2)} < ${battle.requiredAvg}).</p>
                     <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
                     <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
@@ -423,21 +488,19 @@
             const battleDisplay = document.getElementById("battle-display");
             const aliveTeam = selectedTeam.filter(char => char.health > 0);
             battleDisplay.innerHTML = `
-                <h2>מצב הקבוצה</h2>
+                <h2>מצב הקבוצה - ${battles[battleIndex].name}</h2>
                 <p>דירוג ממוצע: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
                 <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
-            `;
-            selectedTeam.forEach(char => {
-                const healthPercent = (char.health / char.overall) * 100;
-                battleDisplay.innerHTML += `
-                    <div class="card">
-                        <img src="${char.image}" alt="${char.name}">
-                        <div>${char.name} (${char.role})</div>
-                        <div>חיים: ${char.health}/${char.overall}</div>
-                        <div class="health-bar"><div class="health-bar-fill" style="width: ${healthPercent}%"></div></div>
-                    </div>`;
-            });
-            battleDisplay.innerHTML += `
+                <div class="team-grid">
+                    ${selectedTeam.map(char => `
+                        <div class="card">
+                            <img src="${char.image}" alt="${char.name}">
+                            <div>${char.name} (${char.role})</div>
+                            <div>חיים: ${char.health}/${char.overall}</div>
+                            <div class="health-bar"><div class="health-bar-fill" style="width: ${(char.health / char.overall) * 100}%"></div></div>
+                        </div>
+                    `).join('')}
+                </div>
                 <button onclick="${battleIndex < battles.length - 1 ? `startBattle(${battleIndex + 1})` : `showCityManagement()`}">${battleIndex < battles.length - 1 ? "קרב הבא" : "ניהול עיר"}</button>
                 <button onclick="showTransferWindow(${battleIndex})">חלון העברות</button>
                 <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
@@ -452,11 +515,11 @@
                 <div class="popup-content">
                     <h2>חלון העברות</h2>
                     <p>תקציב: ${teamBudget.toLocaleString()} €</p>
-                    <h3>מכירה</h3>
-                    <div id="sell-section"></div>
-                    <h3>קנייה</h3>
-                    <div id="buy-section"></div>
-                    <button onclick="this.parentElement.parentElement.remove(); displayTeamStatus(${battleIndex})">חזור</button>
+                    <h3>מכירת שחקנים</h3>
+                    <div class="team-grid" id="sell-section"></div>
+                    <h3>רכישת שחקנים</h3>
+                    <div class="team-grid" id="buy-section"></div>
+                    <button onclick="this.parentElement.parentElement.remove(); displayTeamStatus(${battleIndex})">סגור</button>
                 </div>
             `;
             document.body.appendChild(popup);
@@ -464,9 +527,10 @@
             const sellSection = document.getElementById("sell-section");
             selectedTeam.forEach(char => {
                 sellSection.innerHTML += `
-                    <div class="transfer-card">
+                    <div class="card">
                         <img src="${char.image}" alt="${char.name}">
-                        <div>${char.name}<br>שווי: ${char.value.toLocaleString()} €</div>
+                        <div>${char.name}</div>
+                        <div>שווי: ${char.value.toLocaleString()} €</div>
                         <button onclick="sellPlayer('${char.name}', ${battleIndex})">מכור</button>
                     </div>`;
             });
@@ -474,9 +538,11 @@
             const buySection = document.getElementById("buy-section");
             characters.filter(c => !selectedTeam.some(t => t.name === c.name)).forEach(char => {
                 buySection.innerHTML += `
-                    <div class="transfer-card">
+                    <div class="card">
                         <img src="${char.image}" alt="${char.name}">
-                        <div>${char.name}<br>שווי: ${char.value.toLocaleString()} €<br>Overall: ${char.overall}</div>
+                        <div>${char.name}</div>
+                        <div>שווי: ${char.value.toLocaleString()} €</div>
+                        <div>Overall: ${char.overall}</div>
                         <button onclick="buyPlayer('${char.name}', ${battleIndex})" ${teamBudget < char.value ? "disabled" : ""}>קנה</button>
                     </div>`;
             });
@@ -509,10 +575,10 @@
                 <div class="popup-content">
                     <h2>ניהול צוות</h2>
                     <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
-                    <h3>אימון</h3>
-                    <div id="training-section"></div>
+                    <h3>אימון וריפוי</h3>
+                    <div class="team-grid" id="training-section"></div>
                     <h3>נשקים</h3>
-                    <div id="weapons-section"></div>
+                    <div class="team-grid" id="weapons-section"></div>
                     <button onclick="this.parentElement.parentElement.remove(); startBattle(${battleIndex})">חזור לקרב</button>
                     <button onclick="this.parentElement.parentElement.remove(); showMainMenu()">חזור לתפריט ראשי</button>
                 </div>
@@ -526,7 +592,9 @@
                         <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}</div>
                         <div>Overall: ${char.overall}</div>
+                        <div>חיים: ${char.health}/${char.overall}</div>
                         <button onclick="trainPlayer('${char.name}', ${battleIndex})" ${char.trained || coins < 5 ? "disabled" : ""}>אמן (5 מטבעות)</button>
+                        <button onclick="healPlayer('${char.name}', ${battleIndex})" ${char.health >= char.overall || coins < 10 ? "disabled" : ""}>רפא (10 מטבעות)</button>
                     </div>`;
             });
 
@@ -536,10 +604,10 @@
                     <div class="card">
                         <img src="${char.image}" alt="${char.name}">
                         <div>${char.name}</div>
-                        <div>נשק: ${char.weapon}</div>
-                        <button onclick="sellWeapon('${char.name}', ${battleIndex})" ${char.weapon === "גלוק" ? "disabled" : ""}>מכור</button>
+                        <div>נשק נוכחי: ${char.weapon} (+${weapons[char.weapon].bonus})</div>
+                        <button onclick="sellWeapon('${char.name}', ${battleIndex})" ${char.weapon === "גלוק" ? "disabled" : ""}>מכור נשק</button>
                         <select onchange="buyWeapon('${char.name}', this.value, ${battleIndex})">
-                            <option value="">בחר נשק</option>
+                            <option value="">בחר נשק חדש</option>
                             ${Object.keys(weapons).filter(w => (char.name !== "אריאל שרביט" || w === "גלוק") && (w !== "RPG" || char.name === "דביר ברקת")).map(w => `
                                 <option value="${w}" ${teamBudget < weapons[w].cost || char.weapon === w ? "disabled" : ""}>${w} (${weapons[w].cost.toLocaleString()} €, +${weapons[w].bonus})</option>
                             `).join('')}
@@ -555,6 +623,16 @@
                 char.overall += 3;
                 char.health += 3;
                 char.trained = true;
+                document.querySelector(".popup").remove();
+                showTeamManagement(battleIndex);
+            }
+        }
+
+        function healPlayer(charName, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            if (coins >= 10 && char.health < char.overall) {
+                coins -= 10;
+                char.health = char.overall;
                 document.querySelector(".popup").remove();
                 showTeamManagement(battleIndex);
             }
@@ -595,9 +673,24 @@
             cityDisplay.style.display = "flex";
             cityDisplay.innerHTML = `
                 <h2>ניהול ${cityName}</h2>
-                <p>תקציב העיר: ${cityBudget.toLocaleString()} ₪</p>
-                <p>אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
-                <button onclick="showCityMenu()">תפריט ניהול</button>
+                <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
+                <div class="team-grid">
+                    <div class="card">
+                        <h3>שכונות</h3>
+                        <p>${cityNeighborhoods.join(', ')}</p>
+                        <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
+                    </div>
+                    <div class="card">
+                        <h3>תפקידים</h3>
+                        <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
+                        <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
+                    </div>
+                    <div class="card">
+                        <h3>שדרוגים</h3>
+                        <p>${Object.values(cityUpgrades).filter(u => u).length}/3 שדרוגים</p>
+                        <button onclick="showCityMenu('upgrades')">נהל שדרוגים</button>
+                    </div>
+                </div>
                 <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
             `;
             hideAllExcept("city-management");
@@ -607,7 +700,7 @@
         function startCityIncome() {
             setInterval(() => {
                 cityBudget += 20 + (prostitutes.length * 30) + (cityUpgrades.newNeighborhood ? 40000 : 0) + (cityUpgrades.airport ? 100000 : 0) + (cityUpgrades.hotel ? 50000 : 0);
-                if (Math.random() < 0.1) triggerCityEvent();
+                if (Math.random() < 0.02) triggerCityEvent();
                 updateCityDisplay();
             }, 5000);
         }
@@ -617,9 +710,24 @@
             if (cityDisplay.style.display === "flex") {
                 cityDisplay.innerHTML = `
                     <h2>ניהול ${cityName}</h2>
-                    <p>תקציב העיר: ${cityBudget.toLocaleString()} ₪</p>
-                    <p>אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
-                    <button onclick="showCityMenu()">תפריט ניהול</button>
+                    <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
+                    <div class="team-grid">
+                        <div class="card">
+                            <h3>שכונות</h3>
+                            <p>${cityNeighborhoods.join(', ')}</p>
+                            <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
+                        </div>
+                        <div class="card">
+                            <h3>תפקידים</h3>
+                            <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
+                            <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
+                        </div>
+                        <div class="card">
+                            <h3>שדרוגים</h3>
+                            <p>${Object.values(cityUpgrades).filter(u => u).length}/3 שדרוגים</p>
+                            <button onclick="showCityMenu('upgrades')">נהל שדרוגים</button>
+                        </div>
+                    </div>
                     <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
                 `;
             }
@@ -639,34 +747,48 @@
                     <h3>אירוע בעיר!</h3>
                     <p>${event.text}</p>
                     <button onclick="cityBudget -= ${event.cost}; this.parentElement.parentElement.remove(); updateCityDisplay()">תקן (${event.cost.toLocaleString()} ₪)</button>
+                    <button onclick="this.parentElement.parentElement.remove()">התעלם</button>
                 </div>
             `;
             document.body.appendChild(popup);
         }
 
-        function showCityMenu() {
+        function showCityMenu(section) {
             const popup = document.createElement("div");
             popup.className = "popup";
-            popup.innerHTML = `
-                <div class="popup-content">
-                    <h2>תפריט ניהול ${cityName}</h2>
-                    <h3>שינוי שמות</h3>
-                    <button onclick="changeCityName()">שנה שם עיר (3,000,000 ₪)</button>
+            popup.innerHTML = `<div class="popup-content"><h2>ניהול ${cityName}</h2>`;
+            if (section === "neighborhoods") {
+                popup.innerHTML += `
                     <h3>שכונות</h3>
                     ${cityNeighborhoods.map((n, i) => `<div>${n} <button onclick="changeNeighborhoodName(${i})">שנה שם (1,000,000 ₪)</button></div>`).join('')}
-                    <h3>תפקידים</h3>
-                    ${Object.keys(cityJobs).map(job => `<div>${job}: ${cityJobs[job].toLocaleString()} ₪</div>`).join('')}
                     <h3>זונות (${prostitutes.length}/4)</h3>
                     ${prostitutesList.filter(p => !prostitutes.includes(p)).map(p => `<button onclick="hireProstitute('${p}')">${p} (+30 ₪/5ש)</button>`).join('')}
                     <h3>מכירת מבנים</h3>
                     ${buildings.filter(b => !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
+                `;
+            } else if (section === "jobs") {
+                popup.innerHTML += `
+                    <h3>תפקידים</h3>
+                    ${Object.keys(cityJobs).map(job => `
+                        <div>
+                            ${job}: ${cityJobs[job].toLocaleString()} ₪
+                            <span>${assignedJobs[job] ? `(${assignedJobs[job]})` : ''}</span>
+                            <button onclick="assignJob('${job}')">בחר עובד</button>
+                        </div>
+                    `).join('')}
+                `;
+            } else if (section === "upgrades") {
+                popup.innerHTML += `
                     <h3>שדרוגים</h3>
-                    <button onclick="buyNewNeighborhood()" ${cityUpgrades.newNeighborhood ? "disabled" : ""}>שכונה חדשה (10,000,000 ₪)</button>
-                    <button onclick="buyAirport()" ${cityPopulation < 50000 || cityUpgrades.airport ? "disabled" : ""}>נמל תעופה (50,000,000 ₪)</button>
-                    <button onclick="buyHotel()" ${cityUpgrades.hotel ? "disabled" : ""}>מלון (20,000,000 ₪)</button>
-                    <button onclick="this.parentElement.parentElement.remove()">חזור</button>
-                </div>
-            `;
+                    <button onclick="buyNewNeighborhood()" ${cityUpgrades.newNeighborhood ? "disabled" : ""}>שכונה חדשה (10,000,000 ₪, +4,000 תושבים, +40,000 ₪/5ש)</button>
+                    <button onclick="buyAirport()" ${cityPopulation < 50000 || cityUpgrades.airport ? "disabled" : ""}>נמל תעופה (50,000,000 ₪, +100,000 ₪/5ש)</button>
+                    <button onclick="buyHotel()" ${cityUpgrades.hotel ? "disabled" : ""}>מלון (20,000,000 ₪, +3,000 תושבים, +50,000 ₪/5ש)</button>
+                `;
+            }
+            popup.innerHTML += `
+                <button onclick="changeCityName()">שנה שם עיר (3,000,000 ₪)</button>
+                <button onclick="this.parentElement.parentElement.remove()">סגור</button>
+            </div>`;
             document.body.appendChild(popup);
         }
 
@@ -678,7 +800,7 @@
                     cityName = newName;
                     updateCityDisplay();
                     document.querySelector(".popup").remove();
-                    showCityMenu();
+                    showCityMenu('neighborhoods');
                 }
             } else {
                 alert("אין מספיק תקציב!");
@@ -693,7 +815,7 @@
                     cityNeighborhoods[index] = newName;
                     updateCityDisplay();
                     document.querySelector(".popup").remove();
-                    showCityMenu();
+                    showCityMenu('neighborhoods');
                 }
             } else {
                 alert("אין מספיק תקציב!");
@@ -704,7 +826,7 @@
             if (prostitutes.length < 4) {
                 prostitutes.push(name);
                 document.querySelector(".popup").remove();
-                showCityMenu();
+                showCityMenu('neighborhoods');
             } else {
                 alert("מגיע עד 4 זונות!");
             }
@@ -716,8 +838,34 @@
                 cityBudget += building.value;
                 building.sold = true;
                 document.querySelector(".popup").remove();
-                showCityMenu();
+                showCityMenu('neighborhoods');
             }
+        }
+
+        function assignJob(job) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h3>בחר עובד ל${job}</h3>
+                    <div class="team-grid">
+                        ${selectedTeam.map(char => `
+                            <div class="card" onclick="assignJobToPlayer('${job}', '${char.name}')">
+                                <img src="${char.image}" alt="${char.name}">
+                                <div>${char.name}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()">סגור</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        function assignJobToPlayer(job, charName) {
+            assignedJobs[job] = charName;
+            document.querySelector(".popup").remove();
+            showCityMenu('jobs');
         }
 
         function buyNewNeighborhood() {
@@ -727,7 +875,7 @@
                 cityUpgrades.newNeighborhood = true;
                 updateCityDisplay();
                 document.querySelector(".popup").remove();
-                showCityMenu();
+                showCityMenu('upgrades');
             }
         }
 
@@ -737,7 +885,7 @@
                 cityUpgrades.airport = true;
                 updateCityDisplay();
                 document.querySelector(".popup").remove();
-                showCityMenu();
+                showCityMenu('upgrades');
             }
         }
 
@@ -748,7 +896,7 @@
                 cityUpgrades.hotel = true;
                 updateCityDisplay();
                 document.querySelector(".popup").remove();
-                showCityMenu();
+                showCityMenu('upgrades');
             }
         }
 
