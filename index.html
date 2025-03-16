@@ -370,6 +370,127 @@
             .chat-popup img { width: 40px; height: 40px; }
             .city-image { max-width: 100%; }
         }
+ 
+        .city-dashboard {
+    background: rgba(27, 38, 59, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #00d4ff;
+    max-width: 1400px;
+    margin: 20px auto;
+    box-shadow: 0 6px 25px rgba(0, 212, 255, 0.2);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+}
+
+.stats-panel {
+    background: #1b263b;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #415a77;
+}
+
+.stats-panel h3 {
+    color: #00ff85;
+    margin-bottom: 10px;
+}
+
+.stats-bar {
+    width: 100%;
+    height: 10px;
+    background: #415a77;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.stats-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 1s ease;
+}
+
+.stats-bar-fill.population { background: #00ff85; }
+.stats-bar-fill.budget { background: #ffd60a; }
+.stats-bar-fill.army { background: #ff6f61; }
+
+.city-map {
+    background: #0d1b2a;
+    border-radius: 10px;
+    padding: 15px;
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+}
+
+.map-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://i.imgur.com/8zX9K5M.png') no-repeat center;
+    background-size: cover;
+    opacity: 0.3;
+}
+
+.map-item {
+    position: absolute;
+    background: rgba(0, 212, 255, 0.7);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.map-item:hover {
+    transform: scale(1.5);
+}
+
+.control-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.control-card {
+    background: #1b263b;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #415a77;
+    transition: all 0.3s ease;
+}
+
+.control-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
+}
+
+.control-card button {
+    margin-top: 10px;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #ff6f61;
+    padding: 15px;
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 111, 97, 0.5);
+    z-index: 1001;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+               @keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
     </style>
 </head>
 <body>
@@ -442,26 +563,29 @@
             { name: "מגרש הכדורגל העירוני", value: 2500000, sold: false }
         ];
        let cityUpgrades = {
-    newNeighborhood: { count: 0, max: 20, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים (עד 20)" },
-    apartmentTowers: { count: 0, max: 10, cost: 25000000, population: 10000, income: 80000, description: "מגדלי דירות יוקרתיים (עד 10)" },
-    airport: { bought: false, cost: 50000000, population: 15000, income: 120000, description: "נמל תעופה בינלאומי (דרוש 100,000 תושבים)" },
-    hotel: { count: 0, max: 5, cost: 20000000, population: 5000, income: 60000, description: "מלון מפואר לתיירים (עד 5)" },
-    trainStation: { bought: false, cost: 30000000, population: 10000, income: 70000, description: "תחנת רכבת מהירה (דרוש 50,000 תושבים)" },
-    busTerminal: { bought: false, cost: 15000000, population: 3000, income: 35000, description: "תחנה מרכזית לאוטובוסים" },
-    mall: { count: 0, max: 3, cost: 25000000, population: 6000, income: 80000, description: "קניון ענק לקניות (עד 3)" },
-    hospital: { count: 0, max: 2, cost: 40000000, population: 5000, income: 55000, description: "בית חולים מודרני (עד 2)" },
-    university: { count: 0, max: 5, cost: 60000000, population: 12000, income: 90000, description: "אוניברסיטה למחקר והשכלה (עד 5)" },
-    sportsComplex: { bought: false, cost: 20000000, population: 3000, income: 45000, description: "מתחם ספורט עירוני" },
-    theater: { bought: false, cost: 15000000, population: 2000, income: 35000, description: "תיאטרון לתרבות ובידור" },
-    bridge: { count: 0, max: 3, cost: 8000000, population: 1500, income: 25000, description: "גשר לשיפור תנועה (עד 3)" },
-    tunnel: { count: 0, max: 2, cost: 12000000, population: 2000, income: 30000, description: "מנהרה להקלת עומסי תנועה (עד 2)" },
-    amusementPark: { bought: false, cost: 35000000, population: 8000, income: 100000, description: "פארק שעשועים לתיירות" },
-    powerPlant: { count: 0, max: 2, cost: 45000000, population: 3000, income: 65000, description: "תחנת כוח לאספקת חשמל (עד 2)" },
-    researchCenter: { bought: false, cost: 70000000, population: 15000, income: 130000, description: "מרכז מחקר טכנולוגי (דרוש 200,000 תושבים)" },
-    seaport: { bought: false, cost: 65000000, population: 20000, income: 150000, description: "נמל ימי לסחר ותיירות (דרוש 150,000 תושבים)" },
-    skyscraperDistrict: { count: 0, max: 5, cost: 100000000, population: 25000, income: 200000, description: "רובע גורדי שחקים (עד 5, דרוש 500,000 תושבים)" },
-    metroSystem: { bought: false, cost: 150000000, population: 30000, income: 250000, description: "מערכת רכבת תחתית (דרוש 300,000 תושבים)" },
-    spacePort: { bought: false, cost: 500000000, population: 50000, income: 500000, description: "נמל חלל עתידני (דרוש 1,000,000 תושבים)" }
+    newNeighborhood: { count: 0, max: 50, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים" },
+    apartmentTowers: { count: 0, max: 30, cost: 25000000, population: 10000, income: 80000, description: "מגדלי דירות יוקרתיים" },
+    suburbanExpansion: { count: 0, max: 20, cost: 15000000, population: 6000, income: 50000, description: "הרחבת פרברים" },
+    airport: { count: 0, max: 3, cost: 50000000, population: 20000, income: 150000, description: "נמל תעופה (דרוש 100,000 תושבים)" },
+    hotel: { count: 0, max: 10, cost: 20000000, population: 5000, income: 60000, description: "מלון מפואר" },
+    trainStation: { count: 0, max: 5, cost: 30000000, population: 10000, income: 80000, description: "תחנת רכבת מהירה (דרוש 50,000 תושבים)" },
+    busTerminal: { count: 0, max: 10, cost: 15000000, population: 3000, income: 35000, description: "תחנה מרכזית" },
+    mall: { count: 0, max: 8, cost: 25000000, population: 7000, income: 90000, description: "קניון ענק" },
+    hospital: { count: 0, max: 5, cost: 40000000, population: 6000, income: 60000, description: "בית חולים מודרני" },
+    university: { count: 0, max: 10, cost: 60000000, population: 15000, income: 100000, description: "אוניברסיטה" },
+    sportsComplex: { count: 0, max: 5, cost: 20000000, population: 4000, income: 50000, description: "מתחם ספורט" },
+    theater: { count: 0, max: 5, cost: 15000000, population: 2000, income: 40000, description: "תיאטרון" },
+    bridge: { count: 0, max: 10, cost: 8000000, population: 1500, income: 30000, description: "גשר" },
+    tunnel: { count: 0, max: 8, cost: 12000000, population: 2000, income: 35000, description: "מנהרה" },
+    amusementPark: { count: 0, max: 3, cost: 35000000, population: 10000, income: 120000, description: "פארק שעשועים" },
+    powerPlant: { count: 0, max: 5, cost: 45000000, population: 4000, income: 70000, description: "תחנת כוח" },
+    researchCenter: { count: 0, max: 3, cost: 70000000, population: 20000, income: 150000, description: "מרכז מחקר (דרוש 200,000 תושבים)" },
+    seaport: { count: 0, max: 3, cost: 65000000, population: 25000, income: 180000, description: "נמל ימי (דרוש 150,000 תושבים)" },
+    skyscraperDistrict: { count: 0, max: 10, cost: 100000000, population: 30000, income: 250000, description: "רובע גורדי שחקים (דרוש 500,000 תושבים)" },
+    metroSystem: { count: 0, max: 3, cost: 150000000, population: 40000, income: 300000, description: "רכבת תחתית (דרוש 300,000 תושבים)" },
+    spacePort: { bought: false, cost: 500000000, population: 100000, income: 1000000, description: "נמל חלל (דרוש 1,000,000 תושבים)" },
+    ecoDistrict: { count: 0, max: 10, cost: 30000000, population: 8000, income: 60000, description: "רובע אקולוגי ירוק" },
+    industrialZone: { count: 0, max: 15, cost: 40000000, population: 5000, income: 100000, description: "אזור תעשייה" }
 };
         let army = {
             level: 0,
@@ -560,32 +684,34 @@
             });
         }
 
-       function displayCharacters() {
+      function displayCharacters() {
     clearPopups();
     const selectionDiv = document.getElementById("character-selection");
     selectionDiv.style.display = "flex";
-    selectionDiv.innerHTML = "<h2>בחר עד 5 חברי צוות</h2>";
+    selectionDiv.innerHTML = `
+        <h2>בחר את הצוות שלך (עד 5 לוחמים)</h2>
+        <p id="selection-counter">נבחרו: ${selectedTeam.length}/5</p>
+    `;
     characters.forEach(char => {
         const card = document.createElement("div");
-        card.className = "card";
+        card.className = `card ${selectedTeam.some(c => c.name === char.name) ? "selected" : ""}`;
         card.innerHTML = `
             <img src="${char.image}" alt="${char.name}">
             <div>${char.name}</div>
-            <div>Overall: ${char.overall}</div>
+            <div>דירוג: ${char.overall}</div>
         `;
         card.addEventListener("click", () => toggleSelection(char, card));
         selectionDiv.appendChild(card);
     });
     selectionDiv.innerHTML += `
         <div style="width: 100%; text-align: center; margin-top: 20px;">
-            <p>נבחרו: ${selectedTeam.length}/5</p>
-            <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות</button>
+            <button id="confirm-team" onclick="confirmTeam()" ${selectedTeam.length !== 5 ? "disabled" : ""}>אשר צוות (${selectedTeam.length}/5)</button>
             <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
+            <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
         </div>
     `;
     hideAllExcept("character-selection");
 }
-
        function toggleSelection(char, card) {
     const index = selectedTeam.findIndex(c => c.name === char.name);
     if (index !== -1) {
@@ -601,64 +727,29 @@
     const confirmButton = document.getElementById("confirm-team");
     confirmButton.disabled = selectedTeam.length !== 5;
     confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
-    document.querySelector("#character-selection p").textContent = `נבחרו: ${selectedTeam.length}/5`;
+    document.getElementById("selection-counter").textContent = `נבחרו: ${selectedTeam.length}/5`;
 }
 
-       function selectRandomTeam() {
+     function selectRandomTeam() {
     clearPopups();
     selectedTeam = [];
     const shuffled = [...characters].sort(() => 0.5 - Math.random());
     selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
-    displayCharacters(); // רענון התצוגה
-    const cards = document.querySelectorAll(".card");
-    cards.forEach(card => {
-        const charName = card.querySelector("div").textContent;
-        if (selectedTeam.some(c => c.name === charName)) {
-            card.classList.add("selected");
-        } else {
-            card.classList.remove("selected");
-        }
-    });
-    const confirmButton = document.getElementById("confirm-team");
-    confirmButton.disabled = false;
-    confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
-    document.querySelector("#character-selection p").textContent = `נבחרו: ${selectedTeam.length}/5`;
+    displayCharacters(); // רענון התצוגה עם הבחירה הרנדומלית
 }
-
         function confirmTeam() {
-            clearPopups();
-            const teamDisplay = document.getElementById("team-display");
-            teamDisplay.style.display = "flex";
-            teamDisplay.innerHTML = `<h2>הצוות שלך:</h2>`;
-            selectedTeam.forEach(char => {
-                const stars = Math.round(char.overall / 20);
-                const card = document.createElement("div");
-                card.className = "team-card";
-                card.innerHTML = `
-                    <img src="${char.image}" alt="${char.name}">
-                    <div>${char.name}</div>
-                    <div>Overall: ${char.overall}</div>
-                    <div class="stars">${"★".repeat(stars)}${"☆".repeat(5 - stars)}</div>
-                    <select id="role-${char.name}">
-                        <option value="">בחר תפקיד</option>
-                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
-                        <option value="חייל">חייל</option>
-                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
-                    </select>
-                `;
-                teamDisplay.appendChild(card);
-            });
-            teamDisplay.innerHTML += `
-                <div style="width: 100%; text-align: center;">
-                    <button onclick="confirmRoles()">אשר תפקידים</button>
-                    <button onclick="assignRandomRoles()">בחר תפקידים אוטומטית</button>
-                    <button onclick="displayCharacters()">שנה צוות</button>
-                    <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-                </div>
-            `;
-            hideAllExcept("team-display");
-        }
-
+    clearPopups();
+    const popup = document.createElement("div");
+    popup.className = "popup";
+    popup.innerHTML = `
+        <div class="popup-content" style="animation: slideIn 0.5s ease">
+            <h2>הצוות שלך נבחר!</h2>
+            <p>מוכן להתחיל את הקרב?</p>
+            <button onclick="this.parentElement.parentElement.remove(); confirmRoles()">המשך לתפקידים</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+}
         function assignRandomRoles() {
             clearPopups();
             let available = [...selectedTeam];
@@ -1009,43 +1100,52 @@
         }
 
         function showCityManagement() {
-            if (!bigBossDefeated) return;
-            clearPopups();
-            const cityDisplay = document.getElementById("city-management");
-            cityDisplay.style.display = "flex";
-            cityDisplay.innerHTML = `
-                <h2>ניהול ${cityName}</h2>
-                <img src="${getCityImage()}" alt="${cityName}" class="city-image">
-                <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()} | צבא: רמה ${army.level} (הגנה: ${army.defenseBonus}%, הכנסה: ${army.incomeBonus.toLocaleString()} ₪)</p>
-                <div class="team-grid">
-                    <div class="team-card">
-                        <h3>שכונות</h3>
-                        <p>${cityNeighborhoods.join(', ')}</p>
-                        <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
-                    </div>
-                    <div class="team-card">
-                        <h3>תפקידים</h3>
-                        <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
-                        <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
-                    </div>
-                    <div class="team-card">
-                        <h3>שדרוגים ומכירות</h3>
-                        <p>${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)} שדרוגים</p>
-                        <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
-                    </div>
-                    <div class="team-card">
-                        <h3>צבא</h3>
-                        <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
-                        <button onclick="showCityMenu('army')">נהל צבא</button>
-                    </div>
-                </div>
-                <div style="width: 100%; text-align: center;">
-                    <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-                </div>
-            `;
-            hideAllExcept("city-management");
-            startCityIncome();
-        }
+    if (!bigBossDefeated) return;
+    clearPopups();
+    const cityDisplay = document.getElementById("city-management");
+    cityDisplay.style.display = "block";
+    cityDisplay.className = "city-dashboard";
+    cityDisplay.innerHTML = `
+        <div class="stats-panel">
+            <h3>סטטיסטיקות העיר</h3>
+            <p>אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
+            <div class="stats-bar"><div class="stats-bar-fill population" style="width: ${Math.min(cityPopulation / 1500000 * 100, 100)}%"></div></div>
+            <p>תקציב: ${cityBudget.toLocaleString()} ₪</p>
+            <div class="stats-bar"><div class="stats-bar-fill budget" style="width: ${Math.min(cityBudget / 1000000000 * 100, 100)}%"></div></div>
+            <p>כוח צבאי: ${army.strength} (רמה ${army.level})</p>
+            <div class="stats-bar"><div class="stats-bar-fill army" style="width: ${army.level / army.maxLevel * 100}%"></div></div>
+        </div>
+        <div class="city-map">
+            <div class="map-overlay"></div>
+            ${generateMapItems()}
+        </div>
+        <div class="control-panel">
+            <div class="control-card">
+                <h3>שכונות וזונות</h3>
+                <p>שכונות: ${cityNeighborhoods.length} | זונות: ${prostitutes.length}/4</p>
+                <button onclick="showCityMenu('neighborhoods')">נהל</button>
+            </div>
+            <div class="control-card">
+                <h3>תפקידים</h3>
+                <p>מאוישים: ${Object.keys(assignedJobs).length}/${Object.keys(cityJobs).length}</p>
+                <button onclick="showCityMenu('jobs')">נהל</button>
+            </div>
+            <div class="control-card">
+                <h3>שדרוגים ומכירות</h3>
+                <p>שדרוגים: ${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)}</p>
+                <button onclick="showCityMenu('upgrades')">נהל</button>
+            </div>
+            <div class="control-card">
+                <h3>צבא</h3>
+                <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
+                <button onclick="showCityMenu('army')">נהל</button>
+            </div>
+            <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+        </div>
+    `;
+    hideAllExcept("city-management");
+    startCityIncome();
+}
 
         function startCityIncome() {
             setInterval(() => {
@@ -1058,62 +1158,81 @@
             }, 5000);
         }
 
-        function updateCityDisplay() {
-            const cityDisplay = document.getElementById("city-management");
-            if (cityDisplay.style.display === "flex") {
-                cityDisplay.innerHTML = `
-                    <h2>ניהול ${cityName}</h2>
-                    <img src="${getCityImage()}" alt="${cityName}" class="city-image">
-                    <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()} | צבא: רמה ${army.level} (הגנה: ${army.defenseBonus}%, הכנסה: ${army.incomeBonus.toLocaleString()} ₪)</p>
-                    <div class="team-grid">
-                        <div class="team-card">
-                            <h3>שכונות</h3>
-                            <p>${cityNeighborhoods.join(', ')}</p>
-                            <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
-                        </div>
-                        <div class="team-card">
-                            <h3>תפקידים</h3>
-                            <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
-                            <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
-                        </div>
-                        <div class="team-card">
-                            <h3>שדרוגים ומכירות</h3>
-                            <p>${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)} שדרוגים</p>
-                            <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
-                        </div>
-                        <div class="team-card">
-                            <h3>צבא</h3>
-                            <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
-                            <button onclick="showCityMenu('army')">נהל צבא</button>
-                        </div>
-                    </div>
-                    <div style="width: 100%; text-align: center;">
-                        <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-                    </div>
-                `;
-            }
-        }
-                                  function triggerCityEvent() {
-            clearPopups();
-            const events = [
-                { text: "תקלה במים! תיקון עולה 4,000 ₪", cost: 4000 },
-                { text: "הצפה בשכונת רבין! תיקון עולה 10,000 ₪", cost: 10000 },
-                { text: "שריפה במרכז העיר! תיקון עולה 15,000 ₪", cost: 15000 }
-            ];
-            const event = events[Math.floor(Math.random() * events.length)];
-            const popup = document.createElement("div");
-            popup.className = "popup";
-            popup.innerHTML = `
-                <div class="popup-content">
-                    <h3>אירוע בעיר!</h3>
-                    <p>${event.text}</p>
-                    <button onclick="cityBudget -= ${event.cost}; this.parentElement.parentElement.remove(); updateCityDisplay()">תקן (${event.cost.toLocaleString()} ₪)</button>
-                    <button onclick="this.parentElement.parentElement.remove()">התעלם</button>
+      function updateCityDisplay() {
+    const cityDisplay = document.getElementById("city-management");
+    if (cityDisplay.style.display === "flex") {
+        cityDisplay.className = "city-dashboard"; // עדכון למחלקה החדשה מהשדרוג
+        cityDisplay.innerHTML = `
+            <div class="stats-panel">
+                <h3>סטטיסטיקות ${cityName}</h3>
+                <p>אוכלוסייה: ${cityPopulation.toLocaleString()}</p>
+                <div class="stats-bar"><div class="stats-bar-fill population" style="width: ${Math.min(cityPopulation / 1500000 * 100, 100)}%"></div></div>
+                <p>תקציב: ${cityBudget.toLocaleString()} ₪</p>
+                <div class="stats-bar"><div class="stats-bar-fill budget" style="width: ${Math.min(cityBudget / 1000000000 * 100, 100)}%"></div></div>
+                <p>כוח צבאי: ${army.strength} (רמה ${army.level})</p>
+                <div class="stats-bar"><div class="stats-bar-fill army" style="width: ${army.level / army.maxLevel * 100}%"></div></div>
+            </div>
+            <div class="city-map">
+                <div class="map-overlay"></div>
+                ${generateMapItems()}
+            </div>
+            <div class="control-panel">
+                <div class="control-card">
+                    <h3>שכונות וזונות</h3>
+                    <p>שכונות: ${cityNeighborhoods.length} | זונות: ${prostitutes.length}/4</p>
+                    <button onclick="showCityMenu('neighborhoods')">נהל</button>
                 </div>
-            `;
-            document.body.appendChild(popup);
-        }
-
+                <div class="control-card">
+                    <h3>תפקידים</h3>
+                    <p>מאוישים: ${Object.keys(assignedJobs).length}/${Object.keys(cityJobs).length}</p>
+                    <button onclick="showCityMenu('jobs')">נהל</button>
+                </div>
+                <div class="control-card">
+                    <h3>שדרוגים ומכירות</h3>
+                    <p>שדרוגים: ${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)}</p>
+                    <button onclick="showCityMenu('upgrades')">נהל</button>
+                </div>
+                <div class="control-card">
+                    <h3>צבא</h3>
+                    <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
+                    <button onclick="showCityMenu('army')">נהל</button>
+                </div>
+                <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+            </div>
+        `;
+    }
+}
+        function triggerCityEvent() {
+    clearPopups();
+    const events = [
+        { text: "תקלה במים! תיקון עולה 4,000 ₪", cost: 4000 },
+        { text: "הצפה בשכונת רבין! תיקון עולה 10,000 ₪", cost: 10000 },
+        { text: "שריפה במרכז העיר! תיקון עולה 15,000 ₪", cost: 15000 },
+        { text: "פשיטה על העיר! הפסדת 50,000 ₪", cost: 50000 }
+    ];
+    const event = events[Math.floor(Math.random() * events.length)];
+    const notification = document.createElement("div");
+    notification.className = "notification";
+    notification.innerHTML = `<p>${event.text}</p>`;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000);
+    if (event.cost <= cityBudget) {
+        cityBudget -= event.cost;
+        updateCityDisplay();
+    } else {
+        const popup = document.createElement("div");
+        popup.className = "popup";
+        popup.innerHTML = `
+            <div class="popup-content">
+                <h3>משבר בעיר!</h3>
+                <p>${event.text}</p>
+                <button onclick="cityBudget -= ${event.cost}; this.parentElement.parentElement.remove(); updateCityDisplay()">תקן (${event.cost.toLocaleString()} ₪)</button>
+                <button onclick="cityPopulation -= 1000; this.parentElement.parentElement.remove(); updateCityDisplay()">התעלם (אובדן 1,000 תושבים)</button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+    }
+}
         function showCityMenu(section) {
             clearPopups();
             const popup = document.createElement("div");
@@ -1274,7 +1393,7 @@
             }
         }
 
-       function buyUpgrade(upgradeKey) {
+      function buyUpgrade(upgradeKey) {
     const upgrade = cityUpgrades[upgradeKey];
     if (cityBudget >= upgrade.cost && (!upgrade.bought || (upgrade.count < upgrade.max))) {
         if ((upgradeKey === "airport" && cityPopulation < 100000) ||
@@ -1298,7 +1417,7 @@
         showCityMenu("upgrades");
         updateCityDisplay();
     } else {
-        alert("אין מספיק תקציב או שהשדרוג כבר נקנה!");
+        alert("אין מספיק תקציב או שהשדרוג כבר הגיע למקסימום!");
     }
 }
 
@@ -1318,7 +1437,16 @@
             showCityMenu("army");
             updateCityDisplay();
         }
-
+function generateMapItems() {
+    const items = [];
+    const upgrades = Object.entries(cityUpgrades).filter(([_, u]) => u.bought || u.count > 0);
+    upgrades.forEach(([key], i) => {
+        const x = Math.random() * 90 + 5;
+        const y = Math.random() * 90 + 5;
+        items.push(`<div class="map-item" style="left: ${x}%; top: ${y}%;" title="${key}"></div>`);
+    });
+    return items.join('');
+}
         function recruitUnit(unit) {
             const unitData = army.units[unit];
             if (cityBudget >= unitData.cost && army.level > 0) {
