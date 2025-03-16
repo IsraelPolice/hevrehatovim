@@ -737,7 +737,7 @@
     selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
     displayCharacters(); // רענון התצוגה עם הבחירה הרנדומלית
 }
-        function confirmTeam() {
+       function confirmTeam() {
     clearPopups();
     const popup = document.createElement("div");
     popup.className = "popup";
@@ -751,51 +751,58 @@
     document.body.appendChild(popup);
 }
         function assignRandomRoles() {
-            clearPopups();
-            let available = [...selectedTeam];
-            selectedTeam.forEach(char => char.role = "");
-            let leaderCandidates = available.filter(c => c.name !== "אריאל עין גל" && c.name !== "חיים מרקס");
-            const leader = leaderCandidates[Math.floor(Math.random() * leaderCandidates.length)];
-            leader.role = "מנהיג";
-            document.getElementById(`role-${leader.name}`).value = "מנהיג";
-            available = available.filter(c => c.name !== leader.name);
-            let whoreCandidates = available.filter(c => c.name !== "דביר ברקת");
-            const whore = whoreCandidates[Math.floor(Math.random() * whoreCandidates.length)];
-            whore.role = "זונה";
-            document.getElementById(`role-${whore.name}`).value = "זונה";
-            available = available.filter(c => c.name !== whore.name);
-            available.forEach(char => {
-                char.role = "חייל";
-                document.getElementById(`role-${char.name}`).value = "חייל";
-            });
-        }
+    clearPopups();
+    let available = [...selectedTeam];
+    selectedTeam.forEach(char => char.role = "");
+    let leaderCandidates = available.filter(c => c.name !== "אריאל עין גל" && c.name !== "חיים מרקס");
+    const leader = leaderCandidates[Math.floor(Math.random() * leaderCandidates.length)];
+    leader.role = "מנהיג";
+    document.getElementById(`role-${leader.name}`).value = "מנהיג";
+    available = available.filter(c => c.name !== leader.name);
+    let whoreCandidates = available.filter(c => c.name !== "דביר ברקת");
+    const whore = whoreCandidates[Math.floor(Math.random() * whoreCandidates.length)];
+    whore.role = "זונה";
+    document.getElementById(`role-${whore.name}`).value = "זונה";
+    available = available.filter(c => c.name !== whore.name);
+    available.forEach(char => {
+        char.role = "חייל";
+        document.getElementById(`role-${char.name}`).value = "חייל";
+    });
+}
 
         function confirmRoles() {
-            clearPopups();
-            let leaderCount = 0, soldierCount = 0, whoreCount = 0;
-            for (const char of selectedTeam) {
-                const role = document.getElementById(`role-${char.name}`).value;
-                if (!role) return alert("חובה לבחור תפקיד לכל חבר צוות!");
-                if (role === "מנהיג") leaderCount++;
-                if (role === "חייל") soldierCount++;
-                if (role === "זונה") whoreCount++;
-                if (char.name === "דביר ברקת" && role === "זונה") return showLosePopup(char);
-                if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") return alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
-            }
-            if (leaderCount > 1) return alert("יכול להיות רק מנהיג אחד!");
-            if (soldierCount > 3) return alert("יכולים להיות עד 3 חיילים!");
-            if (whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
-
-            selectedTeam.forEach(char => {
-                const role = document.getElementById(`role-${char.name}`).value;
-                char.role = role;
-                if (role === "מנהיג") char.overall += 3;
-                if (role === "חייל") char.overall += 1;
-                if (role === "זונה") char.overall -= 2;
-                char.health = char.overall;
-            });
-            startBattle(0);
-        }
+    clearPopups();
+    const teamDisplay = document.getElementById("team-display");
+    teamDisplay.style.display = "flex";
+    teamDisplay.innerHTML = `<h2>בחר תפקידים לצוות שלך</h2>`;
+    selectedTeam.forEach(char => {
+        const stars = Math.round(char.overall / 20);
+        const card = document.createElement("div");
+        card.className = "team-card";
+        card.innerHTML = `
+            <img src="${char.image}" alt="${char.name}">
+            <div>${char.name}</div>
+            <div>דירוג: ${char.overall}</div>
+            <div class="stars">${"★".repeat(stars)}${"☆".repeat(5 - stars)}</div>
+            <select id="role-${char.name}">
+                <option value="">בחר תפקיד</option>
+                ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
+                <option value="חייל">חייל</option>
+                ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
+            </select>
+        `;
+        teamDisplay.appendChild(card);
+    });
+    teamDisplay.innerHTML += `
+        <div style="width: 100%; text-align: center; margin-top: 20px;">
+            <button onclick="assignRolesAndStart()">אשר תפקידים</button>
+            <button onclick="assignRandomRoles()">בחר תפקידים אוטומטית</button>
+            <button onclick="displayCharacters()">שנה צוות</button>
+            <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+        </div>
+    `;
+    hideAllExcept("team-display");
+}
 
         function showLosePopup(char) {
             clearPopups();
@@ -1446,6 +1453,53 @@ function generateMapItems() {
         items.push(`<div class="map-item" style="left: ${x}%; top: ${y}%;" title="${key}"></div>`);
     });
     return items.join('');
+}
+        function assignRolesAndStart() {
+    clearPopups();
+    let leaderCount = 0, soldierCount = 0, whoreCount = 0;
+    for (const char of selectedTeam) {
+        const role = document.getElementById(`role-${char.name}`).value;
+        if (!role) {
+            alert("חובה לבחור תפקיד לכל חבר צוות!");
+            return;
+        }
+        if (role === "מנהיג") leaderCount++;
+        if (role === "חייל") soldierCount++;
+        if (role === "זונה") whoreCount++;
+        if (char.name === "דביר ברקת" && role === "זונה") {
+            showLosePopup(char);
+            return;
+        }
+        if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") {
+            alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
+            return;
+        }
+    }
+    if (leaderCount > 1) {
+        alert("יכול להיות רק מנהיג אחד!");
+        return;
+    }
+    if (soldierCount > 3) {
+        alert("יכולים להיות עד 3 חיילים!");
+        return;
+    }
+    if (whoreCount > 1) {
+        alert("יכולה להיות רק זונה אחת!");
+        return;
+    }
+
+    // שמירת התפקידים והתאמת הדירוג
+    selectedTeam.forEach(char => {
+        const role = document.getElementById(`role-${char.name}`).value;
+        char.role = role;
+        if (role === "מנהיג") char.overall += 3;
+        if (role === "חייל") char.overall += 1;
+        if (role === "זונה") char.overall -= 2;
+        char.health = char.overall;
+    });
+
+    // מעבר לקרב הראשון
+    startBattle(0);
 }
         function recruitUnit(unit) {
             const unitData = army.units[unit];
