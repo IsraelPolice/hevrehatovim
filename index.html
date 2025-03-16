@@ -91,6 +91,26 @@
             border: 1px solid #778da9;
         }
 
+        .war-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(45deg, #ff1e00, #ff6f61);
+            color: #fff;
+            border: 2px solid #ff1e00;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 30, 0, 0.6);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .war-button:hover {
+            background: linear-gradient(45deg, #ff6f61, #ff1e00);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 30, 0, 0.8);
+        }
+
         .team-card {
             background: #1b263b;
             border: 2px solid #415a77;
@@ -192,7 +212,7 @@
             float: right;
             margin-left: 10px;
         }
-
+    </style>
         .battle-screen {
             background: rgba(27, 38, 59, 0.9);
             padding: 25px;
@@ -302,7 +322,7 @@
         summary {
             cursor: pointer;
             font-size: 1.3em;
-            color: #00d4ff;
+            color: #00搜索引擎优化ff;
             font-family: 'Orbitron', sans-serif;
         }
 
@@ -360,965 +380,942 @@
     <div id="battle-display" class="battle-screen" style="display: none;"></div>
     <div id="city-management" class="container" style="display: none;"></div>
     <script>
-const weapons = {
-    "גלוק": { cost: 1000, bonus: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn9GcR-U913muhRYPQf90Rdx6lU2mNovdSLPQTV6A&s" },
-    "MP5": { cost: 5000, bonus: 2, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn9GcRTcYN7Ay8P0akauOPxiBm9vQ1XTg2fSNOL6w&s" },
-    "M16": { cost: 15000, bonus: 3, image: "https://airsoftmania.eu/cdn/shop/products/1152230674_1.webp?v=1662630204" },
-    "M4": { cost: 30000, bonus: 4, image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/M4A1-flattop.png/800px-M4A1-flattop.png" },
-    "RPG": { cost: 50000, bonus: 5, image: "https://static.wikia.nocookie.net/maxpayne/images/4/40/Rpg.png" }
-};
+        const weapons = {
+            "גלוק": { cost: 1000, bonus: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn9GcR-U913muhRYPQf90Rdx6lU2mNovdSLPQTV6A&s" },
+            "MP5": { cost: 5000, bonus: 2, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn9GcRTcYN7Ay8P0akauOPxiBm9vQ1XTg2fSNOL6w&s" },
+            "M16": { cost: 15000, bonus: 3, image: "https://airsoftmania.eu/cdn/shop/products/1152230674_1.webp?v=1662630204" },
+            "M4": { cost: 30000, bonus: 4, image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/M4A1-flattop.png/800px-M4A1-flattop.png" },
+            "RPG": { cost: 50000, bonus: 5, image: "https://static.wikia.nocookie.net/maxpayne/images/4/40/Rpg.png" }
+        };
 
-const characters = [
-    { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((79 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 75, defense: 70, fatPercentage: 18, report: "ביצועים סבירים", weapon: "גלוק", trained: false },
-    { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 90, defense: 85, fatPercentage: 12, report: "לוחם מצוין", weapon: "גלוק", trained: false },
-    { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 92, defense: 88, fatPercentage: 10, report: "כישרון טבעי", weapon: "גלוק", trained: false },
-    { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 78, fatPercentage: 15, report: "ביצועים טובים", weapon: "גלוק", trained: false },
-    { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 93, defense: 87, fatPercentage: 9, report: "חייל עילית", weapon: "גלוק", trained: false },
-    { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((86 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 88, defense: 82, fatPercentage: 13, report: "לוחם אמין", weapon: "גלוק", trained: false },
-    { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((92 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 95, defense: 90, fatPercentage: 8, report: "כוכב עליון", weapon: "גלוק", trained: false },
-    { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((80 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 78, defense: 75, fatPercentage: 17, report: "ממוצע", weapon: "גלוק", trained: false },
-    { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((74 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 70, defense: 68, fatPercentage: 22, report: "חלש יחסית", weapon: "גלוק", trained: false },
-    { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((83 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 82, defense: 80, fatPercentage: 14, report: "ביצועים טובים", weapon: "גלוק", trained: false },
-    { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((58 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 55, defense: 50, fatPercentage: 30, report: "חלש מאוד", weapon: "גלוק", trained: false },
-    { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((85 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 87, defense: 83, fatPercentage: 11, report: "לוחם חזק", weapon: "גלוק", trained: false },
-    { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((89 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 91, defense: 86, fatPercentage: 10, report: "מצוין", weapon: "גלוק", trained: false },
-    { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 79, fatPercentage: 16, report: "סביר", weapon: "גלוק", trained: false },
-    { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round(80000 + ((66 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 65, defense: 60, fatPercentage: 25, report: "ביצועים נמוכים", weapon: "גלוק", trained: false },
-    { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round(80000 + ((71 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 68, defense: 66, fatPercentage: 23, report: "חלש", weapon: "גלוק", trained: false },
-    { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 89, defense: 85, fatPercentage: 12, report: "לוחם מעולה", weapon: "גלוק", trained: false },
-    { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 80000, attack: 50, defense: 45, fatPercentage: 32, report: "חלשה ביותר", weapon: "גלוק", trained: false },
-    { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000, attack: 99, defense: 98, fatPercentage: 5, report: "מושלם", weapon: "גלוק", trained: false }
-];
+        const characters = [
+            { name: "אור דהן", overall: 79, image: "https://i.postimg.cc/13r31pJG/IMG-5054.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((79 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 75, defense: 70, fatPercentage: 18, report: "ביצועים סבירים", weapon: "גלוק", trained: false },
+            { name: "יוסף קחלר", overall: 88, image: "https://i.postimg.cc/KYcvGRHd/IMG-4721-2.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Iraq.svg/1200px-Flag_of_Iraq.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 90, defense: 85, fatPercentage: 12, report: "לוחם מצוין", weapon: "גלוק", trained: false },
+            { name: "עמית לסרי", overall: 90, image: "https://i.postimg.cc/Y2T962vW/IMG-5056.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 92, defense: 88, fatPercentage: 10, report: "כישרון טבעי", weapon: "גלוק", trained: false },
+            { name: "איציק מור יוסף", overall: 82, image: "https://i.postimg.cc/SQnRYYx4/IMG-5057.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 78, fatPercentage: 15, report: "ביצועים טובים", weapon: "גלוק", trained: false },
+            { name: "איתי אוחנה", overall: 90, image: "https://i.postimg.cc/DwTwNCdf/IMG-5058.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((90 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 93, defense: 87, fatPercentage: 9, report: "חייל עילית", weapon: "גלוק", trained: false },
+            { name: "ג׳ורדן בוחבוט", overall: 86, image: "https://i.postimg.cc/zvbsDr5m/IMG-5059.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((86 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 88, defense: 82, fatPercentage: 13, report: "לוחם אמין", weapon: "גלוק", trained: false },
+            { name: "דביר אוחנה", overall: 92, image: "https://i.postimg.cc/J0f9G24s/IMG-5060.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((92 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 95, defense: 90, fatPercentage: 8, report: "כוכב עליון", weapon: "גלוק", trained: false },
+            { name: "דור אביכזר", overall: 80, image: "https://i.postimg.cc/vBNRdmJL/IMG-5061.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((80 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 78, defense: 75, fatPercentage: 17, report: "ממוצע", weapon: "גלוק", trained: false },
+            { name: "יוגב שבתאי", overall: 74, image: "https://i.postimg.cc/TYmPC8bH/IMG-5062.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((74 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 70, defense: 68, fatPercentage: 22, report: "חלש יחסית", weapon: "גלוק", trained: false },
+            { name: "ליאב בן יעקב", overall: 83, image: "https://i.postimg.cc/Sss059vx/IMG-5063.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((83 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 82, defense: 80, fatPercentage: 14, report: "ביצועים טובים", weapon: "גלוק", trained: false },
+            { name: "אריאל עין גל", overall: 58, image: "https://i.postimg.cc/k5w3fsw-H/IMG-5064.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((58 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 55, defense: 50, fatPercentage: 30, report: "חלש מאוד", weapon: "גלוק", trained: false },
+            { name: "מיכה גורלובסקי", overall: 85, image: "https://i.postimg.cc/jjRYHm6N/IMG-5065.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((85 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 87, defense: 83, fatPercentage: 11, report: "לוחם חזק", weapon: "גלוק", trained: false },
+            { name: "קורן בן משה", overall: 89, image: "https://i.postimg.cc/wjXdsgNg/IMG-5066.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((89 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 91, defense: 86, fatPercentage: 10, report: "מצוין", weapon: "גלוק", trained: false },
+            { name: "נתנאל יוסילביץ׳", overall: 82, image: "https://i.postimg.cc/wMndDBFT/IMG-5068.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((82 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 80, defense: 79, fatPercentage: 16, report: "סביר", weapon: "גלוק", trained: false },
+            { name: "חיים מרקס", overall: 66, image: "https://i.postimg.cc/MHnScB7F/IMG-5069.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png", value: Math.round(80000 + ((66 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 65, defense: 60, fatPercentage: 25, report: "ביצועים נמוכים", weapon: "גלוק", trained: false },
+            { name: "רפי אלגרבלי", overall: 71, image: "https://i.postimg.cc/9MFVhKrV/IMG-5070.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/1200px-Flag_of_Palestine.svg.png", value: Math.round(80000 + ((71 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 68, defense: 66, fatPercentage: 23, report: "חלש", weapon: "גלוק", trained: false },
+            { name: "יעקב שוורץ", overall: 88, image: "https://i.postimg.cc/nzRxc2Dm/IMG-5071.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: Math.round(80000 + ((88 - 57) / (96 - 57)) * (36000000 - 80000)), attack: 89, defense: 85, fatPercentage: 12, report: "לוחם מעולה", weapon: "גלוק", trained: false },
+            { name: "אריאל שרביט", overall: 57, image: "https://i.postimg.cc/TPcGBf2C/IMG-5072.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 80000, attack: 50, defense: 45, fatPercentage: 32, report: "חלשה ביותר", weapon: "גלוק", trained: false },
+            { name: "דביר ברקת", overall: 96, image: "https://www.qube.co.il/images/ency/bands/DvirBareket.jpg", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png", value: 36000000, attack: 99, defense: 98, fatPercentage: 5, report: "מושלם", weapon: "גלוק", trained: false }
+        ];
 
-let selectedTeam = [];
-let coins = 150;
-let teamBudget = 15000000;
-let completedBattles = [];
-let lastBattleName = "";
-let cityBudget = 5000000;
-let cityPopulation = 22000;
-let cityName = "מעלות תרשיחא";
-let cityNeighborhoods = ["יפה נוף", "סביונים", "מרכז העיר", "שכונת רבין", "גבעת הזיתים", "אילנות", "סביונים"];
-let prostitutes = [];
-let buildings = [
-    { name: "הבית של ג׳ורדן", value: 4000000, sold: false },
-    { name: "הבית של איתי אוחנה", value: 3000000, sold: false },
-    { name: "הבית של יוסף קחלר", value: 1500000, sold: false },
-    { name: "הבית של יוגב שבתאי", value: 200000, sold: false },
-    { name: "הבית של דביר אוחנה", value: 450000, sold: false },
-    { name: "היכל התרבות", value: 8000000, sold: false },
-    { name: "המרכז המסחרי", value: 12000000, sold: false },
-    { name: "בית ספר למוזיקה", value: 5000000, sold: false },
-    { name: "אגם מונפורט", value: 10000000, sold: false },
-    { name: "קניון צים סנטר", value: 15000000, sold: false },
-    { name: "מגדל המים", value: 3000000, sold: false },
-    { name: "פארק המים", value: 7000000, sold: false },
-    { name: "כיכר ירושלים", value: 2000000, sold: false },
-    { name: "כיכר השלום", value: 1500000, sold: false },
-    { name: "גינת המשחקים המרכזית", value: 500000, sold: false },
-    { name: "פארק העצמאות", value: 800000, sold: false },
-    { name: "ספרייה עירונית", value: 1200000, sold: false },
-    { name: "בית העם", value: 1000000, sold: false },
-    { name: "מגרש הכדורגל העירוני", value: 2500000, sold: false }
-];
-let cityUpgrades = {
-    newNeighborhood: { count: 0, max: 5, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים (עד 5)" },
-    airport: { bought: false, cost: 50000000, population: 10000, income: 100000, description: "נמל תעופה בינלאומי (דרוש 50,000 תושבים)" },
-    hotel: { bought: false, cost: 20000000, population: 3000, income: 50000, description: "מלון מפואר לתיירים" },
-    trainStation: { bought: false, cost: 30000000, population: 5000, income: 60000, description: "תחנת רכבת מהירה" },
-    busTerminal: { bought: false, cost: 15000000, population: 2000, income: 30000, description: "תחנה מרכזית לאוטובוסים" },
-    mall: { bought: false, cost: 25000000, population: 4000, income: 70000, description: "קניון ענק לקניות" },
-    hospital: { bought: false, cost: 40000000, population: 3000, income: 50000, description: "בית חולים מודרני" },
-    university: { count: 0, max: 3, cost: 60000000, population: 8000, income: 80000, description: "אוניברסיטה למחקר והשכלה (עד 3)" },
-    sportsComplex: { bought: false, cost: 20000000, population: 2000, income: 40000, description: "מתחם ספורט עירוני" },
-    theater: { bought: false, cost: 15000000, population: 1000, income: 30000, description: "תיאטרון לתרבות ובידור" },
-    bridge: { bought: false, cost: 8000000, population: 1000, income: 20000, description: "גשר לשיפור תנועה" },
-    tunnel: { bought: false, cost: 12000000, population: 1500, income: 25000, description: "מנהרה להקלת עומסי תנועה" },
-    amusementPark: { bought: false, cost: 35000000, population: 5000, income: 90000, description: "פארק שעשועים לתיירות" },
-    powerPlant: { bought: false, cost: 45000000, population: 2000, income: 60000, description: "תחנת כוח לאספקת חשמל" },
-    researchCenter: { bought: false, cost: 70000000, population: 10000, income: 120000, description: "מרכז מחקר טכנולוגי" },
-    seaport: { bought: false, cost: 65000000, population: 7000, income: 110000, description: "נמל ימי לסחר ותיירות (דרוש 75,000 תושבים)" }
-};
-let army = {
-    level: 0,
-    strength: 0,
-    costToBuild: 20000000,
-    costToUpgrade: 15000000,
-    maxLevel: 5,
-    defenseBonus: 0,
-    incomeBonus: 0,
-    units: {
-        police: { count: 0, cost: 500000, strength: 10, income: 2000, image: "https://cdn-icons-png.flaticon.com/512/3063/3063170.png" },
-        infantry: { count: 0, cost: 1000000, strength: 20, income: 5000, image: "https://cdn-icons-png.flaticon.com/512/3048/3048428.png" },
-        tanks: { count: 0, cost: 5000000, strength: 50, income: 10000, image: "https://cdn-icons-png.flaticon.com/512/3048/3048458.png" }
-    }
-};
-let bigBossDefeated = false;
-let assignedJobs = {};
+        let selectedTeam = [];
+        let coins = 150;
+        let teamBudget = 15000000;
+        let completedBattles = [];
+        let lastBattleName = "";
+        let cityBudget = 5000000;
+        let cityPopulation = 22000;
+        let cityName = "מעלות תרשיחא";
+        let cityNeighborhoods = ["יפה נוף", "סביונים", "מרכז העיר", "שכונת רבין", "גבעת הזיתים", "אילנות", "סביונים"];
+        let prostitutes = [];
+        let buildings = [
+            { name: "הבית של ג׳ורדן", value: 4000000, sold: false },
+            { name: "הבית של איתי אוחנה", value: 3000000, sold: false },
+            { name: "הבית של יוסף קחלר", value: 1500000, sold: false },
+            { name: "הבית של יוגב שבתאי", value: 200000, sold: false },
+            { name: "הבית של דביר אוחנה", value: 450000, sold: false },
+            { name: "היכל התרבות", value: 8000000, sold: false },
+            { name: "המרכז המסחרי", value: 12000000, sold: false },
+            { name: "בית ספר למוזיקה", value: 5000000, sold: false },
+            { name: "אגם מונפורט", value: 10000000, sold: false },
+            { name: "קניון צים סנטר", value: 15000000, sold: false },
+            { name: "מגדל המים", value: 3000000, sold: false },
+            { name: "פארק המים", value: 7000000, sold: false },
+            { name: "כיכר ירושלים", value: 2000000, sold: false },
+            { name: "כיכר השלום", value: 1500000, sold: false },
+            { name: "גינת המשחקים המרכזית", value: 500000, sold: false },
+            { name: "פארק העצמאות", value: 800000, sold: false },
+            { name: "ספרייה עירונית", value: 1200000, sold: false },
+            { name: "בית העם", value: 1000000, sold: false },
+            { name: "מגרש הכדורגל העירוני", value: 2500000, sold: false }
+        ];
+        let cityUpgrades = {
+            newNeighborhood: { count: 0, max: 5, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים (עד 5)" },
+            airport: { bought: false, cost: 50000000, population: 10000, income: 100000, description: "נמל תעופה בינלאומי (דרוש 50,000 תושבים)" },
+            hotel: { bought: false, cost: 20000000, population: 3000, income: 50000, description: "מלון מפואר לתיירים" },
+            trainStation: { bought: false, cost: 30000000, population: 5000, income: 60000, description: "תחנת רכבת מהירה" },
+            busTerminal: { bought: false, cost: 15000000, population: 2000, income: 30000, description: "תחנה מרכזית לאוטובוסים" },
+            mall: { bought: false, cost: 25000000, population: 4000, income: 70000, description: "קניון ענק לקניות" },
+            hospital: { bought: false, cost: 40000000, population: 3000, income: 50000, description: "בית חולים מודרני" },
+            university: { count: 0, max: 3, cost: 60000000, population: 8000, income: 80000, description: "אוניברסיטה למחקר והשכלה (עד 3)" },
+            sportsComplex: { bought: false, cost: 20000000, population: 2000, income: 40000, description: "מתחם ספורט עירוני" },
+            theater: { bought: false, cost: 15000000, population: 1000, income: 30000, description: "תיאטרון לתרבות ובידור" },
+            bridge: { bought: false, cost: 8000000, population: 1000, income: 20000, description: "גשר לשיפור תנועה" },
+            tunnel: { bought: false, cost: 12000000, population: 1500, income: 25000, description: "מנהרה להקלת עומסי תנועה" },
+            amusementPark: { bought: false, cost: 35000000, population: 5000, income: 90000, description: "פארק שעשועים לתיירות" },
+            powerPlant: { bought: false, cost: 45000000, population: 2000, income: 60000, description: "תחנת כוח לאספקת חשמל" },
+            researchCenter: { bought: false, cost: 70000000, population: 10000, income: 120000, description: "מרכז מחקר טכנולוגי" },
+            seaport: { bought: false, cost: 65000000, population: 7000, income: 110000, description: "נמל ימי לסחר ותיירות (דרוש 75,000 תושבים)" }
+        };
+        let army = {
+            level: 0,
+            strength: 0,
+            costToBuild: 20000000,
+            costToUpgrade: 15000000,
+            maxLevel: 5,
+            defenseBonus: 0,
+            incomeBonus: 0,
+            units: {
+                police: { count: 0, cost: 500000, strength: 10, income: 2000, image: "https://cdn-icons-png.flaticon.com/512/3063/3063170.png" },
+                infantry: { count: 0, cost: 1000000, strength: 20, income: 5000, image: "https://cdn-icons-png.flaticon.com/512/3048/3048428.png" },
+                tanks: { count: 0, cost: 5000000, strength: 50, income: 10000, image: "https://cdn-icons-png.flaticon.com/512/3048/3048458.png" }
+            }
+        };
+        let bigBossDefeated = false;
+        let assignedJobs = {};
 
-const cityImages = [
-    { maxPop: 40000, url: "https://www.healthycities.co.il/html5/web/16874/47068ImageFile2.jpg" },
-    { maxPop: 80000, url: "https://i.redd.it/10-000-population-for-a-city-this-size-cities-skylines-v0-c0m1gzmdrur81.jpg?width=1920&format=pjpg&auto=webp&s=306d87e5b227ec6b8086401ff747552e2e1c1291" },
-    { maxPop: 120000, url: "https://preview.redd.it/10k-population-1-tile-city-economically-stable-v0-s470facgud4c1.png?width=640&crop=smart&auto=webp&s=a0ef6a81edc29911db3372dabcc66715d11ba6b8" },
-    { maxPop: 160000, url: "https://preview.redd.it/150-000-population-in-1-tile-no-mods-v0-puls5bpn2cwd1.png?width=1080&crop=smart&auto=webp&s=eb608463d57a0995ba1e70809d397508bfa0f2e0" },
-    { maxPop: 250000, url: "https://static-cdn.toi-media.com/www/uploads/2023/06/iStock-1476123691-e1686847822176.jpg" },
-    { maxPop: 500000, url: "https://res.cloudinary.com/globes/image/upload/t_800X392/v1740324508/direct/shutterstock_2437057467_dcc9ny.jpg" },
-    { maxPop: Infinity, url: "https://img.mako.co.il/2014/12/11/NY_1_i.jpg" }
-];
+        const cityImages = [
+            { maxPop: 40000, url: "https://www.healthycities.co.il/html5/web/16874/47068ImageFile2.jpg" },
+            { maxPop: 80000, url: "https://i.redd.it/10-000-population-for-a-city-this-size-cities-skylines-v0-c0m1gzmdrur81.jpg?width=1920&format=pjpg&auto=webp&s=306d87e5b227ec6b8086401ff747552e2e1c1291" },
+            { maxPop: 120000, url: "https://preview.redd.it/10k-population-1-tile-city-economically-stable-v0-s470facgud4c1.png?width=640&crop=smart&auto=webp&s=a0ef6a81edc29911db3372dabcc66715d11ba6b8" },
+            { maxPop: 160000, url: "https://preview.redd.it/150-000-population-in-1-tile-no-mods-v0-puls5bpn2cwd1.png?width=1080&crop=smart&auto=webp&s=eb608463d57a0995ba1e70809d397508bfa0f2e0" },
+            { maxPop: 250000, url: "https://static-cdn.toi-media.com/www/uploads/2023/06/iStock-1476123691-e1686847822176.jpg" },
+            { maxPop: 500000, url: "https://res.cloudinary.com/globes/image/upload/t_800X392/v1740324508/direct/shutterstock_2437057467_dcc9ny.jpg" },
+            { maxPop: Infinity, url: "https://img.mako.co.il/2014/12/11/NY_1_i.jpg" }
+        ];
 
-const battles = [
-    { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית!" },
-    { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות!" },
-    { name: "המרכז", requiredAvg: 75, damage: 20, story: "המרכז המסחרי נפל!" },
-    { name: "שכונת האילנות", requiredAvg: 80, damage: 25, story: "מלכודות הוטמנו בשכונה!" },
-    { name: "שכונת סביונים", requiredAvg: 85, damage: 30, story: "האויב בנה בסיס בסביונים!" },
-    { name: "יפה נוף", requiredAvg: 90, damage: 35, story: "קרב גובה קטלני!" },
-    { name: "ביג בוס", requiredAvg: 92, damage: 40, story: "המנהיג הסופי מחכה!" }
-];
+        const battles = [
+            { name: "כיכר ירושלים", requiredAvg: 65, damage: 10, story: "האויב השתלט על הכיכר המרכזית!" },
+            { name: "פארק המים", requiredAvg: 70, damage: 15, story: "חיילי האויב מתחבאים במגלשות!" },
+            { name: "המרכז", requiredAvg: 75, damage: 20, story: "המרכז המסחרי נפל!" },
+            { name: "שכונת האילנות", requiredAvg: 80, damage: 25, story: "מלכודות הוטמנו בשכונה!" },
+            { name: "שכונת סביונים", requiredAvg: 85, damage: 30, story: "האויב בנה בסיס בסביונים!" },
+            { name: "יפה נוף", requiredAvg: 90, damage: 35, story: "קרב גובה קטלני!" },
+            { name: "ביג בוס", requiredAvg: 92, damage: 40, story: "המנהיג הסופי מחכה!" }
+        ];
 
-const cityJobs = {
-    "ראש העיר": 200000,
-    "סמנכ״ל": 50000,
-    "עובד בזבל": 6000,
-    "נהג משאית": 8000,
-    "מזכיר/ה": 7000,
-    "מנהל בית ספר": 25000,
-    "מנהל אבטחה": 10000,
-    "שומר בית ספר": 7000,
-    "עובד במפעל עטיפית": 5500,
-    "עובד בפסקל": 5500,
-    "עובד ביילו": 5000,
-    "עובד במים": 7000,
-    "עובד בחשמל": 7000,
-    "מנהל האגם": 20000
-};
+        const cityJobs = {
+            "ראש העיר": 200000,
+            "סמנכ״ל": 50000,
+            "עובד בזבל": 6000,
+            "נהג משאית": 8000,
+            "מזכיר/ה": 7000,
+            "מנהל בית ספר": 25000,
+            "מנהל אבטחה": 10000,
+            "שומר בית ספר": 7000,
+            "עובד במפעל עטיפית": 5500,
+            "עובד בפסקל": 5500,
+            "עובד ביילו": 5000,
+            "עובד במים": 7000,
+            "עובד בחשמל": 7000,
+            "מנהל האגם": 20000
+        };
 
-const prostitutesList = ["לאה אוחנה", "אמא של רפי", "זמירה קחלר", "ורד עין גל"];
+        const prostitutesList = ["לאה אוחנה", "אמא של רפי", "זמירה קחלר", "ורד עין גל"];
 
-const funnyMessages = [
-    "אני חייב לאונן עכשיו, תכסה אותי!",
-    "האויב זרק עליי גרב מסריחה!",
-    "מישהו ראה את הסנדוויץ' שלי?",
-    "אני עייף, אפשר הפסקת קפה?"
-];
+        const funnyMessages = [
+            "אני חייב לאונן עכשיו, תכסה אותי!",
+            "האויב זרק עליי גרב מסריחה!",
+            "מישהו ראה את הסנדוויץ' שלי?",
+            "אני עייף, אפשר הפסקת קפה?"
+        ];
+        function clearPopups() {
+            document.querySelectorAll('.popup, .chat-popup').forEach(popup => popup.remove());
+        }
 
-function clearPopups() {
-    document.querySelectorAll('.popup, .chat-popup').forEach(popup => popup.remove());
-}
+        function showMainMenu() {
+            clearPopups();
+            const mainMenu = document.getElementById("main-menu");
+            mainMenu.style.display = "flex";
+            mainMenu.innerHTML = `
+                <button onclick="showIntroPopup()">התחל משחק</button>
+                ${bigBossDefeated ? `<button onclick="showCityManagement()">ניהול ${cityName}</button>` : ""}
+            `;
+            hideAllExcept("main-menu");
+        }
 
-function showMainMenu() {
-    clearPopups();
-    const mainMenu = document.getElementById("main-menu");
-    mainMenu.style.display = "flex";
-    mainMenu.innerHTML = `
-        <button onclick="showIntroPopup()">התחל משחק</button>
-        ${bigBossDefeated ? `<button onclick="showCityManagement()">ניהול ${cityName}</button>` : ""}
-    `;
-    hideAllExcept("main-menu");
-}
+        function showIntroPopup() {
+            clearPopups();
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h2>מעלות בסכנה!</h2>
+                    <p>בחר את הצוות שלך למלחמה</p>
+                    <button onclick="this.parentElement.parentElement.remove(); displayCharacters()">המשך</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
 
-function showIntroPopup() {
-    clearPopups();
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `
-        <div class="popup-content">
-            <h2>מעלות בסכנה!</h2>
-            <p>בחר את הצוות שלך למלחמה</p>
-            <button onclick="this.parentElement.parentElement.remove(); displayCharacters()">המשך</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
-}
+        function hideAllExcept(activeId) {
+            ["main-menu", "character-selection", "team-display", "battle-display", "city-management"].forEach(id => {
+                document.getElementById(id).style.display = id === activeId ? "flex" : "none";
+            });
+        }
 
-function hideAllExcept(activeId) {
-    ["main-menu", "character-selection", "team-display", "battle-display", "city-management"].forEach(id => {
-        document.getElementById(id).style.display = id === activeId ? "flex" : "none";
-    });
-}
-
-function displayCharacters() {
-    clearPopups();
-    const selectionDiv = document.getElementById("character-selection");
-    selectionDiv.style.display = "flex";
-    selectionDiv.innerHTML = "";
-    characters.forEach(char => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-            <img src="${char.image}" alt="${char.name}">
-            <div>${char.name}</div>
-            <div>Overall: ${char.overall}</div>
-        `;
-        card.addEventListener("click", () => toggleSelection(char, card));
-        selectionDiv.appendChild(card);
-    });
-    selectionDiv.innerHTML += `
-        <div style="width: 100%; text-align: center;">
-            <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות (${selectedTeam.length}/5)</button>
-            <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
-        </div>
-    `;
-    hideAllExcept("character-selection");
-}
-
-function toggleSelection(char, card) {
-    const index = selectedTeam.findIndex(c => c.name === char.name);
-    if (index !== -1) {
-        selectedTeam.splice(index, 1);
-        card.classList.remove("selected");
-    } else if (selectedTeam.length < 5) {
-        selectedTeam.push({ ...char, health: char.overall });
-        card.classList.add("selected");
-    }
-    const confirmButton = document.getElementById("confirm-team");
-    confirmButton.disabled = selectedTeam.length !== 5;
-    confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
-}
-
-function selectRandomTeam() {
-    clearPopups();
-    selectedTeam = [];
-    const shuffled = [...characters].sort(() => 0.5 - Math.random());
-    selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
-    const cards = document.querySelectorAll(".card");
-    cards.forEach(card => card.classList.remove("selected"));
-    selectedTeam.forEach(char => {
-        const card = Array.from(cards).find(c => c.querySelector("div").textContent === char.name);
-        if (card) card.classList.add("selected");
-    });
-    const confirmButton = document.getElementById("confirm-team");
-    confirmButton.disabled = false;
-    confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
-}
-
-function confirmTeam() {
-    clearPopups();
-    const teamDisplay = document.getElementById("team-display");
-    teamDisplay.style.display = "flex";
-    teamDisplay.innerHTML = `<h2>הצוות שלך:</h2>`;
-    selectedTeam.forEach(char => {
-        const stars = Math.round(char.overall / 20);
-        const card = document.createElement("div");
-        card.className = "team-card";
-        card.innerHTML = `
-            <img src="${char.image}" alt="${char.name}">
-            <div>${char.name}</div>
-            <div>Overall: ${char.overall}</div>
-            <div class="stars">${"★".repeat(stars)}${"☆".repeat(5 - stars)}</div>
-            <select id="role-${char.name}">
-                <option value="">בחר תפקיד</option>
-                ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
-                <option value="חייל">חייל</option>
-                ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
-            </select>
-        `;
-        teamDisplay.appendChild(card);
-    });
-    teamDisplay.innerHTML += `
-        <div style="width: 100%; text-align: center;">
-            <button onclick="confirmRoles()">אשר תפקידים</button>
-            <button onclick="assignRandomRoles()">בחר תפקידים אוטומטית</button>
-            <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-        </div>
-    `;
-    hideAllExcept("team-display");
-}
-
-function assignRandomRoles() {
-    clearPopups();
-    let available = [...selectedTeam];
-    selectedTeam.forEach(char => char.role = "");
-    let leaderCandidates = available.filter(c => c.name !== "אריאל עין גל" && c.name !== "חיים מרקס");
-    const leader = leaderCandidates[Math.floor(Math.random() * leaderCandidates.length)];
-    leader.role = "מנהיג";
-    document.getElementById(`role-${leader.name}`).value = "מנהיג";
-    available = available.filter(c => c.name !== leader.name);
-    let whoreCandidates = available.filter(c => c.name !== "דביר ברקת");
-    const whore = whoreCandidates[Math.floor(Math.random() * whoreCandidates.length)];
-    whore.role = "זונה";
-    document.getElementById(`role-${whore.name}`).value = "זונה";
-    available = available.filter(c => c.name !== whore.name);
-    available.forEach(char => {
-        char.role = "חייל";
-        document.getElementById(`role-${char.name}`).value = "חייל";
-    });
-}
-
-function confirmRoles() {
-    clearPopups();
-    let leaderCount = 0, soldierCount = 0, whoreCount = 0;
-    for (const char of selectedTeam) {
-        const role = document.getElementById(`role-${char.name}`).value;
-        if (!role) return alert("חובה לבחור תפקיד לכל חבר צוות!");
-        if (role === "מנהיג") leaderCount++;
-        if (role === "חייל") soldierCount++;
-        if (role === "זונה") whoreCount++;
-        if (char.name === "דביר ברקת" && role === "זונה") return showLosePopup(char);
-        if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") return alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
-    }
-    if (leaderCount > 1) return alert("יכול להיות רק מנהיג אחד!");
-    if (soldierCount > 3) return alert("יכולים להיות עד 3 חיילים!");
-    if (whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
-
-    selectedTeam.forEach(char => {
-        const role = document.getElementById(`role-${char.name}`).value;
-        char.role = role;
-        if (role === "מנהיג") char.overall += 3;
-        if (role === "חייל") char.overall += 1;
-        if (role === "זונה") char.overall -= 2;
-        char.health = char.overall;
-    });
-    startBattle(0);
-}
-
-function showLosePopup(char) {
-    clearPopups();
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `
-        <div class="popup-content">
-            <h3>הפסדת!</h3>
-            <p>דביר ברקת לא יכול להיות זונה!</p>
-            <img src="${char.image}" alt="${char.name}">
-            <button onclick="this.parentElement.parentElement.remove(); showMainMenu()">חזור לתפריט ראשי</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
-}
-
-function startBattle(battleIndex) {
-    clearPopups();
-    const battleDisplay = document.getElementById("battle-display");
-    battleDisplay.style.display = "block";
-    const battle = battles[battleIndex];
-    battleDisplay.innerHTML = `
-        <h2>קרב: ${battle.name}</h2>
-        <p>${battle.story}</p>
-        <h3>הצוות שלך:</h3>
-        <div class="team-grid">
-            ${selectedTeam.map(char => `
-                <div class="team-card">
+        function displayCharacters() {
+            clearPopups();
+            const selectionDiv = document.getElementById("character-selection");
+            selectionDiv.style.display = "flex";
+            selectionDiv.innerHTML = "";
+            characters.forEach(char => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
                     <img src="${char.image}" alt="${char.name}">
                     <div>${char.name}</div>
-                    <div>תפקיד: ${char.role}</div>
-                    <div>חיים: ${char.health}/${char.overall}</div>
-                    <div class="health-bar"><div class="health-bar-fill" style="width: ${(char.health / char.overall) * 100}%"></div></div>
+                    <div>Overall: ${char.overall}</div>
+                `;
+                card.addEventListener("click", () => toggleSelection(char, card));
+                selectionDiv.appendChild(card);
+            });
+            selectionDiv.innerHTML += `
+                <div style="width: 100%; text-align: center;">
+                    <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות (${selectedTeam.length}/5)</button>
+                    <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
                 </div>
-            `).join('')}
-        </div>
-        <div style="text-align: center;">
-            <button onclick="fightBattle(${battleIndex})">להילחם!</button>
-            <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
-            <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-        </div>
-    `;
-    hideAllExcept("battle-display");
-    if (Math.random() < 0.2) showFunnyPopup();
-}
+            `;
+            hideAllExcept("character-selection");
+        }
 
-function showFunnyPopup() {
-    clearPopups();
-    const char = selectedTeam[Math.floor(Math.random() * selectedTeam.length)];
-    const message = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-    const popup = document.createElement("div");
-    popup.className = "chat-popup";
-    popup.innerHTML = `
-        <img src="${char.image}" alt="${char.name}">
-        <p>${char.name}: "${message}"</p>
-    `;
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 5000);
-}
+        function toggleSelection(char, card) {
+            const index = selectedTeam.findIndex(c => c.name === char.name);
+            if (index !== -1) {
+                selectedTeam.splice(index, 1);
+                card.classList.remove("selected");
+            } else if (selectedTeam.length < 5) {
+                selectedTeam.push({ ...char, health: char.overall });
+                card.classList.add("selected");
+            }
+            const confirmButton = document.getElementById("confirm-team");
+            confirmButton.disabled = selectedTeam.length !== 5;
+            confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
+        }
 
-function fightBattle(battleIndex) {
-    clearPopups();
-    const battle = battles[battleIndex];
-    let aliveTeam = selectedTeam.filter(char => char.health > 0);
-    const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
-    lastBattleName = battle.name;
+        function selectRandomTeam() {
+            clearPopups();
+            selectedTeam = [];
+            const shuffled = [...characters].sort(() => 0.5 - Math.random());
+            selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
+            const cards = document.querySelectorAll(".card");
+            cards.forEach(card => card.classList.remove("selected"));
+            selectedTeam.forEach(char => {
+                const card = Array.from(cards).find(c => c.querySelector("div").textContent === char.name);
+                if (card) card.classList.add("selected");
+            });
+            const confirmButton = document.getElementById("confirm-team");
+            confirmButton.disabled = false;
+            confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
+        }
 
-    if (avg >= battle.requiredAvg) {
-        aliveTeam.forEach(char => {
-            if (char.weapon !== "RPG") char.health = Math.max(0, char.health - battle.damage * (1 - army.defenseBonus / 100));
-        });
-        if (battleIndex === battles.length - 1) bigBossDefeated = true;
-        displayTeamStatus(battleIndex);
-    } else {
-        const battleDisplay = document.getElementById("battle-display");
-        battleDisplay.innerHTML = `
-            <h2>קרב: ${battle.name}</h2>
-            <p>הפסדת! הדירוג שלך נמוך מדי (${avg.toFixed(2)} < ${battle.requiredAvg}).</p>
-            <div style="text-align: center;">
-                <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
-                <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-            </div>
-        `;
-    }
-}
-
-function displayTeamStatus(battleIndex) {
-    clearPopups();
-    const battleDisplay = document.getElementById("battle-display");
-    const aliveTeam = selectedTeam.filter(char => char.health > 0);
-    battleDisplay.innerHTML = `
-        <h2>מצב הקבוצה - ${battles[battleIndex].name}</h2>
-        <p>דירוג ממוצע: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
-        <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
-        <div class="team-grid">
-            ${selectedTeam.map(char => `
-                <div class="team-card">
+        function confirmTeam() {
+            clearPopups();
+            const teamDisplay = document.getElementById("team-display");
+            teamDisplay.style.display = "flex";
+            teamDisplay.innerHTML = `<h2>הצוות שלך:</h2>`;
+            selectedTeam.forEach(char => {
+                const stars = Math.round(char.overall / 20);
+                const card = document.createElement("div");
+                card.className = "team-card";
+                card.innerHTML = `
                     <img src="${char.image}" alt="${char.name}">
-                    <div>${char.name} (${char.role})</div>
-                    <div>חיים: ${char.health}/${char.overall}</div>
-                    <div class="health-bar"><div class="health-bar-fill" style="width: ${(char.health / char.overall) * 100}%"></div></div>
+                    <div>${char.name}</div>
+                    <div>Overall: ${char.overall}</div>
+                    <div class="stars">${"★".repeat(stars)}${"☆".repeat(5 - stars)}</div>
+                    <select id="role-${char.name}">
+                        <option value="">בחר תפקיד</option>
+                        ${char.name !== "אריאל עין גל" && char.name !== "חיים מרקס" ? '<option value="מנהיג">מנהיג</option>' : ''}
+                        <option value="חייל">חייל</option>
+                        ${char.name !== "דביר ברקת" ? '<option value="זונה">זונה</option>' : ''}
+                    </select>
+                `;
+                teamDisplay.appendChild(card);
+            });
+            teamDisplay.innerHTML += `
+                <div style="width: 100%; text-align: center;">
+                    <button onclick="confirmRoles()">אשר תפקידים</button>
+                    <button onclick="assignRandomRoles()">בחר תפקידים אוטומטית</button>
+                    <button onclick="displayCharacters()">שנה צוות</button>
+                    <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
                 </div>
-            `).join('')}
-        </div>
-        <div style="text-align: center;">
-            <button onclick="${battleIndex < battles.length - 1 ? `startBattle(${battleIndex + 1})` : `showCityManagement()`}">${battleIndex < battles.length - 1 ? "קרב הבא" : "ניהול עיר"}</button>
-            <button onclick="showTransferWindow(${battleIndex})">חלון העברות</button>
-            <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
-            <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-        </div>
-    `;
-}
+            `;
+            hideAllExcept("team-display");
+        }
 
-function showTransferWindow(battleIndex) {
-    clearPopups();
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `
-        <div class="popup-content">
-            <h2>חלון העברות</h2>
-            <p>תקציב: ${teamBudget.toLocaleString()} €</p>
-            <h3>מכירת שחקנים</h3>
-            <div class="team-grid" id="sell-section"></div>
-            <h3>רכישת שחקנים</h3>
-            <div class="team-grid" id="buy-section"></div>
-            <button onclick="this.parentElement.parentElement.remove(); displayTeamStatus(${battleIndex})">סגור</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
+        function assignRandomRoles() {
+            clearPopups();
+            let available = [...selectedTeam];
+            selectedTeam.forEach(char => char.role = "");
+            let leaderCandidates = available.filter(c => c.name !== "אריאל עין גל" && c.name !== "חיים מרקס");
+            const leader = leaderCandidates[Math.floor(Math.random() * leaderCandidates.length)];
+            leader.role = "מנהיג";
+            document.getElementById(`role-${leader.name}`).value = "מנהיג";
+            available = available.filter(c => c.name !== leader.name);
+            let whoreCandidates = available.filter(c => c.name !== "דביר ברקת");
+            const whore = whoreCandidates[Math.floor(Math.random() * whoreCandidates.length)];
+            whore.role = "זונה";
+            document.getElementById(`role-${whore.name}`).value = "זונה";
+            available = available.filter(c => c.name !== whore.name);
+            available.forEach(char => {
+                char.role = "חייל";
+                document.getElementById(`role-${char.name}`).value = "חייל";
+            });
+        }
 
-    const sellSection = document.getElementById("sell-section");
-    selectedTeam.forEach(char => {
-        sellSection.innerHTML += `
-            <div class="team-card">
-                <img src="${char.image}" alt="${char.name}">
-                <div>${char.name}</div>
-                <div>שווי: ${char.value.toLocaleString()} €</div>
-                <button onclick="sellPlayer('${char.name}', ${battleIndex})">מכור</button>
-            </div>`;
-    });
+        function confirmRoles() {
+            clearPopups();
+            let leaderCount = 0, soldierCount = 0, whoreCount = 0;
+            for (const char of selectedTeam) {
+                const role = document.getElementById(`role-${char.name}`).value;
+                if (!role) return alert("חובה לבחור תפקיד לכל חבר צוות!");
+                if (role === "מנהיג") leaderCount++;
+                if (role === "חייל") soldierCount++;
+                if (role === "זונה") whoreCount++;
+                if (char.name === "דביר ברקת" && role === "זונה") return showLosePopup(char);
+                if (char.name === "אריאל שרביט" && role !== "חייל" && role !== "זונה") return alert("אריאל שרביט יכולה להיות רק חיילת או זונה!");
+            }
+            if (leaderCount > 1) return alert("יכול להיות רק מנהיג אחד!");
+            if (soldierCount > 3) return alert("יכולים להיות עד 3 חיילים!");
+            if (whoreCount > 1) return alert("יכולה להיות רק זונה אחת!");
 
-    const buySection = document.getElementById("buy-section");
-    characters.filter(c => !selectedTeam.some(t => t.name === c.name)).forEach(char => {
-        buySection.innerHTML += `
-            <div class="team-card">
-                <img src="${char.image}" alt="${char.name}">
-                <div>${char.name}</div>
-                <div>שווי: ${char.value.toLocaleString()} €</div>
-                <div>Overall: ${char.overall}</div>
-                <button onclick="buyPlayer('${char.name}', ${battleIndex})" ${teamBudget < char.value ? "disabled" : ""}>קנה</button>
-            </div>`;
-    });
-}
+            selectedTeam.forEach(char => {
+                const role = document.getElementById(`role-${char.name}`).value;
+                char.role = role;
+                if (role === "מנהיג") char.overall += 3;
+                if (role === "חייל") char.overall += 1;
+                if (role === "זונה") char.overall -= 2;
+                char.health = char.overall;
+            });
+            startBattle(0);
+        }
 
-function sellPlayer(charName, battleIndex) {
-    const char = selectedTeam.find(c => c.name === charName);
-    teamBudget += char.value;
-    selectedTeam = selectedTeam.filter(c => c.name !== charName);
-    document.querySelector(".popup").remove();
-    showTransferWindow(battleIndex);
-}
-
-function buyPlayer(charName, battleIndex) {
-    const char = characters.find(c => c.name === charName);
-    if (teamBudget >= char.value && selectedTeam.length < 5) {
-        teamBudget -= char.value;
-        selectedTeam.push({ ...char, health: char.overall });
-        document.querySelector(".popup").remove();
-        showTransferWindow(battleIndex);
-    } else {
-        alert(selectedTeam.length >= 5 ? "צוות מלא!" : "אין מספיק תקציב!");
-    }
-}
-
-function showTeamManagement(battleIndex) {
-    clearPopups();
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `
-        <div class="popup-content">
-            <h2>ניהול צוות</h2>
-            <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
-            <h3>אימון וריפוי</h3>
-            <div class="team-grid" id="training-section"></div>
-            <h3>נשקים</h3>
-            <div class="team-grid" id="weapons-section"></div>
-            <div style="text-align: center;">
-                <button onclick="this.parentElement.parentElement.remove(); startBattle(${battleIndex})">חזור לקרב</button>
-                <button onclick="this.parentElement.parentElement.remove(); showMainMenu()">חזור לתפריט ראשי</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(popup);
-
-    const trainingSection = document.getElementById("training-section");
-    selectedTeam.forEach(char => {
-        trainingSection.innerHTML += `
-            <div class="team-card">
-                <img src="${char.image}" alt="${char.name}">
-                <div>${char.name}</div>
-                <div>Overall: ${char.overall}</div>
-                <div>חיים: ${char.health}/${char.overall}</div>
-                <button onclick="trainPlayer('${char.name}', ${battleIndex})" ${char.trained || coins < 5 ? "disabled" : ""}>אמן (5 מטבעות)</button>
-                <button onclick="healPlayer('${char.name}', ${battleIndex})" ${char.health >= char.overall || coins < 10 ? "disabled" : ""}>רפא (10 מטבעות)</button>
-            </div>`;
-    });
-
-    const weaponsSection = document.getElementById("weapons-section");
-    selectedTeam.forEach(char => {
-        weaponsSection.innerHTML += `
-            <div class="team-card">
-                <img src="${char.image}" alt="${char.name}">
-                <div>${char.name}</div>
-                <div>נשק נוכחי: ${char.weapon} (+${weapons[char.weapon].bonus})</div>
-                <button onclick="sellWeapon('${char.name}', ${battleIndex})" ${char.weapon === "גלוק" ? "disabled" : ""}>מכור נשק</button>
-                <button onclick="showWeaponShop('${char.name}', ${battleIndex})">קנה נשק</button>
-            </div>`;
-    });
-}
-
-function showWeaponShop(charName, battleIndex) {
-    clearPopups();
-    const char = selectedTeam.find(c => c.name === charName);
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `
-        <div class="popup-content">
-            <h2>חנות נשקים - ${charName}</h2>
-            <p>תקציב: ${teamBudget.toLocaleString()} €</p>
-            <div class="weapon-grid" id="weapon-options"></div>
-            <button onclick="this.parentElement.parentElement.remove(); showTeamManagement(${battleIndex})">סגור</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
-
-    const weaponOptions = document.getElementById("weapon-options");
-    Object.keys(weapons).forEach(weapon => {
-        if ((char.name === "אריאל שרביט" && weapon !== "גלוק") || (weapon === "RPG" && char.name !== "דביר ברקת")) return;
-        weaponOptions.innerHTML += `
-            <div class="weapon-card">
-                <img src="${weapons[weapon].image}" alt="${weapon}">
-                <div>${weapon}</div>
-                <div>עלות: ${weapons[weapon].cost.toLocaleString()} €</div>
-                <div>בונוס: +${weapons[weapon].bonus}</div>
-                <button onclick="buyWeapon('${charName}', '${weapon}', ${battleIndex})" ${teamBudget < weapons[weapon].cost || char.weapon === weapon ? "disabled" : ""}>קנה</button>
-            </div>`;
-    });
-}
-
-function trainPlayer(charName, battleIndex) {
-    const char = selectedTeam.find(c => c.name === charName);
-    if (coins >= 5 && !char.trained) {
-        coins -= 5;
-        char.overall += 3;
-        char.health += 3;
-        char.trained = true;
-        document.querySelector(".popup").remove();
-        showTeamManagement(battleIndex);
-    }
-}
-
-function healPlayer(charName, battleIndex) {
-    const char = selectedTeam.find(c => c.name === charName);
-    if (coins >= 10 && char.health < char.overall) {
-        coins -= 10;
-        char.health = char.overall;
-        document.querySelector(".popup").remove();
-        showTeamManagement(battleIndex);
-    }
-}
-
-function buyWeapon(charName, weapon, battleIndex) {
-    const char = selectedTeam.find(c => c.name === charName);
-    const newWeaponCost = weapons[weapon].cost;
-    if (teamBudget >= newWeaponCost) {
-        const oldWeaponBonus = weapons[char.weapon].bonus;
-        teamBudget -= newWeaponCost;
-        char.overall = char.overall - oldWeaponBonus + weapons[weapon].bonus;
-        char.health = char.health - oldWeaponBonus + weapons[weapon].bonus;
-        char.weapon = weapon;
-        document.querySelector(".popup").remove();
-        showTeamManagement(battleIndex);
-    }
-}
-
-function sellWeapon(charName, battleIndex) {
-    const char = selectedTeam.find(c => c.name === charName);
-    if (char.weapon !== "גלוק") {
-        const oldWeaponCost = weapons[char.weapon].cost;
-        const oldWeaponBonus = weapons[char.weapon].bonus;
-        teamBudget += Math.floor(oldWeaponCost / 2);
-        char.overall = char.overall - oldWeaponBonus + weapons["גלוק"].bonus;
-        char.health = char.health - oldWeaponBonus + weapons["גלוק"].bonus;
-        char.weapon = "גלוק";
-        document.querySelector(".popup").remove();
-        showTeamManagement(battleIndex);
-    }
-}
-function getCityImage() {
-    return cityImages.find(img => cityPopulation <= img.maxPop).url;
-}
-
-function showCityManagement() {
-    if (!bigBossDefeated) return;
-    clearPopups();
-    const cityDisplay = document.getElementById("city-management");
-    cityDisplay.style.display = "flex";
-    cityDisplay.innerHTML = `
-        <h2>ניהול ${cityName}</h2>
-        <img src="${getCityImage()}" alt="${cityName}" class="city-image">
-        <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()} | צבא: רמה ${army.level} (הגנה: ${army.defenseBonus}%, הכנסה: ${army.incomeBonus.toLocaleString()} ₪)</p>
-        <div class="team-grid">
-            <div class="team-card">
-                <h3>שכונות</h3>
-                <p>${cityNeighborhoods.join(', ')}</p>
-                <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
-            </div>
-            <div class="team-card">
-                <h3>תפקידים</h3>
-                <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
-                <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
-            </div>
-            <div class="team-card">
-                <h3>שדרוגים ומכירות</h3>
-                <p>${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)} שדרוגים</p>
-                <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
-            </div>
-            <div class="team-card">
-                <h3>צבא</h3>
-                <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
-                <button onclick="showCityMenu('army')">נהל צבא</button>
-            </div>
-        </div>
-        <div style="width: 100%; text-align: center;">
-            <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-        </div>
-    `;
-    hideAllExcept("city-management");
-    startCityIncome();
-}
-
-function startCityIncome() {
-    setInterval(() => {
-        let jobIncome = Object.keys(assignedJobs).length * 10000; // 10,000 ₪ לכל תפקיד מאויש
-        let upgradeIncome = Object.values(cityUpgrades).reduce((sum, u) => sum + ((u.bought ? u.income : (u.count || 0) * u.income) || 0), 0);
-        let armyIncome = army.incomeBonus + Object.values(army.units).reduce((sum, unit) => sum + unit.count * unit.income, 0);
-        cityBudget += 20 + (prostitutes.length * 30) + upgradeIncome + jobIncome + armyIncome;
-        if (Math.random() < 0.02) triggerCityEvent();
-        updateCityDisplay();
-    }, 5000);
-}
-
-function updateCityDisplay() {
-    const cityDisplay = document.getElementById("city-management");
-    if (cityDisplay.style.display === "flex") {
-        cityDisplay.innerHTML = `
-            <h2>ניהול ${cityName}</h2>
-            <img src="${getCityImage()}" alt="${cityName}" class="city-image">
-            <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()} | צבא: רמה ${army.level} (הגנה: ${army.defenseBonus}%, הכנסה: ${army.incomeBonus.toLocaleString()} ₪)</p>
-            <div class="team-grid">
-                <div class="team-card">
-                    <h3>שכונות</h3>
-                    <p>${cityNeighborhoods.join(', ')}</p>
-                    <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
+        function showLosePopup(char) {
+            clearPopups();
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h3>הפסדת!</h3>
+                    <p>דביר ברקת לא יכול להיות זונה!</p>
+                    <img src="${char.image}" alt="${char.name}">
+                    <button onclick="this.parentElement.parentElement.remove(); showMainMenu()">חזור לתפריט ראשי</button>
                 </div>
-                <div class="team-card">
-                    <h3>תפקידים</h3>
-                    <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
-                    <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
-                </div>
-                <div class="team-card">
-                    <h3>שדרוגים ומכירות</h3>
-                    <p>${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)} שדרוגים</p>
-                    <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
-                </div>
-                <div class="team-card">
-                    <h3>צבא</h3>
-                    <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
-                    <button onclick="showCityMenu('army')">נהל צבא</button>
-                </div>
-            </div>
-            <div style="width: 100%; text-align: center;">
-                <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
-            </div>
-        `;
-    }
-}
+            `;
+            document.body.appendChild(popup);
+        }
 
-function triggerCityEvent() {
-    clearPopups();
-    const events = [
-        { text: "תקלה במים! תיקון עולה 4,000 ₪", cost: 4000 },
-        { text: "הצפה בשכונת רבין! תיקון עולה 10,000 ₪", cost: 10000 },
-        { text: "שריפה במרכז העיר! תיקון עולה 15,000 ₪", cost: 15000 }
-    ];
-    const event = events[Math.floor(Math.random() * events.length)];
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `
-        <div class="popup-content">
-            <h3>אירוע בעיר!</h3>
-            <p>${event.text}</p>
-            <button onclick="cityBudget -= ${event.cost}; this.parentElement.parentElement.remove(); updateCityDisplay()">תקן (${event.cost.toLocaleString()} ₪)</button>
-            <button onclick="this.parentElement.parentElement.remove()">התעלם</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
-}
-
-function showCityMenu(section) {
-    clearPopups();
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `<div class="popup-content"><h2>ניהול ${cityName}</h2>`;
-    if (section === "neighborhoods") {
-        popup.innerHTML += `
-            <h3>שכונות</h3>
-            ${cityNeighborhoods.map((n, i) => `<div>${n} <button onclick="changeNeighborhoodName(${i})">שנה שם (1,000,000 ₪)</button></div>`).join('')}
-            <h3>זונות (${prostitutes.length}/4)</h3>
-            <div class="submenu">
-                ${prostitutesList.filter(p => !prostitutes.includes(p)).map(p => `<button onclick="hireProstitute('${p}')">${p} (+30 ₪/5ש)</button>`).join('')}
-            </div>
-        `;
-    } else if (section === "jobs") {
-        popup.innerHTML += `
-            <h3>תפקידים</h3>
-            ${Object.keys(cityJobs).map(job => `
-                <div>
-                    ${job}: ${cityJobs[job].toLocaleString()} ₪
-                    <span>${assignedJobs[job] ? `(${assignedJobs[job]})` : ''}</span>
-                    <button onclick="assignJob('${job}')">בחר עובד</button>
-                </div>
-            `).join('')}
-        `;
-    } else if (section === "upgrades") {
-        popup.innerHTML += `
-            <h3>שדרוגים ומכירות</h3>
-            <details>
-                <summary>מכירת נכסים גדולים</summary>
-                <div class="submenu">
-                    ${buildings.filter(b => b.value >= 3000000 && !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
-                </div>
-            </details>
-            <details>
-                <summary>מכירת נכסים קטנים</summary>
-                <div class="submenu">
-                    ${buildings.filter(b => b.value < 3000000 && !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
-                </div>
-            </details>
-            <details open>
-                <summary>שדרוגי עיר</summary>
-                <table class="upgrade-table">
-                    <tr>
-                        <th>שדרוג</th>
-                        <th>עלות (₪)</th>
-                        <th>אוכלוסייה</th>
-                        <th>הכנסה (/5ש)</th>
-                        <th>תיאור</th>
-                        <th>פעולה</th>
-                    </tr>
-                    ${Object.keys(cityUpgrades).map(key => `
-                        <tr>
-                            <td>${key === 'newNeighborhood' ? `שכונה חדשה (${cityUpgrades[key].count}/${cityUpgrades[key].max})` : key === 'airport' ? 'נמל תעופה' : key === 'hotel' ? 'מלון' : key === 'trainStation' ? 'תחנת רכבת' : key === 'busTerminal' ? 'תחנה מרכזית' : key === 'mall' ? 'קניון' : key === 'hospital' ? 'בית חולים' : key === 'university' ? `אוניברסיטה (${cityUpgrades[key].count}/${cityUpgrades[key].max})` : key === 'sportsComplex' ? 'מתחם ספורט' : key === 'theater' ? 'תיאטרון' : key === 'bridge' ? 'גשר' : key === 'tunnel' ? 'מנהרה' : key === 'amusementPark' ? 'פארק שעשועים' : key === 'powerPlant' ? 'תחנת כוח' : key === 'researchCenter' ? 'מרכז מחקר' : 'נמל ימי'}</td>
-                            <td>${cityUpgrades[key].cost.toLocaleString()}</td>
-                            <td>+${cityUpgrades[key].population.toLocaleString()}</td>
-                            <td>+${cityUpgrades[key].income.toLocaleString()}</td>
-                            <td>${cityUpgrades[key].description}</td>
-                            <td><button onclick="buyUpgrade('${key}')" ${(cityUpgrades[key].bought || (cityUpgrades[key].count >= cityUpgrades[key].max) || (key === 'airport' && cityPopulation < 50000) || (key === 'seaport' && cityPopulation < 75000) || cityBudget < cityUpgrades[key].cost) ? "disabled" : ""}>קנה</button></td>
-                        </tr>
+        function startBattle(battleIndex) {
+            clearPopups();
+            const battleDisplay = document.getElementById("battle-display");
+            battleDisplay.style.display = "block";
+            const battle = battles[battleIndex];
+            battleDisplay.innerHTML = `
+                <h2>קרב: ${battle.name}</h2>
+                <p>${battle.story}</p>
+                <h3>הצוות שלך:</h3>
+                <div class="team-grid">
+                    ${selectedTeam.map(char => `
+                        <div class="team-card">
+                            <img src="${char.image}" alt="${char.name}">
+                            <div>${char.name}</div>
+                            <div>תפקיד: ${char.role}</div>
+                            <div>חיים: ${char.health}/${char.overall}</div>
+                            <div class="health-bar"><div class="health-bar-fill" style="width: ${(char.health / char.overall) * 100}%"></div></div>
+                        </div>
                     `).join('')}
-                </table>
-            </details>
-        `;
-    } else if (section === "army") {
-        popup.innerHTML += `
-            <h3>ניהול צבא</h3>
-            <div class="army-grid">
-                <div class="army-card">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3048/3048428.png" alt="צבא">
-                    <div>רמה: ${army.level}/${army.maxLevel}</div>
-                    <div>כוח: ${army.strength}</div>
-                    <div>בונוס הגנה: ${army.defenseBonus}%</div>
-                    <div>בונוס הכנסה: ${army.incomeBonus.toLocaleString()} ₪</div>
-                    ${army.level === 0 ? `<button onclick="buildArmy()">בנה צבא (${army.costToBuild.toLocaleString()} ₪)</button>` : army.level < army.maxLevel ? `<button onclick="upgradeArmy()">שדרג צבא (${army.costToUpgrade.toLocaleString()} ₪)</button>` : '<div>רמה מקסימלית</div>'}
                 </div>
-            </div>
-            <h3>יחידות צבא</h3>
-            <div class="army-grid">
-                <div class="army-unit-card">
-                    <img src="${army.units.police.image}" alt="משטרה">
-                    <div>משטרה: ${army.units.police.count}</div>
-                    <div>כוח: ${army.units.police.strength}</div>
-                    <div>הכנסה: ${army.units.police.income.toLocaleString()} ₪</div>
-                    <button onclick="recruitUnit('police')" ${cityBudget < army.units.police.cost ? "disabled" : ""}>גייס (${army.units.police.cost.toLocaleString()} ₪)</button>
+                <div style="text-align: center;">
+                    <button class="war-button" onclick="fightBattle(${battleIndex})">להילחם!</button>
+                    <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
+                    <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
                 </div>
-                <div class="army-unit-card">
-                    <img src="${army.units.infantry.image}" alt="חיילים">
-                    <div>חיילים: ${army.units.infantry.count}</div>
-                    <div>כוח: ${army.units.infantry.strength}</div>
-                    <div>הכנסה: ${army.units.infantry.income.toLocaleString()} ₪</div>
-                    <button onclick="recruitUnit('infantry')" ${cityBudget < army.units.infantry.cost || army.level < 1 ? "disabled" : ""}>גייס (${army.units.infantry.cost.toLocaleString()} ₪)</button>
-                </div>
-                <div class="army-unit-card">
-                    <img src="${army.units.tanks.image}" alt="טנקים">
-                    <div>טנקים: ${army.units.tanks.count}</div>
-                    <div>כוח: ${army.units.tanks.strength}</div>
-                    <div>הכנסה: ${army.units.tanks.income.toLocaleString()} ₪</div>
-                    <button onclick="recruitUnit('tanks')" ${cityBudget < army.units.tanks.cost || army.level < 3 ? "disabled" : ""}>גייס (${army.units.tanks.cost.toLocaleString()} ₪)</button>
-                </div>
-            </div>
-        `;
-    }
-    popup.innerHTML += `
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="this.parentElement.parentElement.remove(); showCityManagement()">חזור לניהול העיר</button>
-        </div>
-    </div>`;
-    document.body.appendChild(popup);
-}
+            `;
+            hideAllExcept("battle-display");
+            if (Math.random() < 0.2) showFunnyPopup();
+        }
 
-function changeNeighborhoodName(index) {
-    if (cityBudget >= 1000000) {
-        const newName = prompt("הכנס שם חדש לשכונה:");
-        if (newName) {
-            cityBudget -= 1000000;
-            cityNeighborhoods[index] = newName;
-            showCityMenu("neighborhoods");
+        function showFunnyPopup() {
+            clearPopups();
+            const char = selectedTeam[Math.floor(Math.random() * selectedTeam.length)];
+            const message = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+            const popup = document.createElement("div");
+            popup.className = "chat-popup";
+            popup.innerHTML = `
+                <img src="${char.image}" alt="${char.name}">
+                <p>${char.name}: "${message}"</p>
+            `;
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 5000);
+        }
+
+        function fightBattle(battleIndex) {
+            clearPopups();
+            const battle = battles[battleIndex];
+            let aliveTeam = selectedTeam.filter(char => char.health > 0);
+            const avg = aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0;
+            lastBattleName = battle.name;
+
+            if (avg >= battle.requiredAvg) {
+                aliveTeam.forEach(char => {
+                    if (char.weapon !== "RPG") char.health = Math.max(0, char.health - battle.damage * (1 - army.defenseBonus / 100));
+                });
+                if (battleIndex === battles.length - 1) bigBossDefeated = true;
+                displayTeamStatus(battleIndex);
+            } else {
+                const battleDisplay = document.getElementById("battle-display");
+                battleDisplay.innerHTML = `
+                    <h2>קרב: ${battle.name}</h2>
+                    <p>הפסדת! הדירוג שלך נמוך מדי (${avg.toFixed(2)} < ${battle.requiredAvg}).</p>
+                    <div style="text-align: center;">
+                        <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
+                        <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+                    </div>
+                `;
+            }
+        }
+
+        function displayTeamStatus(battleIndex) {
+            clearPopups();
+            const battleDisplay = document.getElementById("battle-display");
+            const aliveTeam = selectedTeam.filter(char => char.health > 0);
+            battleDisplay.innerHTML = `
+                <h2>מצב הקבוצה - ${battles[battleIndex].name}</h2>
+                <p>דירוג ממוצע: ${(aliveTeam.reduce((sum, char) => sum + char.overall, 0) / aliveTeam.length || 0).toFixed(2)}</p>
+                <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
+                <div class="team-grid">
+                    ${selectedTeam.map(char => `
+                        <div class="team-card">
+                            <img src="${char.image}" alt="${char.name}">
+                            <div>${char.name} (${char.role})</div>
+                            <div>חיים: ${char.health}/${char.overall}</div>
+                            <div class="health-bar"><div class="health-bar-fill" style="width: ${(char.health / char.overall) * 100}%"></div></div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="text-align: center;">
+                    <button class="war-button" onclick="${battleIndex < battles.length - 1 ? `startBattle(${battleIndex + 1})` : `showCityManagement()`}">${battleIndex < battles.length - 1 ? "קרב הבא" : "ניהול עיר"}</button>
+                    <button onclick="showTransferWindow(${battleIndex})">חלון העברות</button>
+                    <button onclick="showTeamManagement(${battleIndex})">ניהול צוות</button>
+                    <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+                </div>
+            `;
+        }
+
+        function showTransferWindow(battleIndex) {
+            clearPopups();
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h2>חלון העברות</h2>
+                    <p>תקציב: ${teamBudget.toLocaleString()} €</p>
+                    <h3>מכירת שחקנים</h3>
+                    <div class="team-grid" id="sell-section"></div>
+                    <h3>רכישת שחקנים</h3>
+                    <div class="team-grid" id="buy-section"></div>
+                    <button onclick="this.parentElement.parentElement.remove(); displayTeamStatus(${battleIndex})">סגור</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            const sellSection = document.getElementById("sell-section");
+            selectedTeam.forEach(char => {
+                sellSection.innerHTML += `
+                    <div class="team-card">
+                        <img src="${char.image}" alt="${char.name}">
+                        <div>${char.name}</div>
+                        <div>שווי: ${char.value.toLocaleString()} €</div>
+                        <button onclick="sellPlayer('${char.name}', ${battleIndex})">מכור</button>
+                    </div>`;
+            });
+
+            const buySection = document.getElementById("buy-section");
+            characters.filter(c => !selectedTeam.some(t => t.name === c.name)).forEach(char => {
+                buySection.innerHTML += `
+                    <div class="team-card">
+                        <img src="${char.image}" alt="${char.name}">
+                        <div>${char.name}</div>
+                        <div>שווי: ${char.value.toLocaleString()} €</div>
+                        <div>Overall: ${char.overall}</div>
+                        <button onclick="buyPlayer('${char.name}', ${battleIndex})" ${teamBudget < char.value ? "disabled" : ""}>קנה</button>
+                    </div>`;
+            });
+        }
+
+        function sellPlayer(charName, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            teamBudget += char.value;
+            selectedTeam = selectedTeam.filter(c => c.name !== charName);
+            document.querySelector(".popup").remove();
+            showTransferWindow(battleIndex);
+        }
+
+        function buyPlayer(charName, battleIndex) {
+            const char = characters.find(c => c.name === charName);
+            if (teamBudget >= char.value && selectedTeam.length < 5) {
+                teamBudget -= char.value;
+                selectedTeam.push({ ...char, health: char.overall });
+                document.querySelector(".popup").remove();
+                showTransferWindow(battleIndex);
+            } else {
+                alert(selectedTeam.length >= 5 ? "צוות מלא!" : "אין מספיק תקציב!");
+            }
+        }
+
+        function showTeamManagement(battleIndex) {
+            clearPopups();
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h2>ניהול צוות</h2>
+                    <p>מטבעות: ${coins} | תקציב: ${teamBudget.toLocaleString()} €</p>
+                    <h3>אימון וריפוי</h3>
+                    <div class="team-grid" id="training-section"></div>
+                    <h3>נשקים</h3>
+                    <div class="team-grid" id="weapons-section"></div>
+                    <div style="text-align: center;">
+                        <button onclick="this.parentElement.parentElement.remove(); startBattle(${battleIndex})">חזור לקרב</button>
+                        <button onclick="this.parentElement.parentElement.remove(); showMainMenu()">חזור לתפריט ראשי</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            const trainingSection = document.getElementById("training-section");
+            selectedTeam.forEach(char => {
+                trainingSection.innerHTML += `
+                    <div class="team-card">
+                        <img src="${char.image}" alt="${char.name}">
+                        <div>${char.name}</div>
+                        <div>Overall: ${char.overall}</div>
+                        <div>חיים: ${char.health}/${char.overall}</div>
+                        <button onclick="trainPlayer('${char.name}', ${battleIndex})" ${char.trained || coins < 5 ? "disabled" : ""}>אמן (5 מטבעות)</button>
+                        <button onclick="healPlayer('${char.name}', ${battleIndex})" ${char.health >= char.overall || coins < 10 ? "disabled" : ""}>רפא (10 מטבעות)</button>
+                    </div>`;
+            });
+
+            const weaponsSection = document.getElementById("weapons-section");
+            selectedTeam.forEach(char => {
+                weaponsSection.innerHTML += `
+                    <div class="team-card">
+                        <img src="${char.image}" alt="${char.name}">
+                        <div>${char.name}</div>
+                        <div>נשק נוכחי: ${char.weapon} (+${weapons[char.weapon].bonus})</div>
+                        <button onclick="sellWeapon('${char.name}', ${battleIndex})" ${char.weapon === "גלוק" ? "disabled" : ""}>מכור נשק</button>
+                        <button onclick="showWeaponShop('${char.name}', ${battleIndex})">קנה נשק</button>
+                    </div>`;
+            });
+        }
+
+        function showWeaponShop(charName, battleIndex) {
+            clearPopups();
+            const char = selectedTeam.find(c => c.name === charName);
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h2>חנות נשקים - ${charName}</h2>
+                    <p>תקציב: ${teamBudget.toLocaleString()} €</p>
+                    <div class="weapon-grid" id="weapon-options"></div>
+                    <button onclick="this.parentElement.parentElement.remove(); showTeamManagement(${battleIndex})">סגור</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            const weaponOptions = document.getElementById("weapon-options");
+            Object.keys(weapons).forEach(weapon => {
+                if ((char.name === "אריאל שרביט" && weapon !== "גלוק") || (weapon === "RPG" && char.name !== "דביר ברקת")) return;
+                weaponOptions.innerHTML += `
+                    <div class="weapon-card">
+                        <img src="${weapons[weapon].image}" alt="${weapon}">
+                        <div>${weapon}</div>
+                        <div>עלות: ${weapons[weapon].cost.toLocaleString()} €</div>
+                        <div>בונוס: +${weapons[weapon].bonus}</div>
+                        <button onclick="buyWeapon('${charName}', '${weapon}', ${battleIndex})" ${teamBudget < weapons[weapon].cost || char.weapon === weapon ? "disabled" : ""}>קנה</button>
+                    </div>`;
+            });
+        }
+
+        function trainPlayer(charName, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            if (coins >= 5 && !char.trained) {
+                coins -= 5;
+                char.overall += 3;
+                char.health += 3;
+                char.trained = true;
+                document.querySelector(".popup").remove();
+                showTeamManagement(battleIndex);
+            }
+        }
+
+        function healPlayer(charName, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            if (coins >= 10 && char.health < char.overall) {
+                coins -= 10;
+                char.health = char.overall;
+                document.querySelector(".popup").remove();
+                showTeamManagement(battleIndex);
+            }
+        }
+
+        function buyWeapon(charName, weapon, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            const newWeaponCost = weapons[weapon].cost;
+            if (teamBudget >= newWeaponCost) {
+                const oldWeaponBonus = weapons[char.weapon].bonus;
+                teamBudget -= newWeaponCost;
+                char.overall = char.overall - oldWeaponBonus + weapons[weapon].bonus;
+                char.health = char.health - oldWeaponBonus + weapons[weapon].bonus;
+                char.weapon = weapon;
+                document.querySelector(".popup").remove();
+                showTeamManagement(battleIndex);
+            }
+        }
+
+        function sellWeapon(charName, battleIndex) {
+            const char = selectedTeam.find(c => c.name === charName);
+            if (char.weapon !== "גלוק") {
+                const oldWeaponCost = weapons[char.weapon].cost;
+                const oldWeaponBonus = weapons[char.weapon].bonus;
+                teamBudget += Math.floor(oldWeaponCost / 2);
+                char.overall = char.overall - oldWeaponBonus + weapons["גלוק"].bonus;
+                char.health = char.health - oldWeaponBonus + weapons["גלוק"].bonus;
+                char.weapon = "גלוק";
+                document.querySelector(".popup").remove();
+                showTeamManagement(battleIndex);
+            }
+        }
+
+        function getCityImage() {
+            return cityImages.find(img => cityPopulation <= img.maxPop).url;
+        }
+
+        function showCityManagement() {
+            if (!bigBossDefeated) return;
+            clearPopups();
+            const cityDisplay = document.getElementById("city-management");
+            cityDisplay.style.display = "flex";
+            cityDisplay.innerHTML = `
+                <h2>ניהול ${cityName}</h2>
+                <img src="${getCityImage()}" alt="${cityName}" class="city-image">
+                <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()} | צבא: רמה ${army.level} (הגנה: ${army.defenseBonus}%, הכנסה: ${army.incomeBonus.toLocaleString()} ₪)</p>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <h3>שכונות</h3>
+                        <p>${cityNeighborhoods.join(', ')}</p>
+                        <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
+                    </div>
+                    <div class="team-card">
+                        <h3>תפקידים</h3>
+                        <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
+                        <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
+                    </div>
+                    <div class="team-card">
+                        <h3>שדרוגים ומכירות</h3>
+                        <p>${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)} שדרוגים</p>
+                        <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
+                    </div>
+                    <div class="team-card">
+                        <h3>צבא</h3>
+                        <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
+                        <button onclick="showCityMenu('army')">נהל צבא</button>
+                    </div>
+                </div>
+                <div style="width: 100%; text-align: center;">
+                    <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+                </div>
+            `;
+            hideAllExcept("city-management");
+            startCityIncome();
+        }
+
+        function startCityIncome() {
+            setInterval(() => {
+                let jobIncome = Object.keys(assignedJobs).length * 10000;
+                let upgradeIncome = Object.values(cityUpgrades).reduce((sum, u) => sum + ((u.bought ? u.income : (u.count || 0) * u.income) || 0), 0);
+                let armyIncome = army.incomeBonus + Object.values(army.units).reduce((sum, unit) => sum + unit.count * unit.income, 0);
+                cityBudget += 20 + (prostitutes.length * 30) + upgradeIncome + jobIncome + armyIncome;
+                if (Math.random() < 0.02) triggerCityEvent();
+                updateCityDisplay();
+            }, 5000);
+        }
+
+        function updateCityDisplay() {
+            const cityDisplay = document.getElementById("city-management");
+            if (cityDisplay.style.display === "flex") {
+                cityDisplay.innerHTML = `
+                    <h2>ניהול ${cityName}</h2>
+                    <img src="${getCityImage()}" alt="${cityName}" class="city-image">
+                    <p>תקציב: ${cityBudget.toLocaleString()} ₪ | אוכלוסייה: ${cityPopulation.toLocaleString()} | צבא: רמה ${army.level} (הגנה: ${army.defenseBonus}%, הכנסה: ${army.incomeBonus.toLocaleString()} ₪)</p>
+                    <div class="team-grid">
+                        <div class="team-card">
+                            <h3>שכונות</h3>
+                            <p>${cityNeighborhoods.join(', ')}</p>
+                            <button onclick="showCityMenu('neighborhoods')">נהל שכונות</button>
+                        </div>
+                        <div class="team-card">
+                            <h3>תפקידים</h3>
+                            <p>${Object.keys(assignedJobs).length} תפקידים מאוישים</p>
+                            <button onclick="showCityMenu('jobs')">נהל תפקידים</button>
+                        </div>
+                        <div class="team-card">
+                            <h3>שדרוגים ומכירות</h3>
+                            <p>${Object.values(cityUpgrades).reduce((sum, u) => sum + (u.bought ? 1 : u.count || 0), 0)} שדרוגים</p>
+                            <button onclick="showCityMenu('upgrades')">נהל שדרוגים ומכירות</button>
+                        </div>
+                        <div class="team-card">
+                            <h3>צבא</h3>
+                            <p>רמה ${army.level}/${army.maxLevel} | כוח: ${army.strength}</p>
+                            <button onclick="showCityMenu('army')">נהל צבא</button>
+                        </div>
+                    </div>
+                    <div style="width: 100%; text-align: center;">
+                        <button onclick="showMainMenu()">חזור לתפריט ראשי</button>
+                    </div>
+                `;
+            }
+        }
+                                  function triggerCityEvent() {
+            clearPopups();
+            const events = [
+                { text: "תקלה במים! תיקון עולה 4,000 ₪", cost: 4000 },
+                { text: "הצפה בשכונת רבין! תיקון עולה 10,000 ₪", cost: 10000 },
+                { text: "שריפה במרכז העיר! תיקון עולה 15,000 ₪", cost: 15000 }
+            ];
+            const event = events[Math.floor(Math.random() * events.length)];
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h3>אירוע בעיר!</h3>
+                    <p>${event.text}</p>
+                    <button onclick="cityBudget -= ${event.cost}; this.parentElement.parentElement.remove(); updateCityDisplay()">תקן (${event.cost.toLocaleString()} ₪)</button>
+                    <button onclick="this.parentElement.parentElement.remove()">התעלם</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        function showCityMenu(section) {
+            clearPopups();
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `<div class="popup-content"><h2>ניהול ${cityName}</h2>`;
+            if (section === "neighborhoods") {
+                popup.innerHTML += `
+                    <h3>שכונות</h3>
+                    ${cityNeighborhoods.map((n, i) => `<div>${n} <button onclick="changeNeighborhoodName(${i})">שנה שם (1,000,000 ₪)</button></div>`).join('')}
+                    <h3>זונות (${prostitutes.length}/4)</h3>
+                    <div class="submenu">
+                        ${prostitutesList.filter(p => !prostitutes.includes(p)).map(p => `<button onclick="hireProstitute('${p}')">${p} (+30 ₪/5ש)</button>`).join('')}
+                    </div>
+                `;
+            } else if (section === "jobs") {
+                popup.innerHTML += `
+                    <h3>תפקידים</h3>
+                    ${Object.keys(cityJobs).map(job => `
+                        <div>
+                            ${job}: ${cityJobs[job].toLocaleString()} ₪
+                            <span>${assignedJobs[job] ? `(${assignedJobs[job]})` : ''}</span>
+                            <button onclick="assignJob('${job}')">בחר עובד</button>
+                        </div>
+                    `).join('')}
+                `;
+            } else if (section === "upgrades") {
+                popup.innerHTML += `
+                    <h3>שדרוגים ומכירות</h3>
+                    <details>
+                        <summary>מכירת נכסים גדולים</summary>
+                        <div class="submenu">
+                            ${buildings.filter(b => b.value >= 3000000 && !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
+                        </div>
+                    </details>
+                    <details>
+                        <summary>מכירת נכסים קטנים</summary>
+                        <div class="submenu">
+                            ${buildings.filter(b => b.value < 3000000 && !b.sold).map(b => `<button onclick="sellBuilding('${b.name}')">${b.name} (${b.value.toLocaleString()} ₪)</button>`).join('')}
+                        </div>
+                    </details>
+                    <details open>
+                        <summary>שדרוגי עיר</summary>
+                        <table class="upgrade-table">
+                            <tr>
+                                <th>שדרוג</th>
+                                <th>עלות (₪)</th>
+                                <th>אוכלוסייה</th>
+                                <th>הכנסה (/5ש)</th>
+                                <th>תיאור</th>
+                                <th>פעולה</th>
+                            </tr>
+                            ${Object.keys(cityUpgrades).map(key => `
+                                <tr>
+                                    <td>${key === 'newNeighborhood' ? `שכונה חדשה (${cityUpgrades[key].count}/${cityUpgrades[key].max})` : key === 'airport' ? 'נמל תעופה' : key === 'hotel' ? 'מלון' : key === 'trainStation' ? 'תחנת רכבת' : key === 'busTerminal' ? 'תחנה מרכזית' : key === 'mall' ? 'קניון' : key === 'hospital' ? 'בית חולים' : key === 'university' ? `אוניברסיטה (${cityUpgrades[key].count}/${cityUpgrades[key].max})` : key === 'sportsComplex' ? 'מתחם ספורט' : key === 'theater' ? 'תיאטרון' : key === 'bridge' ? 'גשר' : key === 'tunnel' ? 'מנהרה' : key === 'amusementPark' ? 'פארק שעשועים' : key === 'powerPlant' ? 'תחנת כוח' : key === 'researchCenter' ? 'מרכז מחקר' : 'נמל ימי'}</td>
+                                    <td>${cityUpgrades[key].cost.toLocaleString()}</td>
+                                    <td>+${cityUpgrades[key].population.toLocaleString()}</td>
+                                    <td>+${cityUpgrades[key].income.toLocaleString()}</td>
+                                    <td>${cityUpgrades[key].description}</td>
+                                    <td><button onclick="buyUpgrade('${key}')" ${(cityUpgrades[key].bought || (cityUpgrades[key].count >= cityUpgrades[key].max) || (key === 'airport' && cityPopulation < 50000) || (key === 'seaport' && cityPopulation < 75000) || cityBudget < cityUpgrades[key].cost) ? "disabled" : ""}>קנה</button></td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </details>
+                `;
+            } else if (section === "army") {
+                popup.innerHTML += `
+                    <h3>ניהול צבא</h3>
+                    <p>רמה: ${army.level}/${army.maxLevel} | כוח: ${army.strength} | הגנה: ${army.defenseBonus}% | הכנסה: ${army.incomeBonus.toLocaleString()} ₪</p>
+                    <button onclick="buildOrUpgradeArmy()" ${army.level >= army.maxLevel || (army.level === 0 && cityBudget < army.costToBuild) || (army.level > 0 && cityBudget < army.costToUpgrade) ? "disabled" : ""}>${army.level === 0 ? `בנה צבא (${army.costToBuild.toLocaleString()} ₪)` : `שדרג צבא (${army.costToUpgrade.toLocaleString()} ₪)`}</button>
+                    <div class="army-grid" id="army-units"></div>
+                `;
+                const armyUnits = document.createElement("div");
+                armyUnits.id = "army-units";
+                armyUnits.innerHTML = Object.keys(army.units).map(unit => `
+                    <div class="army-unit-card">
+                        <img src="${army.units[unit].image}" alt="${unit}">
+                        <div>${unit === 'police' ? 'משטרה' : unit === 'infantry' ? 'חיילי רגלים' : 'טנקים'}</div>
+                        <div>כמות: ${army.units[unit].count}</div>
+                        <div>עלות: ${army.units[unit].cost.toLocaleString()} ₪</div>
+                        <div>כוח: +${army.units[unit].strength}</div>
+                        <div>הכנסה: +${army.units[unit].income.toLocaleString()} ₪</div>
+                        <button onclick="recruitUnit('${unit}')" ${cityBudget < army.units[unit].cost || army.level === 0 ? "disabled" : ""}>גייס</button>
+                    </div>
+                `).join('');
+                popup.querySelector(".popup-content").appendChild(armyUnits);
+            }
+            popup.innerHTML += `
+                <div style="text-align: center;">
+                    <button onclick="this.parentElement.parentElement.remove(); showCityManagement()">חזור</button>
+                </div>
+            </div>`;
+            document.body.appendChild(popup);
+        }
+
+        function changeNeighborhoodName(index) {
+            if (cityBudget >= 1000000) {
+                const newName = prompt("הזן שם חדש לשכונה:");
+                if (newName) {
+                    cityBudget -= 1000000;
+                    cityNeighborhoods[index] = newName;
+                    document.querySelector(".popup").remove();
+                    showCityMenu("neighborhoods");
+                    updateCityDisplay();
+                }
+            } else {
+                alert("אין מספיק תקציב!");
+            }
+        }
+
+        function hireProstitute(name) {
+            if (prostitutes.length < 4) {
+                prostitutes.push(name);
+                document.querySelector(".popup").remove();
+                showCityMenu("neighborhoods");
+                updateCityDisplay();
+            } else {
+                alert("כבר יש לך 4 זונות!");
+            }
+        }
+
+        function assignJob(job) {
+            clearPopups();
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h2>בחר עובד ל-${job}</h2>
+                    <div class="team-grid">
+                        ${characters.filter(c => !Object.values(assignedJobs).includes(c.name)).map(char => `
+                            <div class="team-card">
+                                <img src="${char.image}" alt="${char.name}">
+                                <div>${char.name}</div>
+                                <button onclick="assignJobToCharacter('${job}', '${char.name}')">בחר</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove(); showCityMenu('jobs')">חזור</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        function assignJobToCharacter(job, charName) {
+            assignedJobs[job] = charName;
+            document.querySelector(".popup").remove();
+            showCityMenu("jobs");
             updateCityDisplay();
         }
-    } else {
-        alert("אין מספיק תקציב!");
-    }
-}
 
-function hireProstitute(name) {
-    if (prostitutes.length < 4 && cityBudget >= 50000) {
-        prostitutes.push(name);
-        cityBudget -= 50000;
-        showCityMenu("neighborhoods");
-        updateCityDisplay();
-    } else {
-        alert(prostitutes.length >= 4 ? "מספיק זונות!" : "אין מספיק תקציב!");
-    }
-}
-
-function assignJob(job) {
-    clearPopups();
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `
-        <div class="popup-content">
-            <h2>בחר עובד עבור ${job}</h2>
-            <div class="team-grid">
-                ${characters.filter(c => !Object.values(assignedJobs).includes(c.name) || assignedJobs[job] === c.name).map(c => `
-                    <div class="team-card">
-                        <img src="${c.image}" alt="${c.name}">
-                        <div>${c.name}</div>
-                        <button onclick="confirmJobAssignment('${job}', '${c.name}')">${assignedJobs[job] === c.name ? "שחרר" : "בחר"}</button>
-                    </div>
-                `).join('')}
-            </div>
-            <button onclick="this.parentElement.parentElement.remove(); showCityMenu('jobs')">חזור</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
-}
-
-function confirmJobAssignment(job, charName) {
-    if (assignedJobs[job] === charName) {
-        delete assignedJobs[job];
-    } else {
-        assignedJobs[job] = charName;
-    }
-    document.querySelector(".popup").remove();
-    showCityMenu("jobs");
-    updateCityDisplay();
-}
-
-function sellBuilding(buildingName) {
-    const building = buildings.find(b => b.name === buildingName);
-    if (!building.sold && confirm(`למכור את ${buildingName} תמורת ${building.value.toLocaleString()} ₪?`)) {
-        building.sold = true;
-        cityBudget += building.value;
-        showCityMenu("upgrades");
-        updateCityDisplay();
-    }
-}
-
-function buyUpgrade(upgradeKey) {
-    const upgrade = cityUpgrades[upgradeKey];
-    if (cityBudget >= upgrade.cost && (!upgrade.bought || (upgrade.count < upgrade.max && upgrade.count >= 0))) {
-        cityBudget -= upgrade.cost;
-        if (upgrade.max) {
-            upgrade.count = (upgrade.count || 0) + 1;
-        } else {
-            upgrade.bought = true;
+        function sellBuilding(buildingName) {
+            const building = buildings.find(b => b.name === buildingName);
+            if (building && !building.sold) {
+                cityBudget += building.value;
+                building.sold = true;
+                document.querySelector(".popup").remove();
+                showCityMenu("upgrades");
+                updateCityDisplay();
+            }
         }
-        cityPopulation += upgrade.population;
-        showCityMenu("upgrades");
-        updateCityDisplay();
-    } else {
-        alert("אין מספיק תקציב או שדרוג לא זמין!");
-    }
-}
 
-function buildArmy() {
-    if (cityBudget >= army.costToBuild && army.level === 0) {
-        cityBudget -= army.costToBuild;
-        army.level = 1;
-        army.strength = 50;
-        army.defenseBonus = 10;
-        army.incomeBonus = 10000;
-        showCityMenu("army");
-        updateCityDisplay();
-    } else {
-        alert("אין מספיק תקציב או שכבר יש צבא!");
-    }
-}
+        function buyUpgrade(upgradeKey) {
+            const upgrade = cityUpgrades[upgradeKey];
+            if (cityBudget >= upgrade.cost && (!upgrade.bought || (upgrade.count < upgrade.max))) {
+                if ((upgradeKey === "airport" && cityPopulation < 50000) || (upgradeKey === "seaport" && cityPopulation < 75000)) {
+                    alert("אוכלוסייה לא מספיקה!");
+                    return;
+                }
+                cityBudget -= upgrade.cost;
+                cityPopulation += upgrade.population;
+                if ("count" in upgrade) {
+                    upgrade.count++;
+                } else {
+                    upgrade.bought = true;
+                }
+                document.querySelector(".popup").remove();
+                showCityMenu("upgrades");
+                updateCityDisplay();
+            } else {
+                alert("אין מספיק תקציב או שהשדרוג כבר נקנה!");
+            }
+        }
 
-function upgradeArmy() {
-    if (cityBudget >= army.costToUpgrade && army.level < army.maxLevel) {
-        cityBudget -= army.costToUpgrade;
-        army.level++;
-        army.strength += 50;
-        army.defenseBonus += 10;
-        army.incomeBonus += 10000;
-        showCityMenu("army");
-        updateCityDisplay();
-    } else {
-        alert("אין מספיק תקציב או שרמת הצבא מקסימלית!");
-    }
-}
+        function buildOrUpgradeArmy() {
+            if (army.level === 0 && cityBudget >= army.costToBuild) {
+                cityBudget -= army.costToBuild;
+                army.level = 1;
+                army.defenseBonus = 10;
+                army.incomeBonus = 10000;
+            } else if (army.level > 0 && army.level < army.maxLevel && cityBudget >= army.costToUpgrade) {
+                cityBudget -= army.costToUpgrade;
+                army.level++;
+                army.defenseBonus += 10;
+                army.incomeBonus += 10000;
+            }
+            document.querySelector(".popup").remove();
+            showCityMenu("army");
+            updateCityDisplay();
+        }
 
-function recruitUnit(unitType) {
-    const unit = army.units[unitType];
-    if (cityBudget >= unit.cost && (unitType === "police" || (unitType === "infantry" && army.level >= 1) || (unitType === "tanks" && army.level >= 3))) {
-        cityBudget -= unit.cost;
-        unit.count++;
-        army.strength += unit.strength;
-        showCityMenu("army");
-        updateCityDisplay();
-    } else {
-        alert("אין מספיק תקציב או רמת צבא לא מספיקה!");
-    }
-}
+        function recruitUnit(unit) {
+            const unitData = army.units[unit];
+            if (cityBudget >= unitData.cost && army.level > 0) {
+                cityBudget -= unitData.cost;
+                unitData.count++;
+                army.strength += unitData.strength;
+                document.querySelector(".popup").remove();
+                showCityMenu("army");
+                updateCityDisplay();
+            } else {
+                alert(army.level === 0 ? "חובה לבנות צבא קודם!" : "אין מספיק תקציב!");
+            }
+        }
 
-showMainMenu();
-</script>
+        // התחלת המשחק
+        showMainMenu();
+    </script>
 </body>
 </html>
 
