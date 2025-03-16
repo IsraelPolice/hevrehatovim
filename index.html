@@ -77,11 +77,11 @@
             border-color: #00d4ff;
         }
 
-        .card.selected {
-            border-color: #00ff85;
-            box-shadow: 0 0 15px rgba(0, 255, 133, 0.5);
-        }
-
+       .card.selected {
+    border-color: #00ff85;
+    box-shadow: 0 0 15px rgba(0, 255, 133, 0.7);
+    background: rgba(0, 255, 133, 0.1);
+}
         .card img {
             width: 100px;
             height: 100px;
@@ -212,7 +212,7 @@
             float: right;
             margin-left: 10px;
         }
-    </style>
+
         .battle-screen {
             background: rgba(27, 38, 59, 0.9);
             padding: 25px;
@@ -441,24 +441,28 @@
             { name: "בית העם", value: 1000000, sold: false },
             { name: "מגרש הכדורגל העירוני", value: 2500000, sold: false }
         ];
-        let cityUpgrades = {
-            newNeighborhood: { count: 0, max: 5, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים (עד 5)" },
-            airport: { bought: false, cost: 50000000, population: 10000, income: 100000, description: "נמל תעופה בינלאומי (דרוש 50,000 תושבים)" },
-            hotel: { bought: false, cost: 20000000, population: 3000, income: 50000, description: "מלון מפואר לתיירים" },
-            trainStation: { bought: false, cost: 30000000, population: 5000, income: 60000, description: "תחנת רכבת מהירה" },
-            busTerminal: { bought: false, cost: 15000000, population: 2000, income: 30000, description: "תחנה מרכזית לאוטובוסים" },
-            mall: { bought: false, cost: 25000000, population: 4000, income: 70000, description: "קניון ענק לקניות" },
-            hospital: { bought: false, cost: 40000000, population: 3000, income: 50000, description: "בית חולים מודרני" },
-            university: { count: 0, max: 3, cost: 60000000, population: 8000, income: 80000, description: "אוניברסיטה למחקר והשכלה (עד 3)" },
-            sportsComplex: { bought: false, cost: 20000000, population: 2000, income: 40000, description: "מתחם ספורט עירוני" },
-            theater: { bought: false, cost: 15000000, population: 1000, income: 30000, description: "תיאטרון לתרבות ובידור" },
-            bridge: { bought: false, cost: 8000000, population: 1000, income: 20000, description: "גשר לשיפור תנועה" },
-            tunnel: { bought: false, cost: 12000000, population: 1500, income: 25000, description: "מנהרה להקלת עומסי תנועה" },
-            amusementPark: { bought: false, cost: 35000000, population: 5000, income: 90000, description: "פארק שעשועים לתיירות" },
-            powerPlant: { bought: false, cost: 45000000, population: 2000, income: 60000, description: "תחנת כוח לאספקת חשמל" },
-            researchCenter: { bought: false, cost: 70000000, population: 10000, income: 120000, description: "מרכז מחקר טכנולוגי" },
-            seaport: { bought: false, cost: 65000000, population: 7000, income: 110000, description: "נמל ימי לסחר ותיירות (דרוש 75,000 תושבים)" }
-        };
+       let cityUpgrades = {
+    newNeighborhood: { count: 0, max: 20, cost: 10000000, population: 4000, income: 40000, description: "שכונה חדשה למגורים (עד 20)" },
+    apartmentTowers: { count: 0, max: 10, cost: 25000000, population: 10000, income: 80000, description: "מגדלי דירות יוקרתיים (עד 10)" },
+    airport: { bought: false, cost: 50000000, population: 15000, income: 120000, description: "נמל תעופה בינלאומי (דרוש 100,000 תושבים)" },
+    hotel: { count: 0, max: 5, cost: 20000000, population: 5000, income: 60000, description: "מלון מפואר לתיירים (עד 5)" },
+    trainStation: { bought: false, cost: 30000000, population: 10000, income: 70000, description: "תחנת רכבת מהירה (דרוש 50,000 תושבים)" },
+    busTerminal: { bought: false, cost: 15000000, population: 3000, income: 35000, description: "תחנה מרכזית לאוטובוסים" },
+    mall: { count: 0, max: 3, cost: 25000000, population: 6000, income: 80000, description: "קניון ענק לקניות (עד 3)" },
+    hospital: { count: 0, max: 2, cost: 40000000, population: 5000, income: 55000, description: "בית חולים מודרני (עד 2)" },
+    university: { count: 0, max: 5, cost: 60000000, population: 12000, income: 90000, description: "אוניברסיטה למחקר והשכלה (עד 5)" },
+    sportsComplex: { bought: false, cost: 20000000, population: 3000, income: 45000, description: "מתחם ספורט עירוני" },
+    theater: { bought: false, cost: 15000000, population: 2000, income: 35000, description: "תיאטרון לתרבות ובידור" },
+    bridge: { count: 0, max: 3, cost: 8000000, population: 1500, income: 25000, description: "גשר לשיפור תנועה (עד 3)" },
+    tunnel: { count: 0, max: 2, cost: 12000000, population: 2000, income: 30000, description: "מנהרה להקלת עומסי תנועה (עד 2)" },
+    amusementPark: { bought: false, cost: 35000000, population: 8000, income: 100000, description: "פארק שעשועים לתיירות" },
+    powerPlant: { count: 0, max: 2, cost: 45000000, population: 3000, income: 65000, description: "תחנת כוח לאספקת חשמל (עד 2)" },
+    researchCenter: { bought: false, cost: 70000000, population: 15000, income: 130000, description: "מרכז מחקר טכנולוגי (דרוש 200,000 תושבים)" },
+    seaport: { bought: false, cost: 65000000, population: 20000, income: 150000, description: "נמל ימי לסחר ותיירות (דרוש 150,000 תושבים)" },
+    skyscraperDistrict: { count: 0, max: 5, cost: 100000000, population: 25000, income: 200000, description: "רובע גורדי שחקים (עד 5, דרוש 500,000 תושבים)" },
+    metroSystem: { bought: false, cost: 150000000, population: 30000, income: 250000, description: "מערכת רכבת תחתית (דרוש 300,000 תושבים)" },
+    spacePort: { bought: false, cost: 500000000, population: 50000, income: 500000, description: "נמל חלל עתידני (דרוש 1,000,000 תושבים)" }
+};
         let army = {
             level: 0,
             strength: 0,
@@ -556,60 +560,70 @@
             });
         }
 
-        function displayCharacters() {
-            clearPopups();
-            const selectionDiv = document.getElementById("character-selection");
-            selectionDiv.style.display = "flex";
-            selectionDiv.innerHTML = "";
-            characters.forEach(char => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `
-                    <img src="${char.image}" alt="${char.name}">
-                    <div>${char.name}</div>
-                    <div>Overall: ${char.overall}</div>
-                `;
-                card.addEventListener("click", () => toggleSelection(char, card));
-                selectionDiv.appendChild(card);
-            });
-            selectionDiv.innerHTML += `
-                <div style="width: 100%; text-align: center;">
-                    <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות (${selectedTeam.length}/5)</button>
-                    <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
-                </div>
-            `;
-            hideAllExcept("character-selection");
-        }
+       function displayCharacters() {
+    clearPopups();
+    const selectionDiv = document.getElementById("character-selection");
+    selectionDiv.style.display = "flex";
+    selectionDiv.innerHTML = "<h2>בחר עד 5 חברי צוות</h2>";
+    characters.forEach(char => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <img src="${char.image}" alt="${char.name}">
+            <div>${char.name}</div>
+            <div>Overall: ${char.overall}</div>
+        `;
+        card.addEventListener("click", () => toggleSelection(char, card));
+        selectionDiv.appendChild(card);
+    });
+    selectionDiv.innerHTML += `
+        <div style="width: 100%; text-align: center; margin-top: 20px;">
+            <p>נבחרו: ${selectedTeam.length}/5</p>
+            <button id="confirm-team" onclick="confirmTeam()" disabled>אשר צוות</button>
+            <button onclick="selectRandomTeam()">בחר צוות רנדומלי</button>
+        </div>
+    `;
+    hideAllExcept("character-selection");
+}
 
-        function toggleSelection(char, card) {
-            const index = selectedTeam.findIndex(c => c.name === char.name);
-            if (index !== -1) {
-                selectedTeam.splice(index, 1);
-                card.classList.remove("selected");
-            } else if (selectedTeam.length < 5) {
-                selectedTeam.push({ ...char, health: char.overall });
-                card.classList.add("selected");
-            }
-            const confirmButton = document.getElementById("confirm-team");
-            confirmButton.disabled = selectedTeam.length !== 5;
-            confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
-        }
+       function toggleSelection(char, card) {
+    const index = selectedTeam.findIndex(c => c.name === char.name);
+    if (index !== -1) {
+        selectedTeam.splice(index, 1);
+        card.classList.remove("selected");
+    } else if (selectedTeam.length < 5) {
+        selectedTeam.push({ ...char, health: char.overall });
+        card.classList.add("selected");
+    } else {
+        alert("כבר בחרת 5 חברי צוות!");
+        return;
+    }
+    const confirmButton = document.getElementById("confirm-team");
+    confirmButton.disabled = selectedTeam.length !== 5;
+    confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
+    document.querySelector("#character-selection p").textContent = `נבחרו: ${selectedTeam.length}/5`;
+}
 
-        function selectRandomTeam() {
-            clearPopups();
-            selectedTeam = [];
-            const shuffled = [...characters].sort(() => 0.5 - Math.random());
-            selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
-            const cards = document.querySelectorAll(".card");
-            cards.forEach(card => card.classList.remove("selected"));
-            selectedTeam.forEach(char => {
-                const card = Array.from(cards).find(c => c.querySelector("div").textContent === char.name);
-                if (card) card.classList.add("selected");
-            });
-            const confirmButton = document.getElementById("confirm-team");
-            confirmButton.disabled = false;
-            confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
+       function selectRandomTeam() {
+    clearPopups();
+    selectedTeam = [];
+    const shuffled = [...characters].sort(() => 0.5 - Math.random());
+    selectedTeam = shuffled.slice(0, 5).map(char => ({ ...char, health: char.overall }));
+    displayCharacters(); // רענון התצוגה
+    const cards = document.querySelectorAll(".card");
+    cards.forEach(card => {
+        const charName = card.querySelector("div").textContent;
+        if (selectedTeam.some(c => c.name === charName)) {
+            card.classList.add("selected");
+        } else {
+            card.classList.remove("selected");
         }
+    });
+    const confirmButton = document.getElementById("confirm-team");
+    confirmButton.disabled = false;
+    confirmButton.textContent = `אשר צוות (${selectedTeam.length}/5)`;
+    document.querySelector("#character-selection p").textContent = `נבחרו: ${selectedTeam.length}/5`;
+}
 
         function confirmTeam() {
             clearPopups();
@@ -1260,27 +1274,33 @@
             }
         }
 
-        function buyUpgrade(upgradeKey) {
-            const upgrade = cityUpgrades[upgradeKey];
-            if (cityBudget >= upgrade.cost && (!upgrade.bought || (upgrade.count < upgrade.max))) {
-                if ((upgradeKey === "airport" && cityPopulation < 50000) || (upgradeKey === "seaport" && cityPopulation < 75000)) {
-                    alert("אוכלוסייה לא מספיקה!");
-                    return;
-                }
-                cityBudget -= upgrade.cost;
-                cityPopulation += upgrade.population;
-                if ("count" in upgrade) {
-                    upgrade.count++;
-                } else {
-                    upgrade.bought = true;
-                }
-                document.querySelector(".popup").remove();
-                showCityMenu("upgrades");
-                updateCityDisplay();
-            } else {
-                alert("אין מספיק תקציב או שהשדרוג כבר נקנה!");
-            }
+       function buyUpgrade(upgradeKey) {
+    const upgrade = cityUpgrades[upgradeKey];
+    if (cityBudget >= upgrade.cost && (!upgrade.bought || (upgrade.count < upgrade.max))) {
+        if ((upgradeKey === "airport" && cityPopulation < 100000) ||
+            (upgradeKey === "trainStation" && cityPopulation < 50000) ||
+            (upgradeKey === "seaport" && cityPopulation < 150000) ||
+            (upgradeKey === "researchCenter" && cityPopulation < 200000) ||
+            (upgradeKey === "metroSystem" && cityPopulation < 300000) ||
+            (upgradeKey === "skyscraperDistrict" && cityPopulation < 500000) ||
+            (upgradeKey === "spacePort" && cityPopulation < 1000000)) {
+            alert("אוכלוסייה לא מספיקה!");
+            return;
         }
+        cityBudget -= upgrade.cost;
+        cityPopulation += upgrade.population;
+        if ("count" in upgrade) {
+            upgrade.count++;
+        } else {
+            upgrade.bought = true;
+        }
+        document.querySelector(".popup").remove();
+        showCityMenu("upgrades");
+        updateCityDisplay();
+    } else {
+        alert("אין מספיק תקציב או שהשדרוג כבר נקנה!");
+    }
+}
 
         function buildOrUpgradeArmy() {
             if (army.level === 0 && cityBudget >= army.costToBuild) {
